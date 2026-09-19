@@ -1,0 +1,55 @@
+{
+    "title": "Grundvatten och dricksvatten",
+    "slug": "grundvatten-och-dricksvatten",
+    "intro": "Vilka risker finns för grundvattnet när man bryter berg under grundvattennivån?",
+    "content": [
+        {
+            "type": "paragraph",
+            "text": "Brytning under grundvattenytan kräver att vatten leds bort (länshållning), vilket kan sänka grundvattennivån i ett område runt täkten."
+        },
+        {
+            "type": "heading",
+            "text": "Enskilda brunnar"
+        },
+        {
+            "type": "paragraph",
+            "text": "Fastigheter med egen brunn kan påverkas om grundvattennivån sänks. Påverkans omfattning beror på berggrund, avstånd och brytningsdjup."
+        },
+        {
+            "type": "warning",
+            "title": "Att bevaka",
+            "text": "Kontrollprogram för grundvatten och åtaganden om ersättningsvatten är viktiga punkter att granska i en ansökan."
+        },
+        {
+            "type": "list",
+            "title": "Frågor att ställa/bevaka",
+            "items": [
+                "Hur är påverkansområdet avgränsat?",
+                "Vilka mätningar, hur många och från vilka årstider ligger till grund för gränserna?",
+                "Hur kommer mängden tillgängligt vatten att räcka till de olika behov som finns om inte berget tätas?",
+                "Hur kan NCC garantera att Rögle Klosters 60 m djupa brunn inte torkar ut igen, tillfälligt eller permanent?",
+                "Hur påverkas dessa vattenmängder av de pågående klimatförändringarna?",
+                "Hur kommer vattennivåerna i dricksvattenbrunnarna inom påverkansområdet att påverkas?",
+                "Hur kompenseras de fastighetsägare och hyresgäster som drabbas och hur går det till?",
+                "Vid pumpning, hur säkerställer NCC att det vatten som pumpas inte innehåller miljöfarliga och för befintlig miljö främmande ämnen?",
+                "I samrådsunderlaget står det att det vatten som pumpas bort från stenbrotten först renas från sprängämnesrester, främst nitrater, med hjälp av sedimentationsdammar. Hur fungerar det, eftersom nitratet är vattenlösligt och inte kan sjunka till botten i en bassäng?",
+                "Om kvalitetskraven på dricksvatten, kraven på vattenkvalité för gynnsam bevarandestatus för rikkärr och förhindrande av igenväxning inte klaras idag, vilka reningsmetoder kan tillämpas, vilka resultat kan förväntas och vad kostar de olika tänkbara reningsstegen?"
+            ]
+        },
+        {
+            "type": "video",
+            "video_url": "",
+            "title": ""
+        }
+    ],
+    "status": "published",
+    "featured_image": null,
+    "sort_order": 1,
+    "created_by": null,
+    "updated_by": "6a58d6d0001c9ec1df7c",
+    "published_at": "2026-09-03T05:27:39.079Z",
+    "icon": "user",
+    "id": "6a577ab7000926d985cf",
+    "created_at": "2026-07-15T12:19:03.223+00:00",
+    "updated_at": "2026-09-03T05:27:39.339+00:00"
+}

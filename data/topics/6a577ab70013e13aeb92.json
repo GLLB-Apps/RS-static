@@ -1,0 +1,36 @@
+{
+    "title": "Trafik och transporter",
+    "slug": "trafik-och-transporter",
+    "intro": "Hur många tunga transporter innebär täkten och vilka vägar berörs?",
+    "content": [
+        {
+            "type": "paragraph",
+            "text": "Uttransport av krossad sten sker med lastbil. Antalet transporter beror på produktionsvolym och avsättning, och kan innebära en märkbar ökning av tung trafik på lokala vägar. "
+        },
+        {
+            "type": "list",
+            "title": "Frågor att ställa",
+            "items": [
+                "Hur påverkas trafiksäkerheten vid skolor och bostäder? ",
+                "Vilka trafikstörningar kommer lastbilstrafiken att medföra? Vilka anpassningar kommer NCC att göra?",
+                "Trafiksäkerhet Hur stor andel av de uppskattade 420-610 fordonsrörelserna per dag kommer att gå via väg 952 respektive väg 945?",
+                "Mellan vilka tider beräknas fordonsrörelserna ske?",
+                "Asfaltstransporter nattetid, hur ofta kommer detta att förekomma?",
+                "Vad räknas in i dessa fordonsrörelser, innefattar de även transporter mellan de olika verksamhetsområdena eller tillkommer transporterna fram och tillbaka över väg 952? Annan form av transporter inom verksamhetsområdena, ex dumprar etc.",
+                "Var planeras tillfartsvägarna till nya täkten mot väg 952 och väg 945? Hur nära de närmst berörda fastigheterna?",
+                "Behöver väg 952 eller väg 945 byggas om eller förstärkas för att klara den ökade trafiken?",
+                "Hur bedöms risksituationen för fotgängare, cyklister, ryttare och skolbarn vid väg 945? Finns ev. förbättringar förankrat hos Transportstyrelsen?"
+            ]
+        }
+    ],
+    "status": "published",
+    "featured_image": null,
+    "sort_order": 4,
+    "created_by": null,
+    "updated_by": "6a819879000d0b697836",
+    "published_at": "2026-08-27T13:37:02.158Z",
+    "icon": "truck",
+    "id": "6a577ab70013e13aeb92",
+    "created_at": "2026-07-15T12:19:03.364+00:00",
+    "updated_at": "2026-08-27T13:37:02.959+00:00"
+}

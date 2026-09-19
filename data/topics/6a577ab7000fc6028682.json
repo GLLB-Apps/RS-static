@@ -1,0 +1,79 @@
+{
+    "title": "Naturvärden och biologisk mångfald",
+    "slug": "naturvarden-och-biologisk-mangfald",
+    "intro": "Vilka naturvärden finns i Rögleskogen och hur påverkas de?",
+    "content": [
+        {
+            "type": "paragraph",
+            "text": "Området innehåller blandskog med inslag av ek och hassel. Naturvårdsinventeringen har pekat ut flera nyckelbiotoper och förekomst av rödlistade arter. Området är märkt med \"riksintresse för naturvård\" och ingår i UNESCO-området Storkriket."
+        },
+        {
+            "type": "heading",
+            "text": "Vad handlar det om?"
+        },
+        {
+            "type": "paragraph",
+            "text": "Rögleskogen består av en blandskog med inslag av fäladsmark, märgelhål, vattendrag, kärr och små dammar. I söder om området finner man en enefälad inringad av stengärde med en stor artrikedom bland annat går det att se backsippor om våren. Mer norröver finner man nu blandskog (björk, ek, rönn, fläder, lönn) med planterad lärk. Förr var området planterat med granskog. I området går det att finna flera fladdermus arter, liten hackspett, kattuggla, talltita, gulsparv, grönsångare, rödvingesparv samt större och mindre vattensalamander."
+        },
+        {
+            "type": "heading",
+            "text": "Skyddsvärda strukturer",
+            "level": 2
+        },
+        {
+            "type": "paragraph",
+            "text": "Stående döda träd, äldre hålträd och död ved är viktiga livsmiljöer för insekter, fåglar och svampar. Fäladsmarken intill det planerade stenbrottet ingår i Länsstyrelsens kulturmiljöprogram (Hardeberga–Arendala–Dalby–Skrylle–Hällestad). Rögleskogen och omgivningar ingår numera i UNESCOS Storkriket och rikkärret Röglekärr som ligger ca 200 m nordväst om Röglekloster uppfyller kraven för \ngenerellt biotopskydd."
+        },
+        {
+            "type": "factbox",
+            "title": "Kort fakta",
+            "text": "Området är klassat som riksintresse för friluftsliv och har även höga naturvärden. Flera rödlistade och fridlysta fågelarter förekommer i området. Dvärgpipistrell har dessutom detekterats i området, och i det närliggande bostadsområdet har ytterligare sju fladdermusarter noterats. De fridlysta större och mindre vattensalamandrarna har också sina tillhåll i de märgelhål och dammar som finns inom området."
+        },
+        {
+            "type": "list",
+            "title": "Frågor att bevaka",
+            "items": [
+                "Hur påverkas skyddade eller rödlistade arter som finns i området?",
+                "Hur påverkas spridningssamband och grön infrastruktur?",
+                "Vilka naturvärdesinventeringar har gjorts – och av vem?",
+                "Hur påverkas skyddade eller rödlistade arter som finns i området?",
+                "Hur säkerställer NCC att de märgelhål, dammar och kärr som finns nära inte påverkas? "
+            ]
+        },
+        {
+            "type": "sources",
+            "sources": [
+                {
+                    "label": "ArtDataBanken",
+                    "url": "https://artfakta.se/observationer/karta"
+                },
+                {
+                    "label": "Artkartan",
+                    "url": "https://play.google.com/store/apps/details?id=se.ravenab.species&hl=sv&pli=1"
+                }
+            ]
+        },
+        {
+            "type": "image",
+            "image_url": "/uploads/images/6a6a571a000a2c452710.jpg",
+            "alt_text": "mindre vattensalamander",
+            "text": "mindre vattensalamander"
+        },
+        {
+            "type": "image",
+            "image_url": "/uploads/images/6a6a5718002967fa8e54.jpg",
+            "alt_text": "backsippa",
+            "text": "backsippa"
+        }
+    ],
+    "status": "published",
+    "featured_image": null,
+    "sort_order": 2,
+    "created_by": null,
+    "updated_by": "6a58d6d0001c9ec1df7c",
+    "published_at": "2026-09-03T05:54:34.003Z",
+    "icon": "leaf",
+    "id": "6a577ab7000fc6028682",
+    "created_at": "2026-07-15T12:19:03.281+00:00",
+    "updated_at": "2026-09-03T05:54:34.154+00:00"
+}

@@ -1,0 +1,11 @@
+{
+    "label": "Lämna vittnesmål",
+    "url": "/vittnesmal",
+    "sort_order": 3,
+    "is_active": true,
+    "parent_id": "6a578c36001a9fca910b",
+    "icon": "megaphone",
+    "id": "6a5779b0000fbbd57358",
+    "created_at": "2026-07-15T12:14:40.308+00:00",
+    "updated_at": "2026-08-20T22:05:19.656+00:00"
+}

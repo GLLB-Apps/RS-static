@@ -1,0 +1,47 @@
+# Apache-regler för webroot (public_html).
+#
+# Ordningen är viktig: /api måste routas till PHP INNAN SPA-fallbacken, annars
+# fångar React-routern API-anropen.
+
+# ---- Säkerhet ---------------------------------------------------------------
+Options -Indexes
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Blockera direkt åtkomst till känsliga kataloger och filer om de av något skäl
+# ligger under webroot (helst ska de ligga utanför — se INSTALL.md).
+#
+# OBS: "server" ingår MEDVETET INTE här. RedirectMatch matchar (via en
+# Apache-egenhet) även den interna omskrivningen /api → server/index.php
+# nedan — inte bara direkta webbläsaranrop — så en generell blockering här
+# skulle stänga av hela API:t. server/.htaccess skyddar redan katalogen mer
+# precist (allt utom index.php nekas där), vilket är den enda fil som ska
+# vara nåbar ändå.
+RedirectMatch 404 ^/(data|database|tests)(/|$)
+<FilesMatch "^(\.env|\.gitignore|composer\.(json|lock)|.*\.sqlite|.*\.lock)$">
+    Require all denied
+</FilesMatch>
+
+# Uppladdade filer får aldrig köras som skript — se uploads/.htaccess.
+# (<Directory> är inte tillåtet i .htaccess-kontext, bara i huvudkonfigurationen,
+# så regeln ligger i en egen .htaccess-fil inne i uploads/ i stället.)
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # ---- API → PHP front controller -----------------------------------------
+    # Allt under /api hanteras av server/index.php.
+    RewriteRule ^api(/.*)?$ server/index.php [QSA,L]
+
+    # ---- Statiska filer och uppladdningar serveras direkt --------------------
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # ---- SPA-fallback -------------------------------------------------------
+    # Allt annat till React-appens index.html (undantar /api och /uploads ovan).
+    RewriteRule ^ index.html [L]
+</IfModule>

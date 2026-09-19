@@ -1,0 +1,41 @@
+{
+    "slug": "demonstration",
+    "title": "Demonstration 20 augusti",
+    "intro": "Den 20:e augusti kl 16.00 har vi en demonstration innan samrådsmötet som börjar 17:30\n\n\n",
+    "blocks": [
+        {
+            "type": "heading",
+            "text": "Torsdagen den 20:e augusti kl 16:00, AF Borgen, Lund",
+            "level": 1
+        },
+        {
+            "type": "cta",
+            "title": "Låt NCC veta vad vi tycker om deras planer!",
+            "links": []
+        },
+        {
+            "type": "cta",
+            "title": "Demonstrationen börjar kl 16:00, det finns ett antal plakat och banderoller att hålla i om man inte har med en egen. PLATS: AF Borgen, Lundagård, Lund",
+            "links": []
+        },
+        {
+            "type": "factbox",
+            "title": "Att tänka på",
+            "text": "Demonstrationen har polistillstånd men det är viktigt att alla uppför sig lugnt och fredligt.\nBanderoller får vara max 3 meter breda och vi måste stå inom anvisat område utanför AF Borgen i Lundagård"
+        },
+        {
+            "type": "image",
+            "image_url": "/uploads/images/6a79e0dd000b3efe49fa.png",
+            "alt_text": "Demonstrationsplakat",
+            "text": "Kom på demonstrationen den 20:e augusti!"
+        }
+    ],
+    "status": "published",
+    "sort_order": 0,
+    "created_by": "6a6a4e2f00367d36a48a",
+    "updated_by": "6a6a4e2f00367d36a48a",
+    "published_at": "2026-08-18T21:58:45.765Z",
+    "id": "6a760a7b003deb7fa17e",
+    "created_at": "2026-08-07T16:40:28.067+00:00",
+    "updated_at": "2026-08-21T22:22:10.405+00:00"
+}

@@ -1,0 +1,26 @@
+{
+    "slug": "hem",
+    "title": "Startsida",
+    "intro": "",
+    "texts": {
+        "status_heading": "Aktuell status",
+        "status_intro": "Översikt över var i processen vi befinner oss.",
+        "summary_heading": "Kort sammanfattning",
+        "card1_title": "Vad planeras?",
+        "card1_text": "NCC har informerat om planer på att ansöka om tillstånd för en ny bergtäkt i Rögleskogen mellan Södra Sandby och Dalby i Lunds kommun. ",
+        "card2_title": "Varför väcker det frågor?",
+        "card2_text": "En ny bergtäkt i närområdet skulle ge upphov till buller, damm, tung trafik och ge påverkan på grundvattennivåer, naturvärden, närmiljö hälso- och livsvillkor för boende i området. ",
+        "card3_title": "Vad händer nu?",
+        "card3_text": "Processen befinner sig i ett tidigt skede. NCC har delgett samrådsunderlag till berörda sakägare och myndigheter. De samlar in information, gör utredningar och  förbereda sin ansökan till Miljö- och vattendomstolen i Växjö. \n\nFram till den 7 september kan sakägare lämna skriftliga synpunkter till bolaget. (privatpersoner som fått brev från NCC räknas som sakägare) ",
+        "topics_heading": "Ämnesområden",
+        "topics_intro": "Utforska olika aspekter av den planerade bergtäkten.",
+        "news_heading": "Senaste nytt",
+        "sponsors_heading": "Med stöd av",
+        "cta_heading": "Hjälp till att sprida informationen",
+        "cta_text": "Skriv ett eget yttrande till NCC. Läs under \"Vad kan jag göra? Dela informationen om vad som händer. Fyll i enkät eller lämna ditt vittnesmål här på raddarogleskogen.nu"
+    },
+    "blocks": null,
+    "id": "hem",
+    "created_at": "2026-08-21T17:27:00.851+00:00",
+    "updated_at": "2026-08-26T19:15:52.217+00:00"
+}

@@ -1,0 +1,11 @@
+{
+    "label": "Karta",
+    "url": "/karta",
+    "sort_order": 12,
+    "is_active": true,
+    "parent_id": null,
+    "icon": "map-pin",
+    "id": "6a5779af003a435a25bd",
+    "created_at": "2026-07-15T12:14:39.964+00:00",
+    "updated_at": "2026-08-21T17:24:30.426+00:00"
+}

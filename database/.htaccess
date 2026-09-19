@@ -1,0 +1,3 @@
+# Skydd i andra hand. Ligger data/ under webroot ska den ändå inte gå att nå
+# direkt — SQLite-databasen får aldrig laddas ner.
+Require all denied

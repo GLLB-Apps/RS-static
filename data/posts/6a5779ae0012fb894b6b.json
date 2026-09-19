@@ -1,0 +1,53 @@
+{
+    "title": "Ny rapport om naturvärden i Rögleskogen",
+    "slug": "ny-rapport-om-naturvarden-i-rogleskogen",
+    "excerpt": "En oberoende naturvärdesinventering visar på höga biologiska värden i det planerade täktområdet.",
+    "content": [
+        {
+            "type": "paragraph",
+            "text": "En naturvärdesinventering genomförd av en oberoende konsult har nu slutförts. Rapporten identifierar flera nyckelbiotoper och artrika miljöer inom det planerade täktområdet."
+        },
+        {
+            "type": "heading",
+            "text": "Viktiga fynd"
+        },
+        {
+            "type": "paragraph",
+            "text": "Inventeringen identifierade bland annat förekomster av rödlistade arter och värdefulla skogsstrukturer som stående döda träd och äldre hålträd."
+        },
+        {
+            "type": "sources",
+            "sources": [
+                {
+                    "label": "Naturvårdsverkets rödlista 2024",
+                    "url": "https://www.naturvardsverket.se"
+                },
+                {
+                    "label": "Artdatabankens artfakta",
+                    "url": "https://artfakta.se"
+                }
+            ]
+        }
+    ],
+    "featured_image": null,
+    "image_caption": null,
+    "author": "Initiativet Rädda Rögleskogen",
+    "status": "archived",
+    "is_pinned": false,
+    "seo_title": null,
+    "seo_description": null,
+    "published_at": null,
+    "created_by": null,
+    "updated_by": "6a60f8ed003b03e97854",
+    "category": null,
+    "tags": [
+        "Naturvärden",
+        "Rödlistade arter",
+        "Utredningar"
+    ],
+    "source": null,
+    "external_url": null,
+    "id": "6a5779ae0012fb894b6b",
+    "created_at": "2026-07-15T12:14:38.339+00:00",
+    "updated_at": "2026-08-04T12:11:54.073+00:00"
+}

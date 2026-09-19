@@ -1,0 +1,11 @@
+{
+    "label": "Tidslinje",
+    "url": "/tidslinje",
+    "sort_order": 17,
+    "is_active": true,
+    "parent_id": "6a5779af002b2ef8f339",
+    "icon": "timeline",
+    "id": "6a5779af003e501a6e87",
+    "created_at": "2026-07-15T12:14:40.060+00:00",
+    "updated_at": "2026-08-21T17:24:30.447+00:00"
+}

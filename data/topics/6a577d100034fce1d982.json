@@ -1,0 +1,45 @@
+{
+    "title": "Damm och luftkvalitet",
+    "slug": "damm-och-luftkvalitet",
+    "intro": "Hur påverkas luften av damm från borrning, krossning och transporter?",
+    "content": [
+        {
+            "type": "paragraph",
+            "text": "Borrning, sprängning, krossning och transporter av sten kan ge upphov till damm som sprids i omgivningen, särskilt vid torrt och blåsigt väder."
+        },
+        {
+            "type": "heading",
+            "text": "Vad dammet innehåller"
+        },
+        {
+            "type": "paragraph",
+            "text": "Stendamm kan innehålla fina partiklar, bland annat kvarts, som vid höga halter kan påverka hälsan hos närboende och känsliga grupper."
+        },
+        {
+            "type": "factbox",
+            "title": "Skyddsåtgärder att bevaka",
+            "text": "Vattenbegjutning av krossverk och vägar, dammbindning, mätprogram för partiklar och krav på hastighetsbegränsningar för transporter."
+        },
+        {
+            "type": "list",
+            "title": "Frågor att bevaka",
+            "items": [
+                "Minimering av nedsmutsningen av allmänna vägar från lastbilarna måste utredas. Vilka metoder tänker NCC att vidta? ",
+                "Vilken ansvarsfördelning gäller mellan NCC och åkerierna som utför transporterna? (LNF) (Tom)",
+                "Boendemiljö Vilka halter av damm och partiklar förväntas vid närliggande bostäder under torra perioder?",
+                "Hur ska damning från transporter och krossning övervakas och begränsas?",
+                "Kommer alla transporter vara täckta för att minska olägenheter med stoftspridning? Kvartsitdamm är giftigt!"
+            ]
+        }
+    ],
+    "status": "published",
+    "featured_image": null,
+    "sort_order": 4,
+    "created_by": null,
+    "updated_by": "6a58d6d0001c9ec1df7c",
+    "published_at": "2026-09-03T05:33:28.076Z",
+    "icon": "wind",
+    "id": "6a577d100034fce1d982",
+    "created_at": "2026-07-15T12:29:04.928+00:00",
+    "updated_at": "2026-09-03T05:33:28.328+00:00"
+}

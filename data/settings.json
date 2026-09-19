@@ -1,0 +1,132 @@
+{
+    "site_name": "Rädda Rögleskogen",
+    "site_subtitle": "Information om den planerade bergtäkten mellan Södra Sandby och Dalby",
+    "logo_url": "/site_logo/ncc_rs_logo.svg",
+    "favicon_url": null,
+    "petition_url": "https://www.skrivunder.com/stoppa_ncc_i_skrylle",
+    "default_share_image": null,
+    "contact_email": null,
+    "contact_phone": null,
+    "social_links": [],
+    "footer_text": "sidfot test",
+    "privacy_text": null,
+    "cookie_text": null,
+    "status_message": null,
+    "status_phase": "Samrådet avslutas",
+    "next_important_date": "2026-09-07",
+    "signature_count": 2627,
+    "hero_title": "Ett nytt stenbrott planeras i Rögleskogen",
+    "hero_intro": "NCC har informerat om planer på att ansöka om tillstånd för en ny bergtäkt mellan Södra Sandby och Dalby. \n\nVi är många som motsätter oss NCC:s planer och vill bevara området för framtiden. Rögleskogen och dess omgivningar är värdefullt för natur- friluftsliv och rekreation. \n\nRädda Rögleskogen är ett initiativ som samlar information, dokument, bilder, vittnesmål och frågor om hur området och närområdet kan påverkas och argument mot en ny bergtäkt i området.\n\n\n",
+    "hero_image": "/rs_compare_hero.JPG",
+    "background_blocks": [
+        {
+            "type": "heading",
+            "text": "Om Rögleskogen"
+        },
+        {
+            "type": "paragraph",
+            "text": "Rögleskogen ligger mellan Södra Sandby och Dalby i Lunds kommun. Området används av boende för promenader, rekreation och naturupplevelser. Skogen hyser enligt uppgifter från boende flera naturvärden och arter."
+        },
+        {
+            "type": "paragraph",
+            "text": "Observera: Informationen på denna webbplats är exempeldata och ska inte tolkas som verifierade fakta utan särskild källhänvisning."
+        },
+        {
+            "type": "heading",
+            "text": "Varför detta initiativ?"
+        },
+        {
+            "type": "paragraph",
+            "text": "NCC har informerat om planer på att ansöka om tillstånd för en ny bergtäkt i området. Boende har frågor om hur verksamheten kan påverka natur, miljö, hälsa och livsmiljö. Detta initiativ samlar information, dokument, vittnesmål och frågor på ett ställe."
+        },
+        {
+            "type": "list",
+            "title": "Vad vi gör",
+            "items": [
+                "Samlar och strukturerar offentlig information om planerna",
+                "Samlar in vittnesmål och observationer från boende",
+                "Sprider information till boende, journalister och beslutsfattare",
+                "Sammanställer frågor och farhågor som väcks av planerna",
+                "Uppmuntrar till saklig och respektfull dialog"
+            ]
+        },
+        {
+            "type": "list",
+            "title": "Viktiga principer",
+            "items": [
+                "All information ska vara saklig och källhänvisad där det är relevant",
+                "Personliga vittnesmål märks tydligt som sådana",
+                "Vi gör inga juridiska eller miljövetenskapliga påståenden utan stöd i publicerade källor",
+                "Initiativet är oberoende och drivs av boende"
+            ]
+        },
+        {
+            "type": "cta",
+            "title": "Läs mer",
+            "links": [
+                {
+                    "label": "Ämnesområden",
+                    "url": "/amnen"
+                },
+                {
+                    "label": "Dokument",
+                    "url": "/dokument"
+                },
+                {
+                    "label": "Tidslinje",
+                    "url": "/tidslinje"
+                }
+            ]
+        }
+    ],
+    "campaign_mode": "consult",
+    "donate_url": null,
+    "donate_title": null,
+    "donate_text": null,
+    "donate_button": null,
+    "hero_buttons": [
+        {
+            "label": "Läs om planerna",
+            "url": "amnen",
+            "style": "primary"
+        },
+        {
+            "label": "",
+            "url": "",
+            "style": "primary",
+            "cta": true
+        },
+        {
+            "label": "Delta i enkäten",
+            "url": "enkat-forskning",
+            "style": "secondary"
+        },
+        {
+            "label": "Se området på karta",
+            "url": "karta",
+            "style": "secondary"
+        }
+    ],
+    "contact_delivery": "both",
+    "contact_recipient": "raddarogleskogen@gmail.com",
+    "contact_from": null,
+    "consult_url": null,
+    "consult_title": null,
+    "consult_text": null,
+    "consult_button": null,
+    "consult_subject": null,
+    "important_dates": [
+        {
+            "date": "2026-09-07",
+            "label": ""
+        }
+    ],
+    "consult_dialog_title": null,
+    "consult_dialog_text": null,
+    "consult_dialog_note": null,
+    "consult_dialog_confirm": null,
+    "consult_dialog_cancel": null,
+    "id": "settings",
+    "created_at": "2026-07-15T11:59:02.010+00:00",
+    "updated_at": "2026-08-27T21:53:30.260+00:00"
+}

@@ -1,0 +1,84 @@
+{
+    "title": "Barn och ungdomar",
+    "slug": "barn-och-ungdomar",
+    "intro": "Vad planerar man att göra åt att barn och ungdomar påverkas?",
+    "content": [
+        {
+            "type": "paragraph",
+            "text": "Blir det en bergtäkt i Rögleskogen försvinner den hälso- och utvecklingsfrämjande tillgången till natur som närboende, barn och barnfamiljer har glädje och nytta av idag. Här samlar vi information om det som kan komma att påverka familjer, barn och ungdomar."
+        },
+        {
+            "type": "heading",
+            "text": "Vad handlar det om?"
+        },
+        {
+            "type": "paragraph",
+            "text": "Tillgång till natur och grön infrastruktur är främjande för barns och ungas välbefinnande och kunskap, både genom hälsofördelar kopplade till biologisk mångfald och genom att skapa förutsättningar för lek och lärande om natur och miljöfrågor. En bergtäkt i Rögleskogen och omgivande miljöer skulle hamna nära (<500m) både förskole- och skolverksamhet. Förskolan Fågelsång, förskolan Almbacken samt Uggleskolan (F-6).  "
+        },
+        {
+            "type": "paragraph",
+            "text": "Cykel- och gångvägen som ligger längst väg 952 är i dagsläget i princip obruten av trafik, vilket gör den säker att ta sig utan bil till Skrylle från S. Sandby. För barn och ungdomar säkrar en obruten cykel- och gångväg deras rörlighetsfrihet. Täkttrafik planeras att öka trafiken avsevärt mellan de två områdena över cykel- och gångvägen vilket bryter den säkra cykel- och gångvägen."
+        },
+        {
+            "type": "factbox",
+            "title": "Kort fakta",
+            "text": "En bergtäkt innebär permanent förstörelse av området Rögleskogen och dess omgivningar.\nFörskolan Fågelsång och Uggleskolan (F-6) kommer att hamna inom 500m från verksamhetsområdet, idag agerar Rögleskogen som skyddområde för nuvarande täkts verksamhet."
+        },
+        {
+            "type": "divider"
+        },
+        {
+            "type": "list",
+            "title": "Frågor att bevaka",
+            "items": [
+                "Hur påverkas skolornas möjlighet till pedagogisk verksamhet utomhus?",
+                "Hur påverkas barn och ungdomars hälsa av en närliggande bergtäkt? ",
+                "Vad säger forskningen om gröna miljöers främjande av barns hälsa och utveckling",
+                "Hur påverkas barnfamiljer vid förlust av grön infrastruktur? "
+            ]
+        },
+        {
+            "type": "factbox",
+            "title": "Barnkonventionen",
+            "text": "En förändring av barns närmiljö påverkar rättigheter som barn har enligt Barnkonventionen, svensk lag sedan 1 januari 2020. \n\nFöretag, kommun eller myndighet kan behöva utreda och redovisa konsekvenserna för barn, samt väga in barnets bästa och barns egna erfarenheter innan beslut fattas. \n"
+        },
+        {
+            "type": "list",
+            "title": "Detta enligt:",
+            "items": [
+                "Artikel 3 – Barnets bästa  ",
+                "Artikel 31 – Rätt till lek, vila, fritid och rekreation",
+                "Artikel 6 – Rätt till liv, överlevnad och utveckling",
+                "Artikel 12 – Barnets rätt att komma till tals ",
+                "Artikel 24 – Rätt till hälsa"
+            ]
+        },
+        {
+            "type": "sources",
+            "sources": [
+                {
+                    "label": "Folkhälsomyndigheten",
+                    "url": "https://www.folkhalsomyndigheten.se/vara-amnesomraden/miljo-och-halsa/sa-paverkar-miljon-hur-befolkningen-mar/grona-miljoer-framjar-barns-halsa-och-utveckling/"
+                },
+                {
+                    "label": "Naturvårdsverket",
+                    "url": "https://www.naturvardsverket.se/amnesomraden/friluftsliv/vardagsnara-natur/"
+                },
+                {
+                    "label": "Unicef om Barnkonventionen",
+                    "url": "https://unicef.se/barnkonventionen/las-texten"
+                }
+            ]
+        }
+    ],
+    "status": "published",
+    "featured_image": null,
+    "sort_order": 0,
+    "created_by": "6a577605000aa59c3a45",
+    "updated_by": "6a819879000d0b697836",
+    "published_at": "2026-08-22T19:59:02.322Z",
+    "icon": "heart",
+    "id": "6a5a1a29000c968bf60a",
+    "created_at": "2026-07-17T12:03:53.425+00:00",
+    "updated_at": "2026-08-22T19:59:02.372+00:00"
+}

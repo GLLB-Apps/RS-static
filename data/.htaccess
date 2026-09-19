@@ -1,0 +1,3 @@
+# Skydd i andra hand. Ligger data/ under webroot ska den ändå inte gå att nå
+# direkt — innehållet serveras bara via PHP-API:t.
+Require all denied

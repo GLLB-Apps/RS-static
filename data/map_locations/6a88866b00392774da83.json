@@ -1,0 +1,17 @@
+{
+    "title": "Utsiktsplats",
+    "description": "En utsiktsplats över stenbrottet",
+    "lat": 55.696588562533,
+    "lng": 13.358548572341,
+    "point_type": "observation_point",
+    "image_url": null,
+    "source": null,
+    "status": "published",
+    "published_at": "2026-08-21T17:10:03.913Z",
+    "created_by": "6a6a4e2f00367d36a48a",
+    "updated_by": "6a6a4e2f00367d36a48a",
+    "icon": null,
+    "id": "6a88866b00392774da83",
+    "created_at": "2026-08-21T17:10:04.009+00:00",
+    "updated_at": "2026-08-21T22:22:08.503+00:00"
+}

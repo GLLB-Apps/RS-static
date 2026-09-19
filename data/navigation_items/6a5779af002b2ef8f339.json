@@ -1,0 +1,11 @@
+{
+    "label": "Bakgrund",
+    "url": "/bakgrund",
+    "sort_order": 13,
+    "is_active": true,
+    "parent_id": null,
+    "icon": "info",
+    "id": "6a5779af002b2ef8f339",
+    "created_at": "2026-07-15T12:14:39.732+00:00",
+    "updated_at": "2026-08-21T17:24:30.443+00:00"
+}

@@ -1,0 +1,62 @@
+{
+    "title": "Rögle Kloster",
+    "slug": "rogle-kloster",
+    "intro": "Klostret riskerar att inte kunna fortsätta sin verksamhet",
+    "content": [
+        {
+            "type": "heading",
+            "text": "Om klostret"
+        },
+        {
+            "type": "paragraph",
+            "text": "Rögle Kloster (Sankt Dominikus kloster), är ett levande kloster där systrarna lever och verkar året runt. Varje år tar klostret emot över 4 000 besökare från hela Sverige och även från andra länder. Hit kommer människor för stillhet, retreat, gudstjänster och rekreation."
+        },
+        {
+            "type": "factbox",
+            "title": "Visste du att...",
+            "text": "Över 4 000 besökare kommer varje år\nKlostret ligger direkt intill det planerade stenbrottet\nBesökare kommer från hela Sverige och även utlandet\nRögleskogen används av både systrarna och besökare."
+        },
+        {
+            "type": "warning",
+            "title": "Om NCC får tillstånd riskerar klostrets verksamhet att inte kunna fortsätta i sin nuvarande form.",
+            "text": "Tystnaden är helt avgörande för klostrets verksamhet. \nBuller, vibrationer och den förändrade naturmiljön i Rögleskogen som stenbrytningen skulle inbära skulle helt förstöra de värden som gör platsen Rögle kloster unik."
+        },
+        {
+            "type": "heading",
+            "text": "Vittnesmål om Rögle kloster: ",
+            "level": 3
+        },
+        {
+            "type": "quote",
+            "text": "\"Jag känner väl Rögle kloster sedan 25 år tillbaka. Det är en plats som har för Sverige helt unika värden. Det finns ganska många ställen, kloster några stycken och andra som erbjuder plats för enskilda och grupper, men ingen som Rögle. Här har systrarna byggt upp en plats koncentrerad av liv och kärlek som möter besökarna. Kapellet, den gamla bondgårdens stall, utformades av den kände lundaarkitekten Hans Wessman i mitten av 50-talet och utvidgades med stor elegans av Anna-Karin Jägare, också verksam i Lund.\n\nLiknande kapell finns inte i Sverige och man kan se et som en del av en våg av ny kristen arkitektur i Europa under efterkrigstiden, här fast förankrat i det skånska landskapet. Reträttverksamheten som pågått på klostret har erbjudit influenser från europeisk intellektuell och andlig tradition som inte presenterats på annat håll. Systrarnas liturgi, musiken och sången, som alla kan ta del av, är också unik för Rögle. Som enda plats i landet vårdar systrarna med kompetens och stor skönhet en musiktradition som i modern form förenar den östliga ortodoxa och den västliga katolska kyrkornas traditioner.\n\nMånga, många besökare välkomnas ända sen klostrets tillkomst. Inte bara katoliker, utan kanske ännu mer människor utanför kyrkan kommer i grupp eller enskilt för att söka svar på livets stora frågor stora frågor, och för att ta del av plats och systrarnas liv. Jag kan intyga att i Rögle besökare, inte bara kristna, finner en glädje och frid som är mycket ovanlig i vårt land, och en gemenskap som få platser erbjuder. Sammanfattningsvis, att med bullrande industri och transporter förstöra förutsättningarna för systrarna att verka på den här platsen skull vara till stor skada för Lund, södra Sverige och hela vårt land. \"    Björn Engdahl, Lund"
+        },
+        {
+            "type": "cta",
+            "title": "Hjälp oss bevara Rögle Kloster och Rögleskogen.",
+            "links": [
+                {
+                    "label": "Karta",
+                    "url": "https://www.raddarogleskogen.nu/karta"
+                },
+                {
+                    "label": "Läs mer om Rögle Kloster",
+                    "url": "https://www.roglekloster.se"
+                },
+                {
+                    "label": "Maila samrådet ",
+                    "url": "https://www.raddarogleskogen.nu/skriv-ett-yttrande-till-ncc-fram-till-den-7-september"
+                }
+            ]
+        }
+    ],
+    "status": "published",
+    "featured_image": null,
+    "sort_order": 0,
+    "created_by": "6a577605000aa59c3a45",
+    "updated_by": "6a58d6d0001c9ec1df7c",
+    "published_at": "2026-09-03T05:37:45.075Z",
+    "icon": "church",
+    "id": "6a6348ba0032a0170a15",
+    "created_at": "2026-07-24T11:12:59.125+00:00",
+    "updated_at": "2026-09-03T05:37:45.258+00:00"
+}

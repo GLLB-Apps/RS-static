@@ -1,0 +1,19 @@
+{
+    "slug": "sidfot",
+    "title": "Sidfot",
+    "intro": null,
+    "texts": {
+        "brand_text": "",
+        "links_heading": "Engagera dig",
+        "contact_heading": "Kontakt",
+        "contact_note": "Har du tips, bilder eller frågor? Hör gärna av dig.",
+        "copyright": "",
+        "to_top": "Till toppen ↑",
+        "links": "Lämna ett vittnesmål | /vittnesmal\nKontakta initiativet | /kontakt\nVanliga frågor | /fragor-och-svar",
+        "links_cta": "1"
+    },
+    "blocks": null,
+    "id": "sidfot",
+    "created_at": "2026-07-30T19:34:08.554+00:00",
+    "updated_at": "2026-07-30T19:34:08.554+00:00"
+}

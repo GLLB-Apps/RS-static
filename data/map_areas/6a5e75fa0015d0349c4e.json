@@ -1,0 +1,38 @@
+{
+    "title": "Nytt brytområde",
+    "description": "Den yta inom det nya verksamhetsområdet där berg bryts.",
+    "color": "#4a6c7f",
+    "line_style": "dashed",
+    "fill_opacity": 0.2,
+    "points": [
+        [
+            55.697975,
+            13.33691
+        ],
+        [
+            55.70285,
+            13.335633
+        ],
+        [
+            55.703453,
+            13.339479
+        ],
+        [
+            55.700732,
+            13.343893
+        ],
+        [
+            55.69828,
+            13.346069
+        ]
+    ],
+    "sort_order": 2,
+    "status": "published",
+    "published_at": "2026-07-23T15:41:42.779Z",
+    "created_by": null,
+    "updated_by": "6a60f8ed003b03e97854",
+    "icon": null,
+    "id": "6a5e75fa0015d0349c4e",
+    "created_at": "2026-07-20T19:24:42.258+00:00",
+    "updated_at": "2026-08-21T22:22:07.885+00:00"
+}

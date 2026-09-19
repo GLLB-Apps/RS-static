@@ -1,0 +1,50 @@
+{
+    "title": "Friluftsliv och rekreation",
+    "slug": "friluftsliv-och-rekreation",
+    "intro": "Vad betyder skogen för promenader, motion och rekreation – och vad står på spel?",
+    "content": [
+        {
+            "type": "paragraph",
+            "text": "Rögleskogen används av många för promenader, löpning, ridning, svamp- och bärplockning samt naturupplevelser. Under pandemin ökade trycket på Skrylleskogen och Måryd i så stor omfattning att omdirigering av besöksflödet behövdes styras upp och behovet av närrekreation ökade lavinartat. Rögleskogen var då ett attraktivt alternativ för många att hitta ut. Området är en viktig del av närmiljöns rekreationsvärde och är utmärkt med \"riksintresse för friluftsliv\"."
+        },
+        {
+            "type": "heading",
+            "text": "Vad handlar det om?"
+        },
+        {
+            "type": "paragraph",
+            "text": "Befintliga promenadstråk löper genom det planerade täktområdet. En täkt skulle innebära begränsad tillgänglighet och förändrad landskapsbild under lång tid. Den tätortsnära och vardagsnära naturen är de boendes och kommunens största och billigaste arena för motion, rörelseglädje och välbefinnande samt ökad naturförståelse. En ny kunskapssammanställning från Naturvårdsverket visar att de som har nära till grönområden går ut oftare, är mindre stressade och håller sig friskare än de som bor längre ifrån. Med den planerade utbyggnaden kommer slingor och rekreationsområden för hundägare, förskolor, skolor, hästägare och andra att försvinna. För Sveriges befolkning och besökare är allemansrätten en förutsättning för att man ska kunna röra sig på annans mark. Därmed är också allemansrätten en förutsättning för att kunna bedriva friluftsliv. Med ytterligare en täkt och ett område som kommer att avgränsas minskar möjligheten att nyttja området enligt allemansrätten och erbjuda Lundabor och skåningar friluftsliv. "
+        },
+        {
+            "type": "warning",
+            "title": "Långsiktig påverkan",
+            "text": "Brytningstiden anges till 25–30 år, vilket innebär att rekreationsmöjligheterna i området påverkas under en hel generation."
+        },
+        {
+            "type": "list",
+            "title": "Frågor att bevaka",
+            "items": [
+                "Hur planeras behovet av närnatur och avlastning för självaste Skrylleskogen mötas?"
+            ]
+        },
+        {
+            "type": "sources",
+            "sources": [
+                {
+                    "label": "Naturvårdsverket",
+                    "url": "https://www.naturvardsverket.se/amnesomraden/friluftsliv/vardagsnara-natur/"
+                }
+            ]
+        }
+    ],
+    "status": "published",
+    "featured_image": null,
+    "sort_order": 5,
+    "created_by": null,
+    "updated_by": "6a819879000d0b697836",
+    "published_at": "2026-08-22T19:27:16.766Z",
+    "icon": "mountain",
+    "id": "6a577d11000185850e4f",
+    "created_at": "2026-07-15T12:29:05.078+00:00",
+    "updated_at": "2026-08-22T19:27:16.816+00:00"
+}

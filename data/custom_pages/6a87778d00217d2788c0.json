@@ -1,0 +1,58 @@
+{
+    "slug": "skriv-ett-yttrande-till-ncc-fram-till-den-7-september",
+    "title": "Skriv ett yttrande till NCC - till 7 september",
+    "intro": "Vill du påverka NCC:s planer på ny bergtäkt i Rögleskogen mellan Södra Sandby och Dalby? ",
+    "blocks": [
+        {
+            "type": "heading",
+            "text": "Du som känner dig berörd av NCC:s planer på ny bergtäkt kan skriva dina synpunkter i ett yttrande. ",
+            "level": 3
+        },
+        {
+            "type": "paragraph",
+            "text": "Det kan vara så enkelt som att skicka in en fråga. \nNCC behöver ta hänsyn till alla yttranden som kommer in.\nDu kan skicka in flera yttranden i olika frågor. "
+        },
+        {
+            "type": "factbox",
+            "title": "Tips:",
+            "text": "Läs igenom samrådsunderlaget från NCC och fundera på vad de inte svarar på. \nEller vad DU vill ha svar på! \nSkriv med egna ord vad du oroar dig för. "
+        },
+        {
+            "type": "button",
+            "text": "NCC Samrådsunderlag Södra Sandby",
+            "url": "https://www.ncc.se/ballast/hitta/skane/samrad-sodrasandby/"
+        },
+        {
+            "type": "paragraph",
+            "text": "Ditt yttrande mailar du till: samrad.sodrasandby@ncc.se "
+        },
+        {
+            "type": "button",
+            "text": "Skicka mig direkt till samrådsmailen!",
+            "url": "mailto:samrad.sodrasandby@ncc.se"
+        },
+        {
+            "type": "warning",
+            "title": "Tänk på: ",
+            "text": "Sweco (konsult) vill att man lämnar namn, kontaktuppgifter, adress eller fastighetsbeteckning. \n\n\"För att underlätta behandling av de synpunkter som kommer in, samt möjliggöra dialog i samrådsprocessen.\" \n\"När du väljer att lämna dina synpunkter samtycker du till behandlingen av personuppgifter.\" (Sweco)"
+        },
+        {
+            "type": "cta",
+            "title": "Skicka in ditt yttrande senast 7 september!",
+            "links": [
+                {
+                    "label": "",
+                    "url": ""
+                }
+            ]
+        }
+    ],
+    "status": "published",
+    "sort_order": 0,
+    "created_by": "6a58d6d0001c9ec1df7c",
+    "updated_by": "6a58d6d0001c9ec1df7c",
+    "published_at": "2026-08-22T14:38:33.595Z",
+    "id": "6a87778d00217d2788c0",
+    "created_at": "2026-08-20T21:54:21.661+00:00",
+    "updated_at": "2026-08-22T14:38:33.706+00:00"
+}

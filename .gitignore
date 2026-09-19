@@ -1,0 +1,38 @@
+# Hemligheter och lokal konfiguration
+.env
+.env.local
+*.local
+
+# SQLite-databasen (skapas vid installation)
+/database/*.sqlite
+/database/*.sqlite-journal
+/database/*.sqlite-wal
+/database/*.sqlite-shm
+
+# Uppladdade filer (innehåll, inte kod)
+/uploads/documents/*
+/uploads/images/*
+!/uploads/documents/.gitkeep
+!/uploads/images/.gitkeep
+
+# Revisionshistorik för JSON-innehåll
+/data/revisions/*
+!/data/revisions/.gitkeep
+
+# Lås- och temporärfiler från säker JSON-skrivning
+*.lock
+json_*
+
+# Byggartefakter och beroenden
+/dist
+/node_modules
+
+# Appwrite-export inför migrering (kan innehålla persondata)
+/import
+
+# Editor/OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.log

@@ -1,0 +1,56 @@
+{
+    "slug": "enkat-forskning",
+    "title": "Delta i forskningsenkäten",
+    "intro": "Vi vill gärna höra din åsikt! Genom att besvara en anonym enkät hjälper du forskningen och bidrar med värdefull kunskap. Enkäten tar cirka 5–10 minuter att genomföra.",
+    "blocks": [
+        {
+            "type": "heading",
+            "text": "Om undersökningen"
+        },
+        {
+            "type": "paragraph",
+            "text": "Denna enkät genomförs av forskare/studenter vid Lunds universitet.\nAlla svar behandlas anonymt och används endast i forskningssyfte."
+        },
+        {
+            "type": "factbox",
+            "title": "Kort om enkäten",
+            "text": "Tid: 5-10 minuter\nMålgrupp: Alla över 18\nAnonymitet: Ja du är alltid anonym\nArrangör: Lund universitet"
+        },
+        {
+            "type": "heading",
+            "text": "Varför är ditt deltagande viktigt? "
+        },
+        {
+            "type": "list",
+            "title": "Varje svar hjälper forskarna att:",
+            "items": [
+                "få ett mer rättvisande resultat",
+                "förstå människors erfarenheter",
+                "förbättra framtida forskning"
+            ]
+        },
+        {
+            "type": "heading",
+            "text": "Kontakt"
+        },
+        {
+            "type": "paragraph",
+            "text": "Har du frågor om undersökningen kontaktar du forskningsgruppen enligt informationen i enkäten eller via Lunds universitet."
+        },
+        {
+            "type": "resource",
+            "title": "Fyll i enkäten",
+            "text": "Vi hoppas att du vill hjälpa till att med dina anonyma svar ta fram material till vidare forskning. ",
+            "url": "https://survey.mailing.lu.se/Survey/66083",
+            "button_label": "Öppna enkäten"
+        }
+    ],
+    "status": "published",
+    "sort_order": 0,
+    "created_by": "6a577605000aa59c3a45",
+    "updated_by": "6a58d6d0001c9ec1df7c",
+    "published_at": "2026-08-04T07:13:58.542Z",
+    "id": "6a64bb1c0025e49a76f9",
+    "created_at": "2026-07-25T13:33:16.925+00:00",
+    "updated_at": "2026-08-21T22:22:10.314+00:00"
+}

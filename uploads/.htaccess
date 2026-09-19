@@ -1,0 +1,9 @@
+# Uppladdade filer körs aldrig som skript, oavsett vad de heter eller vilken
+# typ de påstår sig ha. Se root-.htaccess för varför reglerna ligger här och
+# inte i en <Directory>-block där (inte tillåtet i .htaccess-kontext).
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<FilesMatch "\.(php|phtml|php[3-8]?|phar|cgi|pl|py|sh|asp|aspx)$">
+    Require all denied
+</FilesMatch>

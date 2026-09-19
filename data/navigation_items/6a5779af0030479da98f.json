@@ -1,0 +1,11 @@
+{
+    "label": "Påverkansområden",
+    "url": "/amnen",
+    "sort_order": 8,
+    "is_active": true,
+    "parent_id": null,
+    "icon": "grid-2x2",
+    "id": "6a5779af0030479da98f",
+    "created_at": "2026-07-15T12:14:39.810+00:00",
+    "updated_at": "2026-08-21T17:24:30.443+00:00"
+}

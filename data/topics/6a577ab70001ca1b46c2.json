@@ -1,0 +1,92 @@
+{
+    "title": "Buller och vibrationer",
+    "slug": "buller-och-vibrationer",
+    "intro": "Hur påverkas närboende av buller från borrning, sprängning och krossning?",
+    "content": [
+        {
+            "type": "paragraph",
+            "text": "Ett nytt stenbrott förändrar bullermiljön och vibrationerna i landskapet. Det nya planerade stenbrottet har ett kortare avstånd till flera bostäder och byggnader."
+        },
+        {
+            "type": "heading",
+            "text": "Vad handlar det om?",
+            "level": 2
+        },
+        {
+            "type": "heading",
+            "text": "Buller",
+            "level": 3
+        },
+        {
+            "type": "paragraph",
+            "text": "En bergtäkt genererar buller från flera moment: borrning inför sprängning, själva sprängningarna, krossning av sten samt transporter. Ljudnivåerna varierar över dygnet och året. Verksamheten styrs av miljöbalken och fastställda riktvärden för ljudnivåer utomhus vid bostäder, beroende på tid på dygnet. Naturvårdsverket har riktvärden för industribuller vid bostäder. Vid en tillståndsprövning ska verksamhetsutövaren visa att riktvärdena kan hållas. Den engelska komfortstandarden (BS 6472–2:2008), tar hänsyn till ett flertal faktorer genom att ange ett intervall för vibrationsnivån och att det tillåtna värdet inom intervallet ska fastställas genom bedömning av många situationsfaktorer."
+        },
+        {
+            "type": "heading",
+            "text": "Vibrationer",
+            "level": 3
+        },
+        {
+            "type": "paragraph",
+            "text": "Vibrationer från ett stenbrott kommer oftast från sprängningar, tunga maskiner eller stenkrossar. De styrs av svenska gränsvärden (standard SS 460 48 66) för att inte skada hus eller störa de boende."
+        },
+        {
+            "type": "factbox",
+            "title": "Vanliga bullerkällor",
+            "text": "Sprängning sker vanligtvis vid fasta tider. Krossverk kan vara igång under större delen av arbetsdagen. Tunga transporter tillkommer på till- och frånfartsvägar.\nNaturvårdsverket har riktvärden för industribuller vid bostäder. "
+        },
+        {
+            "type": "list",
+            "title": "Frågor att bevaka",
+            "items": [
+                "Vilket buller kommer sprängningarna att medföra?",
+                "Vilka tider kommer verksamheten att bedrivas? Vad planeras för att reducera störningar från verksamheten?  ",
+                "Vilka bullernivåer förväntas totalt från krossning, skutknackning och transporter och hur ofta kommer dessa störningar att förekomma? ",
+                "Vilka tider på dygnet genereras  buller?",
+                "Hur ofta planeras sprängningar under ett normalår respektive under verksamhetens mest intensiva perioder?",
+                "Vilka vibrationer förväntas vid närliggande bostäder och  hur kommer dessa att övervakas? ",
+                "När kommer bullervallen kring det planerade stenbrottet att byggas upp och hur hög kommer den att bli?",
+                "Kommer sprängningar att utföras innan bullervallen är färdig i höjdled?",
+                "Hur kan NCC garantera att stenkast inte uppkommer i framtiden, särskilt  när man spränger i ytliga lägen? ",
+                "Vilka konkreta bullerskydd planeras och hur mycket beräknas de minska bullret för  närboende? ",
+                "Har en bullerutredning gjorts? och har den även inkluderat Uggleskolan och Fågelsångsförskola som ligger inom 500m verksamhetsområdet?",
+                "Var och vilka bostäder kommer att erbjudas en vibrationsmätare?"
+            ]
+        },
+        {
+            "type": "sources",
+            "sources": [
+                {
+                    "label": "Boverket",
+                    "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/detaljplan/lamplighetsbedomning/buller-vid-detaljplanering/regler-och-riktvarden-for-buller/"
+                },
+                {
+                    "label": "Svenska Institutet för Standarder",
+                    "url": "https://www.sis.se/produkter/metrologi-och-matning-fysikaliska-fenomen/vibrationer-och-stot-vibrationsmatning/ss46048662011/"
+                },
+                {
+                    "label": "Åtgärdsprogram mot buller i Lunds kommun 2024-2028",
+                    "url": "https://lund.se/download/18.7727c40519afce547033727/1770627415753/%C3%85tg%C3%A4rdsprogram%20mot%20buller%20i%20Lunds%20kommun%202024%E2%80%932028.pdf"
+                },
+                {
+                    "label": "Folkhälsomyndigheten",
+                    "url": "https://www.folkhalsomyndigheten.se/regler-och-tillsyn/tillsynsvagledning-och-stod/halsoskydd-vagledning-och-tillsyn/vagledning-om-buller-och-hoga-ljudnivaer/"
+                },
+                {
+                    "label": "Naturvårdsverket",
+                    "url": "https://www.naturvardsverket.se/amnesomraden/buller/"
+                }
+            ]
+        }
+    ],
+    "status": "published",
+    "featured_image": null,
+    "sort_order": 0,
+    "created_by": null,
+    "updated_by": "6a819879000d0b697836",
+    "published_at": "2026-08-23T19:47:03.028Z",
+    "icon": "sound",
+    "id": "6a577ab70001ca1b46c2",
+    "created_at": "2026-07-15T12:19:03.108+00:00",
+    "updated_at": "2026-08-23T19:47:03.071+00:00"
+}

@@ -1,0 +1,11 @@
+{
+    "label": "För press",
+    "url": "/press",
+    "sort_order": 11,
+    "is_active": true,
+    "parent_id": "6a5779af00349e695a56",
+    "icon": "megaphone",
+    "id": "6a5779b0000a7c08939b",
+    "created_at": "2026-07-15T12:14:40.201+00:00",
+    "updated_at": "2026-08-21T17:24:30.460+00:00"
+}
