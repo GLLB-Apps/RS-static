@@ -4,6 +4,10 @@
 > (SQLite-init, första administratören, Appwrite-import). De stegen är markerade
 > **[kommer]** och beskrivs här så att dokumentationen är komplett från början.
 
+> Stegen nedan (bygg + ladda upp manuellt) är förstagångsinstallationen.
+> Vill ni att kodändringar laddas upp automatiskt vid varje push till
+> GitHub efter det, se [DEPLOY.md](DEPLOY.md).
+
 ## 1. Krav
 
 - **PHP 8.1 eller senare**

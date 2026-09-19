@@ -107,4 +107,6 @@ Apache, testa sedan `http://localhost:8081/`.
 
 ## Installation på webbhotell
 
-Se [INSTALL.md](INSTALL.md).
+Se [INSTALL.md](INSTALL.md) — manuellt, eller [DEPLOY.md](DEPLOY.md) för
+automatisk driftsättning via GitHub Actions (push till `main` → byggs och
+laddas upp automatiskt).

@@ -1,0 +1,56 @@
+name: Driftsätt till webbhotell
+
+# Körs vid varje push till main, eller manuellt från fliken "Actions" på
+# GitHub (workflow_dispatch — praktiskt om man vill köra om utan en ny
+# commit). Se DEPLOY.md för hur hemligheterna nedan ställs in första gången —
+# utan dem gör den här filen ingenting av sig själv.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hämta koden
+        uses: actions/checkout@v4
+
+      - name: Sätt upp Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Installera beroenden
+        run: npm ci
+
+      - name: Bygg React-appen
+        run: npm run build
+
+      # Bygger en egen liten mapp med BARA kod och den färdiga sajten.
+      # data/, database/ och uploads/ (riktigt innehåll, konton, filer) finns
+      # aldrig ens i den här mappen — så nästa steg kan omöjligen röra dem,
+      # oavsett hur det är konfigurerat. install/ laddas medvetet INTE upp
+      # här heller: den är till för en enda manuell FTP-uppladdning (se
+      # INSTALL.md), inte något som ska ligga kvar nåbart och skrivas över
+      # vid varje push.
+      - name: Förbered vad som faktiskt ska laddas upp
+        run: |
+          mkdir -p deploy
+          cp -r dist/. deploy/
+          cp .htaccess deploy/.htaccess
+          cp -r server deploy/server
+
+      - name: Ladda upp via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          local-dir: deploy/
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+        # OBS: lägg ALDRIG till "dangerous-clean-slate: true" här — den
+        # raderar ALLT i server-dir oavsett vad som laddas upp, inklusive
+        # data/database/uploads om webbhotellet har dem i samma mapp.
