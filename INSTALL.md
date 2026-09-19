@@ -35,6 +35,7 @@ Annars sätts `VITE_API_BASE` före bygget.
 | `dist/*` | `public_html/` | React-appen (inkl. `index.html`) |
 | `.htaccess` | `public_html/.htaccess` | Routing: `/api` → PHP, SPA-fallback |
 | `server/` | `public_html/server/` | PHP-koden |
+| `install/` | `public_html/install/` | Webbaserad installationsguide — se steg 5–6. Radera efter installationen (guiden gör det åt dig). |
 | `data/` | **utanför** webroot om möjligt | Redaktionellt innehåll |
 | `uploads/` | `public_html/uploads/` | Bilder måste kunna serveras |
 | `database/` | **utanför** webroot om möjligt | SQLite |
@@ -51,25 +52,31 @@ chmod -R 775 data uploads database
 
 Webbservern måste kunna skriva i alla tre. `data/revisions/` skapas automatiskt.
 
-## 5. Initiera databasen
+## 5–6. Initiera databasen och skapa första administratören
 
+**Alternativ A — webbaserad guide (ingen SSH krävs):** besök
+`https://din-domän.se/install/` i webbläsaren direkt efter uppladdning. Fyra
+steg: kontrollerar PHP-version/tillägg/skrivrättigheter, valfria
+e-post-/namninsamlingsinställningar (skriver `.env`), skapar första
+administratören, och avslutas med en knapp som **raderar `install/`-mappen
+åt dig** — den ska inte ligga kvar nåbar. Vägrar köra om databasen redan har
+ett konto, av samma skäl som script-varianten nedan.
+
+**Alternativ B — kommandoraden (SSH):**
 ```bash
 php scripts/install.php
 ```
-
 Skapar `database/app.sqlite` med tabeller för användare, sessioner,
-meddelanden, vittnesmål, audit log och inloggningsförsök (`database/schema.sql`).
-Skriptet vägrar köra igen efter slutförd installation utan uttrycklig
-återställning (`--reset`, kräver att man skriver "RESET" för att bekräfta),
-så att en ominstallation inte kan skriva över befintliga konton.
-
-## 6. Skapa första administratören
-
-Ingår i `scripts/install.php`: e-post, lösenord (minst 10 tecken) och namn
-anges interaktivt (eller via miljövariablerna `INSTALL_ADMIN_EMAIL` /
+meddelanden, vittnesmål, audit log och inloggningsförsök (`database/schema.sql`),
+och skapar första administratören: e-post, lösenord (minst 10 tecken) och
+namn anges interaktivt (eller via miljövariablerna `INSTALL_ADMIN_EMAIL` /
 `INSTALL_ADMIN_PASSWORD` / `INSTALL_ADMIN_NAME` för icke-interaktiv körning).
-Lösenordet lagras med `password_hash()`. Inga standardlösenord i koden.
-Kontot får rollen `superadmin` och full intranätsåtkomst.
+
+Båda vägarna lagrar lösenordet med `password_hash()`, ingen standardadmin i
+koden, och kontot får rollen `superadmin` med full intranätsåtkomst. Båda
+vägrar köra igen efter slutförd installation utan uttrycklig återställning
+(`php scripts/install.php --reset`, kräver att man skriver "RESET" för att
+bekräfta) — så en ominstallation inte kan skriva över befintliga konton.
 
 ## 7. Ange Skrivunder-URL
 

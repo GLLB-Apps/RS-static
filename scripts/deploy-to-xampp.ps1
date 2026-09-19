@@ -34,6 +34,13 @@ Copy-Item "$src\.htaccess" "$Target\.htaccess" -Force
 if (Test-Path "$Target\server") { Remove-Item "$Target\server" -Recurse -Force }
 Copy-Item "$src\server" "$Target\server" -Recurse -Force
 
+# Installationsguiden: samma sak - alltid färsk. Testa den mot en TOM
+# database\app.sqlite (byt namn på/radera den i $Target om du vill köra
+# guiden på nytt lokalt; se dess egen "redan installerad"-spärr).
+if (Test-Path "$Target\install") { Remove-Item "$Target\install" -Recurse -Force }
+Copy-Item "$src\install" "$Target\install" -Recurse -Force
+Copy-Item "$src\.env.example" "$Target\.env.example" -Force
+
 # Data/database/uploads: copied only the first time - never touches existing
 # content in the target.
 foreach ($dir in @("data", "database", "uploads")) {
