@@ -3,19 +3,30 @@ import {
   FileText, Newspaper, Layers, MessageCircle, Image, Handshake,
   ListOrdered, Settings, Pencil, LifeBuoy, Blocks,
 } from 'lucide-react'
+import { useAuth } from '../../lib/auth'
+import { usernameFromEmail } from '../../lib/utils'
+import UserAvatar from '../../components/UserAvatar'
 
 // A simple, friendly handbook explaining how the CMS works. Static content.
 export default function AdminHandbook() {
+  const { user, displayName } = useAuth()
+
   return (
     <div className="fade-in handbook">
       <div className="admin-page-header">
         <h1>Handbok</h1>
       </div>
-      <p className="text-muted handbook-intro">
-        Välkommen! Det här är en enkel guide till hur webbplatsens innehåll hanteras. Du behöver inte
-        kunna något tekniskt – allt sker genom att fylla i fält, ladda upp bilder och klicka på Spara.
-        Använd menyn till vänster för att hitta rätt del.
-      </p>
+
+      <div className="handbook-intro-row">
+        {/* Samma figur som i kontomenyn — en neutral platshållarikon om
+            Rögleblobbar är avstängda i inställningarna, se UserAvatar. */}
+        <UserAvatar seed={user?.email ?? ''} size={64} gaze title={displayName || 'Din guide'} />
+        <p className="text-muted handbook-intro" style={{ margin: 0 }}>
+          Hej {displayName || (user?.email ? usernameFromEmail(user.email) : 'där')}! Välkommen! Det här är en enkel guide
+          till hur webbplatsens innehåll hanteras. Du behöver inte kunna något tekniskt – allt sker genom
+          att fylla i fält, ladda upp bilder och klicka på Spara. Använd menyn till vänster för att hitta rätt del.
+        </p>
+      </div>
 
       <div className="handbook-grid">
         <section className="card handbook-card">
@@ -67,6 +78,9 @@ export default function AdminHandbook() {
           <h2><MessageCircle size={20} /> Kommunikation</h2>
           <ul>
             <li><strong>Vittnesmål</strong> – granska inskickade berättelser och godkänn/avvisa dem.</li>
+            <li><strong>FAQ</strong> – frågor besökare skickat in via FAQ-sidan hamnar överst som
+              <strong> Obesvarade frågor</strong>, både här och under <Link to="/admin/utkast">Utkast</Link>.
+              Skriv ett svar och publicera.</li>
             <li><strong>Meddelanden</strong> – meddelanden från kontaktformuläret.</li>
             <li><strong>Kontakter</strong> – kontaktpersoner som visas på kontaktsidan.</li>
             <li><strong>Sponsorer</strong> – logotyper som rullar i tickern på startsidan. Ordningen styrs med ↑/↓ (ett steg ned = ett steg åt höger).</li>
@@ -86,8 +100,11 @@ export default function AdminHandbook() {
           <h2><Settings size={20} /> Webbplats &amp; inställningar</h2>
           <ul>
             <li><strong>Interna dokument</strong> – en intern dokumentbank som aldrig syns publikt.</li>
-            <li><strong>Inställningar</strong> – webbplatsens namn, logga, hero, kontaktuppgifter m.m.</li>
-            <li><strong>Administratörer</strong> – tilldela roller och (som superadmin) byta lösenord åt andra användare.</li>
+            <li><strong>Inställningar</strong> – webbplatsens namn, logga, hero, kontaktuppgifter m.m. Här styr du
+              också <strong>Rögleblobbar</strong>: de interaktiva figurerna kan stängas av helt, visas bara i
+              adminpanelen/intranätet, eller överallt (även publikt).</li>
+            <li><strong>Administratörer</strong> – tilldela roller och (som superadmin) byta lösenord åt andra
+              användare, direkt i en dialogruta.</li>
           </ul>
         </section>
 
