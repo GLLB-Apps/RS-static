@@ -6,7 +6,7 @@ import { useAuth } from '../../lib/auth'
 import { useToast } from '../../lib/toast'
 import { slugify } from '../../lib/utils'
 import TapEditor from '../../components/admin/TapEditor'
-import BlockAssistant from '../../components/admin/BlockAssistant'
+import ContentStats from '../../components/admin/ContentStats'
 import IconPicker from '../../components/admin/IconPicker'
 import { topicTemplateByKey } from '../../lib/topicTemplates'
 
@@ -183,7 +183,7 @@ export default function AdminTopicEdit() {
             </div>
           </div>
 
-          <BlockAssistant onInsert={blocks => setContent(prev => [...prev, ...blocks])} />
+          <ContentStats blocks={content} />
         </aside>
       </div>
     </div>

@@ -5,7 +5,7 @@ import { supabase } from '../../lib/supabase'
 import { useToast } from '../../lib/toast'
 import { pageBySlug } from '../../lib/pages'
 import TapEditor from '../../components/admin/TapEditor'
-import BlockAssistant from '../../components/admin/BlockAssistant'
+import ContentStats from '../../components/admin/ContentStats'
 
 export default function AdminPageEdit() {
   const { slug } = useParams<{ slug: string }>()
@@ -123,7 +123,7 @@ export default function AdminPageEdit() {
             </p>
           </div>
 
-          <BlockAssistant onInsert={newBlocks => setBlocks(prev => [...prev, ...newBlocks])} />
+          <ContentStats blocks={blocks} />
         </aside>
       </div>
     </div>

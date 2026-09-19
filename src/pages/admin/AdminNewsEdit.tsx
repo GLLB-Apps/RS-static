@@ -7,7 +7,7 @@ import { useToast } from '../../lib/toast'
 import { slugify } from '../../lib/utils'
 import { DEFAULT_NEWS_CATEGORY, NEWS_CATEGORIES, newsCategory, parseTags, postTags } from '../../lib/newsCategories'
 import TapEditor from '../../components/admin/TapEditor'
-import BlockAssistant from '../../components/admin/BlockAssistant'
+import ContentStats from '../../components/admin/ContentStats'
 
 // <input type="date"> vill ha YYYY-MM-DD; databasen sparar hela tidsstämpeln.
 const toDateInput = (iso: string | null) => (iso ? new Date(iso).toISOString().slice(0, 10) : '')
@@ -251,7 +251,7 @@ export default function AdminNewsEdit() {
             </div>
           </div>
 
-          <BlockAssistant onInsert={blocks => setContent(prev => [...prev, ...blocks])} />
+          <ContentStats blocks={content} />
         </aside>
       </div>
     </div>

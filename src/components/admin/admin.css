@@ -1063,44 +1063,26 @@
 }
 .editor-panel-actions .btn { width: 100%; }
 
-/* Skrivhjälpen (markdown → block, ingen AI) längst ned i redigerarens sidofält */
-.block-assistant-trigger {
-  width: 100%;
+/* Innehållsstatistik längst ned i redigerarens sidofält */
+.content-stats-head {
   display: flex;
-  flex-direction: column;
   align-items: center;
   gap: var(--space-3);
-  background: var(--bg-card);
-  border: 1px dashed var(--primary-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5) var(--space-4);
-  cursor: pointer;
-  transition: border-color var(--transition), background var(--transition);
+  margin-bottom: var(--space-3);
 }
-.block-assistant-trigger:hover { border-color: var(--primary); background: var(--primary-bg); }
-.block-assistant-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text);
-  text-align: center;
+.content-stats-numbers { display: flex; gap: var(--space-4); }
+.content-stats-numbers > div { display: flex; flex-direction: column; align-items: center; }
+.content-stats-numbers strong {
+  font-size: 1.3rem;
+  font-family: var(--font-heading);
+  color: var(--text-heading);
+  line-height: 1.1;
 }
-.block-assistant-panel {
-  margin-top: var(--space-3);
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-.block-assistant-panel-head { display: flex; align-items: center; justify-content: space-between; }
-.block-assistant-panel-head h3 { margin: 0; font-size: 0.95rem; }
-.block-assistant-panel code {
-  background: var(--bg-alt);
-  border-radius: var(--radius-sm);
-  padding: 1px 5px;
-  font-size: 0.85em;
+.content-stats-numbers span {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .editor-image-preview {

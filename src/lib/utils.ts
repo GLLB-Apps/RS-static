@@ -258,6 +258,25 @@ export function firstContentImage(blocks: ContentBlock[] | null | undefined): st
   return blocks?.find(b => b.type === 'image' && b.image_url)?.image_url ?? null
 }
 
+export interface ContentStats {
+  words: number
+  paragraphs: number
+  blocks: number
+  /** Läshastighet ~200 ord/minut, avrundat uppåt — aldrig 0 så länge något är skrivet. */
+  readingMinutes: number
+}
+
+/** Ord/stycken/lästid över hela innehållet, för redigerarens sidofält. */
+export function contentStats(blocks: ContentBlock[]): ContentStats {
+  let words = 0
+  for (const b of blocks) {
+    const texts = [b.text, b.title, ...(b.items ?? [])].filter((t): t is string => !!t?.trim())
+    for (const t of texts) words += (t.trim().match(/\S+/g) ?? []).length
+  }
+  const paragraphs = blocks.filter(b => b.type === 'paragraph' && b.text?.trim()).length
+  return { words, paragraphs, blocks: blocks.length, readingMinutes: words > 0 ? Math.max(1, Math.round(words / 200)) : 0 }
+}
+
 export function truncate(text: string, maxLen: number): string {
   if (text.length <= maxLen) return text
   return text.substring(0, maxLen).replace(/\s+\S*$/, '') + '…'
