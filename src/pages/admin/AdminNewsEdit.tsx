@@ -7,6 +7,7 @@ import { useToast } from '../../lib/toast'
 import { slugify } from '../../lib/utils'
 import { DEFAULT_NEWS_CATEGORY, NEWS_CATEGORIES, newsCategory, parseTags, postTags } from '../../lib/newsCategories'
 import TapEditor from '../../components/admin/TapEditor'
+import AiBlockAssistant from '../../components/admin/AiBlockAssistant'
 
 // <input type="date"> vill ha YYYY-MM-DD; databasen sparar hela tidsstämpeln.
 const toDateInput = (iso: string | null) => (iso ? new Date(iso).toISOString().slice(0, 10) : '')
@@ -249,6 +250,8 @@ export default function AdminNewsEdit() {
               <input id="image_caption" className="form-input" type="text" value={form.image_caption} onChange={e => update('image_caption', e.target.value)} />
             </div>
           </div>
+
+          <AiBlockAssistant title={form.title} onInsert={blocks => setContent(prev => [...prev, ...blocks])} />
         </aside>
       </div>
     </div>

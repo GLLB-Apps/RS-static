@@ -6,6 +6,7 @@ import { useAuth } from '../../lib/auth'
 import { useToast } from '../../lib/toast'
 import { RESERVED_SLUGS, slugify } from '../../lib/pages'
 import TapEditor from '../../components/admin/TapEditor'
+import AiBlockAssistant from '../../components/admin/AiBlockAssistant'
 
 export default function AdminCustomPageEdit() {
   const { id } = useParams<{ id: string }>()
@@ -131,6 +132,8 @@ export default function AdminCustomPageEdit() {
               <a href={`/${slugify(slug)}`} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm">Visa sidan →</a>
             )}
           </div>
+
+          <AiBlockAssistant title={title} onInsert={newBlocks => setBlocks(prev => [...prev, ...newBlocks])} />
         </aside>
       </div>
     </div>

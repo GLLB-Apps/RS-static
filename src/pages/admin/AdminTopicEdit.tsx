@@ -6,6 +6,7 @@ import { useAuth } from '../../lib/auth'
 import { useToast } from '../../lib/toast'
 import { slugify } from '../../lib/utils'
 import TapEditor from '../../components/admin/TapEditor'
+import AiBlockAssistant from '../../components/admin/AiBlockAssistant'
 import IconPicker from '../../components/admin/IconPicker'
 import { topicTemplateByKey } from '../../lib/topicTemplates'
 
@@ -181,6 +182,8 @@ export default function AdminTopicEdit() {
               <input id="sortOrder" className="form-input" type="number" value={sortOrder} onChange={e => setSortOrder(Number(e.target.value))} />
             </div>
           </div>
+
+          <AiBlockAssistant title={title} onInsert={blocks => setContent(prev => [...prev, ...blocks])} />
         </aside>
       </div>
     </div>

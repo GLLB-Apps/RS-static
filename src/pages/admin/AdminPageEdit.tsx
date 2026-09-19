@@ -5,6 +5,7 @@ import { supabase } from '../../lib/supabase'
 import { useToast } from '../../lib/toast'
 import { pageBySlug } from '../../lib/pages'
 import TapEditor from '../../components/admin/TapEditor'
+import AiBlockAssistant from '../../components/admin/AiBlockAssistant'
 
 export default function AdminPageEdit() {
   const { slug } = useParams<{ slug: string }>()
@@ -121,6 +122,8 @@ export default function AdminPageEdit() {
               Hoppa hit och tillbaka för att redigera både text och innehåll.
             </p>
           </div>
+
+          <AiBlockAssistant title={title} onInsert={newBlocks => setBlocks(prev => [...prev, ...newBlocks])} />
         </aside>
       </div>
     </div>
