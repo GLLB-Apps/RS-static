@@ -37,8 +37,6 @@ interface RequestOptions {
   /** JSON-body. Utelämnas för GET. */
   body?: unknown
   signal?: AbortSignal
-  /** Override av standardtimeouten (15s) — t.ex. AI-anrop som tar längre tid. */
-  timeoutMs?: number
 }
 
 export async function apiFetch<T>(path: string, options: RequestOptions = {}): Promise<T> {
@@ -47,7 +45,7 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
 
   // Egen timeout som även avbryter om anroparen inte skickat en signal.
   const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), options.timeoutMs ?? TIMEOUT_MS)
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS)
   if (options.signal) {
     options.signal.addEventListener('abort', () => controller.abort(), { once: true })
   }

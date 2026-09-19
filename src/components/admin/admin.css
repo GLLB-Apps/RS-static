@@ -1063,8 +1063,8 @@
 }
 .editor-panel-actions .btn { width: 100%; }
 
-/* AI-skrivhjälpen längst ned i redigerarens sidofält */
-.ai-assistant-trigger {
+/* Skrivhjälpen (markdown → block, ingen AI) längst ned i redigerarens sidofält */
+.block-assistant-trigger {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -1077,14 +1077,14 @@
   cursor: pointer;
   transition: border-color var(--transition), background var(--transition);
 }
-.ai-assistant-trigger:hover { border-color: var(--primary); background: var(--primary-bg); }
-.ai-assistant-label {
+.block-assistant-trigger:hover { border-color: var(--primary); background: var(--primary-bg); }
+.block-assistant-label {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--text);
   text-align: center;
 }
-.ai-assistant-panel {
+.block-assistant-panel {
   margin-top: var(--space-3);
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -1094,8 +1094,14 @@
   flex-direction: column;
   gap: var(--space-3);
 }
-.ai-assistant-panel-head { display: flex; align-items: center; justify-content: space-between; }
-.ai-assistant-panel-head h3 { margin: 0; font-size: 0.95rem; }
+.block-assistant-panel-head { display: flex; align-items: center; justify-content: space-between; }
+.block-assistant-panel-head h3 { margin: 0; font-size: 0.95rem; }
+.block-assistant-panel code {
+  background: var(--bg-alt);
+  border-radius: var(--radius-sm);
+  padding: 1px 5px;
+  font-size: 0.85em;
+}
 
 .editor-image-preview {
   margin-top: var(--space-2);

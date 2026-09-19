@@ -6,7 +6,7 @@ import { useAuth } from '../../lib/auth'
 import { useToast } from '../../lib/toast'
 import { RESERVED_SLUGS, slugify } from '../../lib/pages'
 import TapEditor from '../../components/admin/TapEditor'
-import AiBlockAssistant from '../../components/admin/AiBlockAssistant'
+import BlockAssistant from '../../components/admin/BlockAssistant'
 
 export default function AdminCustomPageEdit() {
   const { id } = useParams<{ id: string }>()
@@ -133,7 +133,7 @@ export default function AdminCustomPageEdit() {
             )}
           </div>
 
-          <AiBlockAssistant title={title} onInsert={newBlocks => setBlocks(prev => [...prev, ...newBlocks])} />
+          <BlockAssistant onInsert={newBlocks => setBlocks(prev => [...prev, ...newBlocks])} />
         </aside>
       </div>
     </div>

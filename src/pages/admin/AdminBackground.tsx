@@ -4,7 +4,7 @@ import type { SiteSettings, ContentBlock } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../../lib/toast'
 import TapEditor from '../../components/admin/TapEditor'
-import AiBlockAssistant from '../../components/admin/AiBlockAssistant'
+import BlockAssistant from '../../components/admin/BlockAssistant'
 
 export default function AdminBackground() {
   const [settings, setSettings] = useState<SiteSettings | null>(null)
@@ -68,7 +68,7 @@ export default function AdminBackground() {
           <TapEditor blocks={blocks} onChange={setBlocks} />
         </div>
         <div style={{ maxWidth: 320 }}>
-          <AiBlockAssistant onInsert={newBlocks => setBlocks(prev => [...prev, ...newBlocks])} />
+          <BlockAssistant onInsert={newBlocks => setBlocks(prev => [...prev, ...newBlocks])} />
         </div>
         <div className="admin-form-actions">
           <button className="btn btn-primary" onClick={save} disabled={saving}>
