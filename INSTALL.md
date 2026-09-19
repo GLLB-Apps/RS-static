@@ -35,7 +35,7 @@ Annars sätts `VITE_API_BASE` före bygget.
 | `dist/*` | `public_html/` | React-appen (inkl. `index.html`) |
 | `.htaccess` | `public_html/.htaccess` | Routing: `/api` → PHP, SPA-fallback |
 | `server/` | `public_html/server/` | PHP-koden |
-| `install/` | `public_html/install/` | Webbaserad installationsguide — se steg 5–6. Radera efter installationen (guiden gör det åt dig). |
+| `install/` | `public_html/install/` | Webbaserad installationsguide (`index.php`) och migreringskontroll (`migrate.php`) — se steg 5–6. Radera efter installationen (knappen där gör det åt dig). |
 | `data/` | **utanför** webroot om möjligt | Redaktionellt innehåll |
 | `uploads/` | `public_html/uploads/` | Bilder måste kunna serveras |
 | `database/` | **utanför** webroot om möjligt | SQLite |
@@ -54,7 +54,17 @@ Webbservern måste kunna skriva i alla tre. `data/revisions/` skapas automatiskt
 
 ## 5–6. Initiera databasen och skapa första administratören
 
-**Alternativ A — webbaserad guide (ingen SSH krävs):** besök
+> **Har ni redan ett färdigt system lokalt** — riktigt innehåll i `data/`, ett
+> riktigt `database/app.sqlite` med konton — och bara ska flytta det till
+> servern? Då gäller inget av alternativen nedan. Ladda upp era **egna,
+> ifyllda** `data/`, `database/` och `uploads/` i stället för tomma mappar,
+> och besök `https://din-domän.se/install/migrate.php`: den skapar inget
+> nytt konto, bara kontrollerar att allt kom med (räknar konton/filer),
+> försöker rätta skrivrättigheter, och säkerställer att `.env` har
+> `APP_ENV=production` innan besökare når sajten. `install/index.php`
+> vägrar köra i det här läget ändå (databasen har redan konton).
+
+**Alternativ A — webbaserad guide (ingen SSH krävs), för ett HELT TOMT konto:** besök
 `https://din-domän.se/install/` i webbläsaren direkt efter uppladdning. Fyra
 steg: kontrollerar PHP-version/tillägg/skrivrättigheter, valfria
 e-post-/namninsamlingsinställningar (skriver `.env`), skapar första
