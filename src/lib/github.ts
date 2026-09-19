@@ -7,7 +7,7 @@
 // import. Blir repot privat igen slutar det här att fungera (404) och då krävs
 // en server-side-hämtning med GITHUB_TOKEN i stället.
 
-export const GITHUB_REPO = 'GLLB-Apps/NCC-Draft-RS'
+export const GITHUB_REPO = 'GLLB-Apps/RS-static'
 export const GITHUB_BRANCH = 'main'
 
 export interface GitHubCommit {
