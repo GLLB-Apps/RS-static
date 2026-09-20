@@ -4,10 +4,10 @@ import { Blobatar } from '@blobatar/react'
 import type { BlobatarOptions } from 'blobatar'
 import { useGaze } from '@blobatar/react/gaze'
 import { sleepy } from 'blobatar/expression'
-import { User } from 'lucide-react'
+import { Eye, EyeOff, User } from 'lucide-react'
 import { caretAt } from '../lib/caretGaze'
 import { useBlobAvatarsEnabled } from '../lib/blobSettings'
-import { hueForSeed } from '../lib/blobPalette'
+import { hueForSeed, NATURE_SHAPES } from '../lib/blobPalette'
 import 'blobatar/motion.css'
 import 'blobatar/gaze.css'
 
@@ -88,6 +88,7 @@ export default function PasswordField({
           size={size}
           background="circle"
           hue={blobatar?.hue ?? hueForSeed(name)}
+          traits={blobatar?.traits ?? { shape: NATURE_SHAPES }}
           animate="always"
           expression={shown ? sleepy : blobatar?.expression}
         />
@@ -129,10 +130,14 @@ export default function PasswordField({
             tabIndex={-1}
             aria-pressed={shown}
             aria-label={shown ? 'Dölj lösenord' : 'Visa lösenord'}
+            title={shown ? 'Dölj lösenord' : 'Visa lösenord'}
             onClick={() => { setShown(s => !s); input.current?.focus() }}
             className="blobatar-password-field-toggle"
           >
-            {shown ? 'Dölj' : 'Visa'}
+            {/* Ögats öppna/stängda tillstånd speglar blobataren bredvid: öppet
+                när den följer insättningspunkten, kluvet (EyeOff) när den
+                tittar bort och lösenordet syns i klartext. */}
+            {shown ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
           </button>
         </div>
         <p className="form-hint" aria-live="polite">

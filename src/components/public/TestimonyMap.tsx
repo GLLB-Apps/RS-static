@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css'
 import type { Testimony, MapLocation, LatLngTuple } from '../../lib/types'
 import { MAP_FIT_PADDING } from '../../lib/utils'
 import { useBlobAvatarsEnabled } from '../../lib/blobSettings'
-import { hueForSeed } from '../../lib/blobPalette'
+import { hueForSeed, NATURE_SHAPES } from '../../lib/blobPalette'
 
 /**
  * Markören som en cirkulär blob — samma figur som syns i listan, kortet och
@@ -18,7 +18,7 @@ function testimonyMarkerHtml(seed: string, size: number, enabled: boolean): stri
   if (!enabled) {
     return `<div style="width:${size}px;height:${size}px;border-radius:50%;background:#2d5a3d;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)"></div>`
   }
-  const svg = blobatar(seed, { background: 'circle', size, hue: hueForSeed(seed) })
+  const svg = blobatar(seed, { background: 'circle', size, hue: hueForSeed(seed), traits: { shape: NATURE_SHAPES } })
   return `<div style="width:${size}px;height:${size}px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4);overflow:hidden;">${svg}</div>`
 }
 

@@ -6,7 +6,7 @@ import type { Expression } from 'blobatar/expression'
 import { User } from 'lucide-react'
 import { caretAt } from '../lib/caretGaze'
 import { useBlobAvatarsEnabled } from '../lib/blobSettings'
-import { hueForSeed } from '../lib/blobPalette'
+import { hueForSeed, NATURE_SHAPES } from '../lib/blobPalette'
 import 'blobatar/motion.css'
 import 'blobatar/gaze.css'
 
@@ -119,6 +119,7 @@ export default function UserAvatar({
       size={size}
       background="circle"
       hue={hueForSeed(name)}
+      traits={{ shape: NATURE_SHAPES }}
       animate={active || expression ? 'always' : animate}
       expression={expression}
       title={title}

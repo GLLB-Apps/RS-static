@@ -408,19 +408,21 @@
 .blobatar-password-field-toggle {
   position: absolute;
   top: 50%;
-  right: var(--space-3);
+  right: var(--space-2);
   transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
   background: none;
   border: none;
+  border-radius: 6px;
   padding: 0;
-  font-size: 0.78rem;
-  font-weight: 600;
   color: var(--text-muted);
-  text-decoration: underline;
-  text-underline-offset: 3px;
   cursor: pointer;
 }
-.blobatar-password-field-toggle:hover { color: var(--text); }
+.blobatar-password-field-toggle:hover { color: var(--text); background: var(--bg-alt); }
 
 /* Sponsors admin */
 .sponsor-row-order { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
