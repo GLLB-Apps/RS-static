@@ -24,6 +24,7 @@ export default function UserAvatar({
   animate,
   gaze,
   caretOf,
+  revealed,
   expression,
   className,
   style,
@@ -41,6 +42,13 @@ export default function UserAvatar({
    * inloggningens lösenordsfält, där en hel PasswordField är överkurs.
    */
   caretOf?: RefObject<HTMLInputElement | null>
+  /**
+   * Med `caretOf`: lösenordet visas i klartext just nu, så figuren ska INTE
+   * titta på vad som skrivs — blicken går till vila i stället för att följa
+   * insättningspunkten. Samma idé som PasswordField.tsx, fast för en avatar
+   * kopplad till ett fält den inte själv äger.
+   */
+  revealed?: boolean
   /** En låst pose, t.ex. `thinking` från `blobatar/expression`. Tvingar fram animate="always" (posen morphar annars inte fram). */
   expression?: Expression
   className?: string
@@ -66,6 +74,7 @@ export default function UserAvatar({
     const el = caretOf?.current
     if (!el) return
     const aim = () => {
+      if (revealed) { lookAt('rest'); return }
       if (document.activeElement === el) {
         const at = caretAt(el)
         if (at) { lookAt(at); return }
@@ -91,7 +100,7 @@ export default function UserAvatar({
       window.removeEventListener('scroll', aim, { capture: true })
       window.removeEventListener('resize', aim)
     }
-  }, [caretOf, lookAt])
+  }, [caretOf, revealed, lookAt])
 
   // Avstängt i inställningarna för den här delen av sajten: en neutral,
   // icke-personifierad platshållare i stället för blobben.

@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { apiFetch, ApiError } from '../../api/client'
 import { useToast } from '../../lib/toast'
 import UserAvatar from '../../components/UserAvatar'
-import { thinking } from 'blobatar/expression'
+import { thinking, sleepy } from 'blobatar/expression'
+import { Eye, EyeOff } from 'lucide-react'
 
 // Sista steget i "glömt lösenord"-flödet — nås via länken som mejlas från
 // AdminLogin.tsx (forgot-läget). Token-parametern kommer från serverns
@@ -18,6 +19,9 @@ export default function AdminResetPassword() {
   const [confirm, setConfirm] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
+  const [shown, setShown] = useState(false)
+  const [confirmShown, setConfirmShown] = useState(false)
+  const passwordRef = useRef<HTMLInputElement>(null)
 
   if (token === '') {
     return (
@@ -76,21 +80,50 @@ export default function AdminResetPassword() {
               <p className="admin-login-subtitle">Länken gäller i 30 minuter och kan bara användas en gång.</p>
               <form onSubmit={handleSubmit}>
                 <div className="admin-login-avatar-preview">
-                  <UserAvatar seed={token} size={72} expression={submitting ? thinking : undefined} title="Rögleblobb" />
+                  <UserAvatar
+                    seed={token} size={72}
+                    caretOf={passwordRef} revealed={shown}
+                    expression={shown ? sleepy : submitting ? thinking : undefined}
+                    title={shown ? 'Tittar bort — lösenordet syns i klartext' : 'Rögleblobb'}
+                  />
                 </div>
                 <div className="form-group">
                   <label className="form-label" htmlFor="password">Nytt lösenord (minst 8 tecken)</label>
-                  <input
-                    id="password" className="form-input" type="password" autoComplete="new-password"
-                    minLength={8} value={password} onChange={e => setPassword(e.target.value)} required
-                  />
+                  <div className="blobatar-password-field-input-wrap">
+                    <input
+                      ref={passwordRef} id="password" className="form-input"
+                      type={shown ? 'text' : 'password'} autoComplete="new-password"
+                      minLength={8} value={password} onChange={e => setPassword(e.target.value)} required
+                    />
+                    <button
+                      type="button" tabIndex={-1}
+                      aria-pressed={shown} aria-label={shown ? 'Dölj lösenord' : 'Visa lösenord'}
+                      title={shown ? 'Dölj lösenord' : 'Visa lösenord'}
+                      onClick={() => { setShown(s => !s); passwordRef.current?.focus() }}
+                      className="blobatar-password-field-toggle"
+                    >
+                      {shown ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+                    </button>
+                  </div>
                 </div>
                 <div className="form-group">
                   <label className="form-label" htmlFor="confirm">Upprepa lösenordet</label>
-                  <input
-                    id="confirm" className="form-input" type="password" autoComplete="new-password"
-                    minLength={8} value={confirm} onChange={e => setConfirm(e.target.value)} required
-                  />
+                  <div className="blobatar-password-field-input-wrap">
+                    <input
+                      id="confirm" className="form-input"
+                      type={confirmShown ? 'text' : 'password'} autoComplete="new-password"
+                      minLength={8} value={confirm} onChange={e => setConfirm(e.target.value)} required
+                    />
+                    <button
+                      type="button" tabIndex={-1}
+                      aria-pressed={confirmShown} aria-label={confirmShown ? 'Dölj lösenord' : 'Visa lösenord'}
+                      title={confirmShown ? 'Dölj lösenord' : 'Visa lösenord'}
+                      onClick={() => setConfirmShown(s => !s)}
+                      className="blobatar-password-field-toggle"
+                    >
+                      {confirmShown ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+                    </button>
+                  </div>
                 </div>
                 <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 'var(--space-3)' }} disabled={submitting}>
                   {submitting ? 'Sparar…' : 'Sätt nytt lösenord'}

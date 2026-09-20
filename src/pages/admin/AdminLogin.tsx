@@ -6,7 +6,8 @@ import { useAuth } from '../../lib/auth'
 import { useToast } from '../../lib/toast'
 import MobileAdminNotice from '../../components/admin/MobileAdminNotice'
 import UserAvatar from '../../components/UserAvatar'
-import { thinking } from 'blobatar/expression'
+import { thinking, sleepy } from 'blobatar/expression'
+import { Eye, EyeOff } from 'lucide-react'
 
 // Presentationen är obligatorisk vid registrering: den som tilldelar behörighet
 // ska veta vem personen är innan de släpps in. Minimilängden hindrar "hej".
@@ -35,6 +36,8 @@ export default function AdminLogin() {
   const [submitting, setSubmitting] = useState(false)
   const [signupDone, setSignupDone] = useState(false)
   const [forgotSent, setForgotSent] = useState(false)
+  const [loginShown, setLoginShown] = useState(false)
+  const [signupShown, setSignupShown] = useState(false)
   const loginPasswordRef = useRef<HTMLInputElement>(null)
 
   if (loading) {
@@ -177,8 +180,9 @@ export default function AdminLogin() {
                       seed={email}
                       size={88}
                       caretOf={loginPasswordRef}
-                      expression={submitting ? thinking : undefined}
-                      title={submitting ? 'Loggar in…' : 'Din Rögleblobb'}
+                      revealed={loginShown}
+                      expression={loginShown ? sleepy : submitting ? thinking : undefined}
+                      title={submitting ? 'Loggar in…' : loginShown ? 'Tittar bort — lösenordet syns i klartext' : 'Din Rögleblobb'}
                     />
                   </div>
                   <div className="form-group">
@@ -187,7 +191,22 @@ export default function AdminLogin() {
                   </div>
                   <div className="form-group">
                     <label className="form-label" htmlFor="password">Lösenord</label>
-                    <input ref={loginPasswordRef} id="password" className="form-input" type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required />
+                    <div className="blobatar-password-field-input-wrap">
+                      <input
+                        ref={loginPasswordRef} id="password" className="form-input"
+                        type={loginShown ? 'text' : 'password'} autoComplete="current-password"
+                        value={password} onChange={e => setPassword(e.target.value)} required
+                      />
+                      <button
+                        type="button" tabIndex={-1}
+                        aria-pressed={loginShown} aria-label={loginShown ? 'Dölj lösenord' : 'Visa lösenord'}
+                        title={loginShown ? 'Dölj lösenord' : 'Visa lösenord'}
+                        onClick={() => { setLoginShown(s => !s); loginPasswordRef.current?.focus() }}
+                        className="blobatar-password-field-toggle"
+                      >
+                        {loginShown ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+                      </button>
+                    </div>
                   </div>
                   <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 'var(--space-3)' }} disabled={submitting}>
                     {submitting ? 'Loggar in…' : 'Logga in'}
@@ -252,7 +271,22 @@ export default function AdminLogin() {
                   </div>
                   <div className="form-group">
                     <label className="form-label" htmlFor="password">Lösenord (minst 8 tecken)</label>
-                    <input id="password" className="form-input" type="password" autoComplete="new-password" minLength={8} value={password} onChange={e => setPassword(e.target.value)} required />
+                    <div className="blobatar-password-field-input-wrap">
+                      <input
+                        id="password" className="form-input"
+                        type={signupShown ? 'text' : 'password'} autoComplete="new-password" minLength={8}
+                        value={password} onChange={e => setPassword(e.target.value)} required
+                      />
+                      <button
+                        type="button" tabIndex={-1}
+                        aria-pressed={signupShown} aria-label={signupShown ? 'Dölj lösenord' : 'Visa lösenord'}
+                        title={signupShown ? 'Dölj lösenord' : 'Visa lösenord'}
+                        onClick={() => setSignupShown(s => !s)}
+                        className="blobatar-password-field-toggle"
+                      >
+                        {signupShown ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+                      </button>
+                    </div>
                   </div>
                   <div className="form-group">
                     <label className="form-label" htmlFor="intro">Presentera dig</label>
