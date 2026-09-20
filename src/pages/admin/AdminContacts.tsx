@@ -4,6 +4,7 @@ import type { Contact } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../../lib/toast'
 import { useConfirm } from '../../lib/confirm'
+import UserAvatar from '../../components/UserAvatar'
 
 export default function AdminContacts() {
   const [contacts, setContacts] = useState<Contact[]>([])
@@ -70,7 +71,10 @@ export default function AdminContacts() {
       {editing && (
         <div className="card" style={{ marginBottom: 'var(--space-5)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-3)' }}>
-            <h3>{editing.id ? 'Redigera kontakt' : 'Ny kontakt'}</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+              <UserAvatar seed={editing.email || editing.name} size={36} gaze style={{ flexShrink: 0 }} />
+              <h3 style={{ margin: 0 }}>{editing.id ? 'Redigera kontakt' : 'Ny kontakt'}</h3>
+            </div>
             <button className="btn btn-ghost btn-sm" onClick={() => setEditing(null)}>Stäng</button>
           </div>
           <div className="form-group">
@@ -105,6 +109,7 @@ export default function AdminContacts() {
         <div className="admin-list">
           {contacts.map(c => (
             <div key={c.id} className="admin-list-item">
+              <UserAvatar seed={c.email || c.name} size={36} style={{ flexShrink: 0 }} />
               <div className="admin-list-item-info">
                 <div className="admin-list-item-title">{c.name}</div>
                 <div className="admin-list-item-meta">
