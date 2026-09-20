@@ -32,6 +32,7 @@ const CustomPage = lazy(() => import('./pages/public/CustomPage'))
 
 // Admin pages — lazy
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
+const AdminResetPassword = lazy(() => import('./pages/admin/AdminResetPassword'))
 const AdminGuard = lazy(() => import('./pages/admin/AdminGuard'))
 const AdminOverview = lazy(() => import('./pages/admin/AdminOverview'))
 const AdminDrafts = lazy(() => import('./pages/admin/AdminDrafts'))
@@ -126,6 +127,7 @@ export default function App() {
 
               {/* Admin routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/aterstall-losenord" element={<AdminResetPassword />} />
               <Route path="/admin" element={<AdminGuard />}>
                 <Route index element={<AdminOverview />} />
                 <Route path="utkast" element={<AdminDrafts />} />

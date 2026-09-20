@@ -63,4 +63,7 @@ return [
     // på webbhotellets domännamn, vilket sällan är rätt permanent lösning.
     'mail_from_address' => env_str('MAIL_FROM_ADDRESS', 'no-reply@' . ($_SERVER['HTTP_HOST'] ?? 'localhost')),
     'mail_from_name'    => env_str('MAIL_FROM_NAME', ''),
+    // Basadress för länkar i utskickade mejl (lösenordsåterställning).
+    // Härleds annars från requesten, precis som mail_from_address ovan.
+    'site_url' => env_str('SITE_URL', (($_SERVER['HTTPS'] ?? '') !== '' ? 'https://' : 'http://') . ($_SERVER['HTTP_HOST'] ?? 'localhost')),
 ];

@@ -15,6 +15,8 @@ final class Auth
     private const SESSION_TTL_DAYS = 30;
     private const MAX_ATTEMPTS = 5;
     private const ATTEMPT_WINDOW_MIN = 15;
+    private const RESET_TTL_MIN = 30;
+    private const RESET_MAX_PER_WINDOW = 3;
 
     private ?array $user = null;
     private ?array $session = null;
@@ -160,6 +162,92 @@ final class Auth
             'u' => (new DateTimeImmutable())->format(DATE_ATOM), 'id' => $id,
         ]);
         return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * Begär en självbetjänad lösenordsåterställning. Avslöjar aldrig om
+     * kontot finns — anroparen (PasswordResetController) svarar alltid
+     * likadant oavsett vad som returneras här. Returnerar null om kontot
+     * saknas ELLER om för många länkar redan begärts nyligen (samma svar,
+     * ingen ny token skapas — enkelt skydd mot att mejlbomba ett konto).
+     * @return array{token:string,displayName:string}|null
+     */
+    public function requestPasswordReset(string $email): ?array
+    {
+        $email = strtolower(trim($email));
+        $now = new DateTimeImmutable();
+
+        // Opportunistisk städning — ingen cron i det här projektet, så gamla
+        // utgångna/förbrukade rader rensas i förbigående här i stället.
+        $this->db->prepare("DELETE FROM password_resets WHERE expires_at < :cutoff")
+            ->execute(['cutoff' => $now->modify('-1 day')->format(DATE_ATOM)]);
+
+        $stmt = $this->db->prepare('SELECT id, display_name FROM users WHERE email = :email LIMIT 1');
+        $stmt->execute(['email' => $email]);
+        $user = $stmt->fetch();
+        if ($user === false) {
+            return null;
+        }
+
+        $since = $now->modify('-' . self::ATTEMPT_WINDOW_MIN . ' minutes')->format(DATE_ATOM);
+        $stmt = $this->db->prepare(
+            'SELECT COUNT(*) AS n FROM password_resets WHERE user_id = :id AND created_at > :since'
+        );
+        $stmt->execute(['id' => $user['id'], 'since' => $since]);
+        if ((int) $stmt->fetch()['n'] >= self::RESET_MAX_PER_WINDOW) {
+            return null;
+        }
+
+        $token = bin2hex(random_bytes(32));
+        $stmt = $this->db->prepare(
+            'INSERT INTO password_resets (token_hash, user_id, created_at, expires_at)
+             VALUES (:hash, :user_id, :created, :expires)'
+        );
+        $stmt->execute([
+            'hash'    => hash('sha256', $token),
+            'user_id' => $user['id'],
+            'created' => $now->format(DATE_ATOM),
+            'expires' => $now->modify('+' . self::RESET_TTL_MIN . ' minutes')->format(DATE_ATOM),
+        ]);
+
+        return ['token' => $token, 'displayName' => (string) $user['display_name']];
+    }
+
+    /**
+     * Sätter nytt lösenord via en giltig, oanvänd, icke-utgången token.
+     * Loggar ut alla befintliga sessioner för kontot vid lyckad återställning
+     * — ett läckt lösenord ska inte kunna fortsätta användas via en session
+     * som redan var öppen innan återställningen.
+     */
+    public function resetPassword(string $token, string $newPassword): bool
+    {
+        if ($token === '' || strlen($newPassword) < 8) {
+            return false;
+        }
+
+        $hash = hash('sha256', $token);
+        $stmt = $this->db->prepare(
+            'SELECT user_id, expires_at, used_at FROM password_resets WHERE token_hash = :hash LIMIT 1'
+        );
+        $stmt->execute(['hash' => $hash]);
+        $row = $stmt->fetch();
+        if ($row === false || $row['used_at'] !== null) {
+            return false;
+        }
+        if (new DateTimeImmutable($row['expires_at']) < new DateTimeImmutable()) {
+            return false;
+        }
+
+        $now = (new DateTimeImmutable())->format(DATE_ATOM);
+        $this->db->prepare('UPDATE users SET password_hash = :hash, updated_at = :u WHERE id = :id')
+            ->execute(['hash' => password_hash($newPassword, PASSWORD_DEFAULT), 'u' => $now, 'id' => $row['user_id']]);
+        $this->db->prepare('UPDATE password_resets SET used_at = :u WHERE token_hash = :hash')
+            ->execute(['u' => $now, 'hash' => $hash]);
+        $this->db->prepare('DELETE FROM sessions WHERE user_id = :id')->execute(['id' => $row['user_id']]);
+
+        Audit::log($this->db, $row['user_id'], 'password_reset_self', 'users', $row['user_id']);
+
+        return true;
     }
 
     public function logout(): void

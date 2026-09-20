@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
+import { apiFetch, ApiError } from '../../api/client'
 import { useAuth } from '../../lib/auth'
 import { useToast } from '../../lib/toast'
 import MobileAdminNotice from '../../components/admin/MobileAdminNotice'
@@ -26,13 +27,14 @@ export default function AdminLogin() {
     return () => { cancelled = true }
   }, [])
 
-  const [mode, setMode] = useState<'login' | 'signup'>('login')
+  const [mode, setMode] = useState<'login' | 'signup' | 'forgot'>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [displayName, setDisplayName] = useState('')
   const [intro, setIntro] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [signupDone, setSignupDone] = useState(false)
+  const [forgotSent, setForgotSent] = useState(false)
   const loginPasswordRef = useRef<HTMLInputElement>(null)
 
   if (loading) {
@@ -85,6 +87,22 @@ export default function AdminLogin() {
     setSignupDone(true)
   }
 
+  async function handleForgot(e: React.FormEvent) {
+    e.preventDefault()
+    setSubmitting(true)
+    try {
+      // Servern svarar alltid likadant oavsett om kontot finns — så UI:t kan
+      // inte (och ska inte) skilja på fallen här heller.
+      await apiFetch('/auth/forgot-password', { method: 'POST', body: { email } })
+    } catch (e) {
+      show(e instanceof ApiError ? e.message : 'Kunde inte skicka återställningslänken.', 'error')
+      setSubmitting(false)
+      return
+    }
+    setSubmitting(false)
+    setForgotSent(true)
+  }
+
   return (
     <div className="admin-login-page">
       <MobileAdminNotice />
@@ -124,27 +142,33 @@ export default function AdminLogin() {
             </div>
           ) : (
             <div className="admin-login-card">
-              <h2 className="admin-login-title">{mode === 'login' ? 'Välkommen tillbaka' : 'Skapa konto'}</h2>
-              <p className="admin-login-subtitle">
-                {mode === 'login' ? 'Logga in för att hantera webbplatsen.' : 'Registrera dig – en administratör aktiverar ditt konto.'}
-              </p>
+              <h2 className="admin-login-title">
+                {mode === 'login' ? 'Välkommen tillbaka' : mode === 'signup' ? 'Skapa konto' : 'Glömt lösenordet'}
+              </h2>
+              {mode !== 'forgot' && (
+                <p className="admin-login-subtitle">
+                  {mode === 'login' ? 'Logga in för att hantera webbplatsen.' : 'Registrera dig – en administratör aktiverar ditt konto.'}
+                </p>
+              )}
 
-              <div className="admin-login-tabs">
-                <button
-                  type="button"
-                  className={mode === 'login' ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm'}
-                  onClick={() => setMode('login')}
-                >
-                  Logga in
-                </button>
-                <button
-                  type="button"
-                  className={mode === 'signup' ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm'}
-                  onClick={() => setMode('signup')}
-                >
-                  Skapa konto
-                </button>
-              </div>
+              {mode !== 'forgot' && (
+                <div className="admin-login-tabs">
+                  <button
+                    type="button"
+                    className={mode === 'login' ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm'}
+                    onClick={() => setMode('login')}
+                  >
+                    Logga in
+                  </button>
+                  <button
+                    type="button"
+                    className={mode === 'signup' ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm'}
+                    onClick={() => setMode('signup')}
+                  >
+                    Skapa konto
+                  </button>
+                </div>
+              )}
 
               {mode === 'login' ? (
                 <form onSubmit={handleLogin}>
@@ -168,7 +192,48 @@ export default function AdminLogin() {
                   <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 'var(--space-3)' }} disabled={submitting}>
                     {submitting ? 'Loggar in…' : 'Logga in'}
                   </button>
+                  <button
+                    type="button"
+                    className="btn-link"
+                    style={{ display: 'block', margin: 'var(--space-3) auto 0', textAlign: 'center' }}
+                    onClick={() => { setForgotSent(false); setMode('forgot') }}
+                  >
+                    Glömt lösenordet?
+                  </button>
                 </form>
+              ) : mode === 'forgot' ? (
+                forgotSent ? (
+                  <div style={{ textAlign: 'center' }}>
+                    <div className="admin-login-check" aria-hidden="true">✓</div>
+                    <p className="admin-login-subtitle">
+                      Om {email} har ett konto skickades en återställningslänk dit. Länken gäller i 30 minuter.
+                    </p>
+                    <button type="button" className="btn btn-primary" style={{ width: '100%' }} onClick={() => setMode('login')}>
+                      Till inloggningen
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleForgot}>
+                    <p className="admin-login-hint" style={{ marginTop: 0 }}>
+                      Ange kontots e-postadress så mejlar vi en länk för att sätta ett nytt lösenord.
+                    </p>
+                    <div className="form-group">
+                      <label className="form-label" htmlFor="email">E-postadress</label>
+                      <input id="email" className="form-input" type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} required />
+                    </div>
+                    <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 'var(--space-3)' }} disabled={submitting}>
+                      {submitting ? 'Skickar…' : 'Skicka återställningslänk'}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-link"
+                      style={{ display: 'block', margin: 'var(--space-3) auto 0', textAlign: 'center' }}
+                      onClick={() => setMode('login')}
+                    >
+                      Tillbaka till inloggningen
+                    </button>
+                  </form>
+                )
               ) : (
                 <form onSubmit={handleSignup}>
                   <div className="admin-login-avatar-preview">

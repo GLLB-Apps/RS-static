@@ -9,6 +9,7 @@ declare(strict_types=1);
 $config = require __DIR__ . '/bootstrap.php';
 
 require __DIR__ . '/api/auth.php';
+require __DIR__ . '/api/password_reset.php';
 require __DIR__ . '/api/data.php';
 require __DIR__ . '/api/users.php';
 require __DIR__ . '/api/changelog.php';
@@ -24,6 +25,7 @@ $db = Db::get($config['db_path']);
 $auth = new Auth($db);
 $mailer = new Mailer($config['resend_api_key'], $config['mail_from_address'], $config['mail_from_name']);
 $authApi = new AuthController($auth);
+$passwordResetApi = new PasswordResetController($auth, $mailer, $config['site_url']);
 $data = new DataController($store, $auth, $db);
 $usersApi = new UsersController($db, $auth, $mailer);
 $changelogApi = new ChangelogController($auth, $config['anthropic_api_key']);
@@ -39,6 +41,8 @@ $router->add('POST', '/auth/login', [$authApi, 'login']);
 $router->add('POST', '/auth/logout', [$authApi, 'logout']);
 $router->add('POST', '/auth/signup', [$authApi, 'signup']);
 $router->add('POST', '/auth/profile', [$authApi, 'updateProfile']);
+$router->add('POST', '/auth/forgot-password', [$passwordResetApi, 'request']);
+$router->add('POST', '/auth/reset-password', [$passwordResetApi, 'reset']);
 
 // --- Generiska JSON-kollektioner (sidor, nyheter, ämnen, FAQ, m.fl.) ----------
 // Se DataController::TABLES för vilka tabellnamn som hanteras här.

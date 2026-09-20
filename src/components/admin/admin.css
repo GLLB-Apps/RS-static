@@ -861,6 +861,16 @@
   margin-top: var(--space-3);
 }
 
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: var(--space-1) 0;
+}
+.btn-link:hover { text-decoration: underline; }
+
 @media (max-width: 860px) {
   .admin-login-split { grid-template-columns: 1fr; min-height: 100vh; }
   .admin-login-brand {
