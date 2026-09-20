@@ -5,6 +5,7 @@ import { useToast } from '../../lib/toast'
 import { useConfirm } from '../../lib/confirm'
 import { formatDateShort, statusLabel, statusBadgeClass } from '../../lib/utils'
 import { useMarkSourceRead } from '../../lib/notifications'
+import UserAvatar from '../../components/UserAvatar'
 
 export default function AdminMessages() {
   const [messages, setMessages] = useState<ContactMessage[]>([])
@@ -68,9 +69,12 @@ export default function AdminMessages() {
       {selected && (
         <div className="card" style={{ marginBottom: 'var(--space-5)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-3)' }}>
-            <div>
-              <h3>{selected.subject || 'Utan ämne'}</h3>
-              <p className="text-muted" style={{ fontSize: '0.85rem' }}>Från: {selected.name} ({selected.email}) — {formatDateShort(selected.created_at)}</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+              <UserAvatar seed={selected.email} size={36} gaze style={{ flexShrink: 0 }} />
+              <div>
+                <h3 style={{ margin: 0 }}>{selected.subject || 'Utan ämne'}</h3>
+                <p className="text-muted" style={{ fontSize: '0.85rem' }}>Från: {selected.name} ({selected.email}) — {formatDateShort(selected.created_at)}</p>
+              </div>
             </div>
             <button className="btn btn-ghost btn-sm" onClick={() => setSelected(null)}>Stäng</button>
           </div>
@@ -94,6 +98,7 @@ export default function AdminMessages() {
         <div className="admin-list">
           {messages.map(m => (
             <div key={m.id} className="admin-list-item">
+              <UserAvatar seed={m.email} size={36} style={{ flexShrink: 0 }} />
               <div className="admin-list-item-info">
                 <div className="admin-list-item-title">{m.subject || 'Utan ämne'} {m.status === 'unread' && <span className="badge badge-warning">Ny</span>}</div>
                 <div className="admin-list-item-meta">
