@@ -42,8 +42,12 @@ Manuellt, utan wizarden:
    `ftp`. Annars används `ftps` (krypterat) som standard — lämna den
    ospecificerad om ni inte vet, de flesta moderna webbhotell stödjer det.
 
-4. Klart. Nästa push till `main` (eller **Actions**-fliken → välj workflowen
-   → **Run workflow** för att köra utan en ny commit) bygger och laddar upp.
+4. Klart. Just nu är `push`-triggern avstängd i `.github/workflows/deploy.yml`
+   (en kommenterad rad) — så länge secrets saknas skulle varje push annars ge
+   en misslyckad körning + felmejl. Kör manuellt under tiden: **Actions**-
+   fliken → välj workflowen → **Run workflow**. När secrets är på plats,
+   avkommentera `push: branches: [main]` i workflow-filen så byggs och laddas
+   det upp automatiskt vid varje push igen.
 
 ## Första gången — i vilken ordning
 
