@@ -130,11 +130,58 @@ function render(string $eyebrow, string $title, string $body): never
         . '.btn.ghost{background:none;color:var(--text);border:1px solid var(--border)}'
         . '.steps{display:flex;gap:.4rem;margin-bottom:1.25rem}'
         . '.steps span{flex:1;height:4px;border-radius:2px;background:var(--border)}.steps span.on{background:var(--primary)}'
+        . '.kv{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}'
+        . '.kv th,.kv td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid #eee;vertical-align:top}'
+        . '.kv code{background:#f0f0ec;padding:.15rem .4rem;border-radius:4px;font-size:.85rem}'
+        . '.copy-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:.2rem .5rem;font-size:.75rem;cursor:pointer;margin-left:.4rem;color:var(--text)}'
+        . '.copy-btn:hover{background:#f0f0ec}'
         . '</style></head><body><div class="wrap">'
         . '<p class="eyebrow">' . h($eyebrow) . '</p>'
         . $body
         . '</div></body></html>';
     exit;
+}
+
+/**
+ * Valfri ruta som visas på "Klart"-sidan i båda guiderna: direktlänkar till
+ * GitHubs egna sidor för att lägga in FTP-hemligheterna för den automatiska
+ * driftsättningen (.github/workflows/deploy.yml, se DEPLOY.md). Hemligheterna
+ * skrivs ALDRIG här eller skickas genom den här servern — GitHub stödjer inte
+ * att förifylla namnet via URL, så det här är bara en genväg förbi menyerna
+ * plus kopieringsknappar för namnen, inte ett formulär.
+ */
+function deploySetupBox(): string
+{
+    $secretsUrl = 'https://github.com/GLLB-Apps/RS-static/settings/secrets/actions/new';
+    $varsUrl = 'https://github.com/GLLB-Apps/RS-static/settings/variables/actions/new';
+    $rows = [
+        ['FTP_SERVER', 'Värdnamnet till FTP-servern, t.ex. ftp.er-domän.se'],
+        ['FTP_USERNAME', 'FTP-användarnamnet'],
+        ['FTP_PASSWORD', 'FTP-lösenordet'],
+        ['FTP_SERVER_DIR', 'Målmappen på servern, måste sluta med / — t.ex. public_html/'],
+    ];
+    $rowsHtml = '';
+    foreach ($rows as [$name, $hint]) {
+        $rowsHtml .= '<tr><td><code>' . h($name) . '</code>'
+            . '<button type="button" class="copy-btn" data-copy="' . h($name) . '">Kopiera namn</button></td>'
+            . '<td>' . h($hint) . '</td></tr>';
+    }
+
+    return '<div class="card" style="margin-top:1.5rem">'
+        . '<h1>Valfritt: automatiska driftsättningar</h1>'
+        . '<p class="hint" style="margin-bottom:1rem">Vill ni att kodändringar laddas upp automatiskt vid varje '
+        . 'push till GitHub, i stället för att FTP:a för hand varje gång? Fyra hemligheter läggs in en gång — '
+        . 'direkt på GitHub, aldrig här i guiden eller i koden. Fullständig genomgång i <code>DEPLOY.md</code> '
+        . 'i projektet.</p>'
+        . '<a class="btn ghost" href="' . h($secretsUrl) . '" target="_blank" rel="noopener">Öppna "Ny secret" på GitHub →</a>'
+        . '<table class="kv"><tr><th>Namn (klistras i "Name")</th><th>Värde (klistras i "Secret")</th></tr>' . $rowsHtml . '</table>'
+        . '<p class="hint">Stödjer webbhotellet bara vanlig FTP (inte FTPS)? Lägg dessutom till en <strong>variable</strong> '
+        . '(inte secret), namn <code>FTP_PROTOCOL</code>, värde <code>ftp</code>, på <a href="' . h($varsUrl)
+        . '" target="_blank" rel="noopener">variabelsidan</a>. Annars används FTPS automatiskt.</p>'
+        . '<script>document.addEventListener("click",function(e){var b=e.target.closest(".copy-btn");if(!b)return;'
+        . 'navigator.clipboard.writeText(b.dataset.copy).then(function(){var old=b.textContent;b.textContent="Kopierat!";'
+        . 'setTimeout(function(){b.textContent=old;},1200);});});</script>'
+        . '</div>';
 }
 
 function stepper(int $current, int $total): string

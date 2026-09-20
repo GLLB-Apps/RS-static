@@ -19,7 +19,11 @@ De flesta webbhotell (t.ex. Inleed) visar de här uppgifterna under
 ## Engångsinställning
 
 Fyra hemligheter läggs in på GitHub — **aldrig i koden, aldrig i den här
-chatten**. Så här:
+chatten**. Sista steget i både `install/index.php` och `install/migrate.php`
+("Klart"-sidan) har en ruta med en direktlänk till GitHubs "Ny secret"-sida
+och kopieringsknappar för namnen, så ni slipper leta i menyerna — men värdena
+(FTP-uppgifterna) skrivs alltid in direkt på github.com, aldrig i guiden.
+Manuellt, utan wizarden:
 
 1. Öppna repot på github.com → **Settings** → **Secrets and variables** →
    **Actions**.

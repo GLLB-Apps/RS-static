@@ -186,4 +186,5 @@ render($eyebrow, 'Klart', stepper(3, 3) . '<div class="card">'
     . '<a class="btn ghost" href="/admin/login">Till inloggningen →</a></div>'
     . '</form>'
     . '<p class="hint" style="margin-top:1rem">Går raderingen inte (skrivskyddad mapp) — ta bort <code>install/</code> manuellt via FTP eller webbhotellets filhanterare.</p>'
-    . '</div>');
+    . '</div>'
+    . deploySetupBox());
