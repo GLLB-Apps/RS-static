@@ -4,6 +4,7 @@ import type { TimelineEvent, ContentStatus } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../lib/auth'
 import { useToast } from '../../lib/toast'
+import FocusModeToggle from '../../components/admin/FocusModeToggle'
 
 export default function AdminTimelineEdit() {
   const { id } = useParams<{ id: string }>()
@@ -76,7 +77,10 @@ export default function AdminTimelineEdit() {
     <div className="fade-in">
       <div className="admin-page-header">
         <h1>{isNew ? 'Ny tidslinjehändelse' : 'Redigera händelse'}{!isNew && form.title && <span className="admin-edit-subject"> — {form.title}</span>}</h1>
-        <Link to="/admin/tidslinje" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+          <FocusModeToggle />
+          <Link to="/admin/tidslinje" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+        </div>
       </div>
       <div className="admin-form-card">
         <div className="grid grid-2">

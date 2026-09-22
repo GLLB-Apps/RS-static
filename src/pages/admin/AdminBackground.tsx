@@ -8,6 +8,7 @@ import ContentStats from '../../components/admin/ContentStats'
 import { useAutosave, useDraftRestore, clearDraft } from '../../lib/useAutosave'
 import AutosaveBanner from '../../components/admin/AutosaveBanner'
 import AutosaveStatus from '../../components/admin/AutosaveStatus'
+import FocusModeToggle from '../../components/admin/FocusModeToggle'
 
 const DRAFT_KEY = 'background'
 
@@ -67,6 +68,7 @@ export default function AdminBackground() {
       <div className="admin-page-header">
         <h1>Bakgrund · innehåll</h1>
         <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+          <FocusModeToggle />
           <Link to="/admin/sidor/bakgrund" className="btn btn-ghost btn-sm">← Sidan</Link>
           <a
             href="/bakgrund"

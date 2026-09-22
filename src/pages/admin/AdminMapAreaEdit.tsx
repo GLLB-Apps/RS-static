@@ -8,6 +8,7 @@ import { parseCoordinateText, polygonAreaKm2, MAP_FIT_PADDING } from '../../lib/
 import LucideIcon from '../../lib/lucide'
 import IconPicker from '../../components/admin/IconPicker'
 import Dropzone from '../../components/admin/Dropzone'
+import FocusModeToggle from '../../components/admin/FocusModeToggle'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -211,7 +212,10 @@ export default function AdminMapAreaEdit() {
     <div className="fade-in">
       <div className="admin-page-header">
         <h1>{isNew ? 'Nytt område' : 'Redigera område'}{!isNew && form.title && <span className="admin-edit-subject"> — {form.title}</span>}</h1>
-        <Link to="/admin/karta" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+          <FocusModeToggle />
+          <Link to="/admin/karta" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+        </div>
       </div>
 
       <div className="map-edit-layout">

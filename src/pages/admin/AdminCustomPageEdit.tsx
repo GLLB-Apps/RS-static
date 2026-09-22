@@ -10,6 +10,7 @@ import ContentStats from '../../components/admin/ContentStats'
 import { useAutosave, useDraftRestore, clearDraft } from '../../lib/useAutosave'
 import AutosaveBanner from '../../components/admin/AutosaveBanner'
 import AutosaveStatus from '../../components/admin/AutosaveStatus'
+import FocusModeToggle from '../../components/admin/FocusModeToggle'
 
 interface CustomPageDraft {
   title: string
@@ -122,6 +123,7 @@ export default function AdminCustomPageEdit() {
         <h1>{isNew ? 'Ny sida' : 'Redigera sida'}{!isNew && title && <span className="admin-edit-subject"> — {title}</span>}</h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
           <AutosaveStatus dirty={dirty} savedAt={savedAt} />
+          <FocusModeToggle />
           <Link to="/admin/egna-sidor" className="btn btn-ghost btn-sm">← Alla fristående sidor</Link>
         </div>
       </div>

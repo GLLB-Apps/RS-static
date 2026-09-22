@@ -5,6 +5,7 @@ import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../lib/auth'
 import { useToast } from '../../lib/toast'
 import Dropzone from '../../components/admin/Dropzone'
+import FocusModeToggle from '../../components/admin/FocusModeToggle'
 
 export default function AdminMediaEdit() {
   const { id } = useParams<{ id: string }>()
@@ -83,7 +84,10 @@ export default function AdminMediaEdit() {
     <div className="fade-in">
       <div className="admin-page-header">
         <h1>{isNew ? 'Ny media' : 'Redigera media'}{!isNew && form.title && <span className="admin-edit-subject"> — {form.title}</span>}</h1>
-        <Link to="/admin/media" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+          <FocusModeToggle />
+          <Link to="/admin/media" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+        </div>
       </div>
       <div className="admin-form-card">
         <div className="form-group">

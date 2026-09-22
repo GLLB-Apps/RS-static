@@ -12,6 +12,7 @@ import { topicTemplateByKey } from '../../lib/topicTemplates'
 import { useAutosave, useDraftRestore, clearDraft } from '../../lib/useAutosave'
 import AutosaveBanner from '../../components/admin/AutosaveBanner'
 import AutosaveStatus from '../../components/admin/AutosaveStatus'
+import FocusModeToggle from '../../components/admin/FocusModeToggle'
 
 interface TopicDraft {
   title: string
@@ -159,6 +160,7 @@ export default function AdminTopicEdit() {
         <h1>{isNew ? 'Nytt ämne' : 'Redigera ämne'}{!isNew && title && <span className="admin-edit-subject"> — {title}</span>}</h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
           <AutosaveStatus dirty={dirty} savedAt={savedAt} />
+          <FocusModeToggle />
           <Link to="/admin/amnen" className="btn btn-ghost btn-sm">← Tillbaka</Link>
         </div>
       </div>

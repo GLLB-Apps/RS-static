@@ -5,6 +5,7 @@ import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../lib/auth'
 import { useToast } from '../../lib/toast'
 import Dropzone from '../../components/admin/Dropzone'
+import FocusModeToggle from '../../components/admin/FocusModeToggle'
 
 // Derive a human file-type label (e.g. "PDF") from a filename or URL.
 function fileTypeFromName(name: string): string {
@@ -85,7 +86,10 @@ export default function AdminDocumentEdit() {
     <div className="fade-in">
       <div className="admin-page-header">
         <h1>{isNew ? 'Nytt dokument' : 'Redigera dokument'}{!isNew && form.title && <span className="admin-edit-subject"> — {form.title}</span>}</h1>
-        <Link to="/admin/dokument" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+          <FocusModeToggle />
+          <Link to="/admin/dokument" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+        </div>
       </div>
       <div className="admin-form-card">
         <div className="form-group">

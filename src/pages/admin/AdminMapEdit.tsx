@@ -8,6 +8,7 @@ import { mapPointTypeIconName } from '../../lib/utils'
 import LucideIcon from '../../lib/lucide'
 import IconPicker from '../../components/admin/IconPicker'
 import Dropzone from '../../components/admin/Dropzone'
+import FocusModeToggle from '../../components/admin/FocusModeToggle'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -115,7 +116,10 @@ export default function AdminMapEdit() {
     <div className="fade-in">
       <div className="admin-page-header">
         <h1>{isNew ? 'Ny kartpunkt' : 'Redigera kartpunkt'}{!isNew && form.title && <span className="admin-edit-subject"> — {form.title}</span>}</h1>
-        <Link to="/admin/karta" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+          <FocusModeToggle />
+          <Link to="/admin/karta" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+        </div>
       </div>
       <div className="map-edit-layout">
         <div className="map-edit-map admin-form-card">

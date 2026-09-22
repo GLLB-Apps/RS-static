@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Search, Sun, Moon } from 'lucide-react'
+import { Search, Sun, Moon, PanelLeftClose, PanelLeftOpen, ExternalLink } from 'lucide-react'
 import { useAuth } from '../../lib/auth'
 import type { UserRole } from '../../lib/types'
 import { roleLabel, usernameFromEmail } from '../../lib/utils'
 import { MENU_GROUPS } from '../../lib/adminMenu'
 import { NotificationsProvider, useNotifications } from '../../lib/notifications'
 import { EditorDirtyProvider, useIsEditorDirty } from '../../lib/editorDirty'
+import { FocusModeProvider, useFocusMode } from '../../lib/focusMode'
 import { useConfirm } from '../../lib/confirm'
 import MobileAdminNotice from './MobileAdminNotice'
 import DraftRecoveryDialog from './DraftRecoveryDialog'
@@ -49,6 +50,7 @@ function AdminMenu({ role, pathname, onNavigate }: {
                   to={item.path}
                   className={isActive ? 'admin-menu-link active' : 'admin-menu-link'}
                   onClick={onNavigate}
+                  title={item.label}
                 >
                   <Icon size={16} aria-hidden="true" />
                   <span className="admin-menu-label">{item.label}</span>
@@ -66,6 +68,7 @@ function AdminMenu({ role, pathname, onNavigate }: {
 }
 
 const THEME_KEY = 'ncc-rs:admin-theme'
+const SIDEBAR_COLLAPSED_KEY = 'ncc-rs:admin-sidebar-collapsed'
 
 /** Sparat val, annars systemets färgschema, annars ljust. */
 function initialTheme(): 'light' | 'dark' {
@@ -79,13 +82,19 @@ function initialTheme(): 'light' | 'dark' {
   return 'light'
 }
 
+function initialSidebarCollapsed(): boolean {
+  try { return window.localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === '1' } catch { return false }
+}
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   // Egen provider här (inte i App.tsx) — dirty-läget ska bara existera medan
   // adminpanelen faktiskt är monterad, aldrig läcka till den publika sidan
   // eller intranätet.
   return (
     <EditorDirtyProvider>
-      <AdminLayoutInner>{children}</AdminLayoutInner>
+      <FocusModeProvider>
+        <AdminLayoutInner>{children}</AdminLayoutInner>
+      </FocusModeProvider>
     </EditorDirtyProvider>
   )
 }
@@ -96,9 +105,17 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
   const { confirm } = useConfirm()
   const isEditorDirty = useIsEditorDirty()
+  const { focusMode } = useFocusMode()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(initialSidebarCollapsed)
   const [theme, setTheme] = useState<'light' | 'dark'>(initialTheme)
   const [paletteOpen, setPaletteOpen] = useState(false)
+
+  // Fäll in menyn till bara ikoner för en renare, mer fokuserad redigerings-
+  // yta — sparas per webbläsare, precis som temat.
+  useEffect(() => {
+    try { window.localStorage.setItem(SIDEBAR_COLLAPSED_KEY, sidebarCollapsed ? '1' : '0') } catch { /* ignore */ }
+  }, [sidebarCollapsed])
 
   // Sätts på <html> (inte bara .admin-layout) så att toasts och dialogrutor
   // också nås — ToastProvider/ConfirmProvider monteras i App.tsx ovanför hela
@@ -146,17 +163,33 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
 
   return (
     <NotificationsProvider>
-    <div className="admin-layout">
+    <div className={`admin-layout ${focusMode ? 'is-focus-mode' : ''}`.trim()}>
       <MobileAdminNotice />
       <DraftRecoveryDialog />
-      <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
+      <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''} ${sidebarCollapsed ? 'is-collapsed' : ''}`.trim()}>
         <div className="admin-sidebar-header">
-          <Link to="/admin" className="admin-logo">Rögleskogen</Link>
-          <span className="admin-badge">Admin</span>
+          {!sidebarCollapsed && (
+            <>
+              <Link to="/admin" className="admin-logo">Rögleskogen</Link>
+              <span className="admin-badge">Admin</span>
+            </>
+          )}
+          <button
+            type="button"
+            className="admin-sidebar-collapse-toggle"
+            onClick={() => setSidebarCollapsed(v => !v)}
+            aria-label={sidebarCollapsed ? 'Visa menytexter' : 'Fäll in menyn till ikoner'}
+            title={sidebarCollapsed ? 'Visa menytexter' : 'Fäll in menyn till ikoner'}
+          >
+            {sidebarCollapsed ? <PanelLeftOpen size={18} aria-hidden="true" /> : <PanelLeftClose size={18} aria-hidden="true" />}
+          </button>
         </div>
         <AdminMenu role={role} pathname={location.pathname} onNavigate={() => setSidebarOpen(false)} />
         <div className="admin-sidebar-footer">
-          <Link to="/" className="admin-menu-link" target="_blank">Visa webbplats →</Link>
+          <Link to="/" className="admin-menu-link" target="_blank" title="Visa webbplats">
+            <ExternalLink size={16} aria-hidden="true" />
+            <span className="admin-menu-label">Visa webbplats</span>
+          </Link>
         </div>
       </aside>
 
