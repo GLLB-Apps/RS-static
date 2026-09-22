@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion, AnimatePresence } from 'motion/react'
 import { Mail, MessageSquareQuote, FileEdit, Megaphone, StickyNote, ListChecks, FileText, LogOut } from 'lucide-react'
 import { useNotifications, NOTIFICATION_SOURCES, timeAgo, type NotificationSource } from '../../lib/notifications'
 import { usernameFromEmail } from '../../lib/utils'
@@ -65,8 +66,17 @@ export default function NotificationBell({ avatarSeed, email, displayName, roleL
         {newCount > 0 && <span className="admin-bell-badge">{newCount > 99 ? '99+' : newCount}</span>}
       </button>
 
+      <AnimatePresence>
       {open && (
-        <div className="admin-bell-panel" role="dialog" aria-label="Konto och notiser">
+        <motion.div
+          className="admin-bell-panel"
+          role="dialog"
+          aria-label="Konto och notiser"
+          initial={{ opacity: 0, scale: 0.96, y: -6 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.96, y: -6 }}
+          transition={{ duration: 0.15 }}
+        >
           <div className="admin-bell-account">
             <UserAvatar seed={avatarSeed || email} size={40} />
             <div className="admin-bell-account-info">
@@ -146,8 +156,9 @@ export default function NotificationBell({ avatarSeed, email, displayName, roleL
               })
             )}
           </div>
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
   )
 }

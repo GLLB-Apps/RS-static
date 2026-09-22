@@ -2589,12 +2589,11 @@
 .admin-sidebar-collapse-toggle:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
 
 /* Fäller in menyn till bara ikoner — en renare, mer fokuserad yta. Sparas
-   per webbläsare (se SIDEBAR_COLLAPSED_KEY i AdminLayout.tsx). */
-.admin-sidebar.is-collapsed { width: 68px; }
+   per webbläsare (se SIDEBAR_COLLAPSED_KEY i AdminLayout.tsx). Bredden och
+   menytexternas in/ut-toning sköts av motion.dev (AdminLayout.tsx) — här
+   ligger bara det som inte behöver animeras. */
 .admin-sidebar.is-collapsed .admin-sidebar-header { justify-content: center; padding: var(--space-4) var(--space-2); }
 .admin-sidebar.is-collapsed .admin-sidebar-collapse-toggle { margin-left: 0; }
-.admin-sidebar.is-collapsed .admin-menu-group-title { display: none; }
-.admin-sidebar.is-collapsed .admin-menu-label { display: none; }
 .admin-sidebar.is-collapsed .admin-menu-link { position: relative; justify-content: center; padding: var(--space-3) var(--space-2); }
 .admin-sidebar.is-collapsed .admin-menu-badge {
   position: absolute;
@@ -2609,17 +2608,15 @@
 
 /* ---- Fokusläge ----
    Döljer adminpanelens egen chrome (sidomeny, toppbar) under redigering —
-   se FocusModeToggle.tsx / focusMode.tsx. Redigerarens eget innehåll och
-   sidopanel (publicering, detaljer m.m.) förblir kvar. */
-.admin-layout.is-focus-mode .admin-sidebar,
-.admin-layout.is-focus-mode .admin-sidebar-overlay,
-.admin-layout.is-focus-mode .admin-topbar {
-  display: none;
-}
+   se FocusModeToggle.tsx / focusMode.tsx. Sidomenyn/toppbaren monteras ur
+   (motion.dev animerar bort dem, AdminLayout.tsx) i stället för display:none,
+   så innehållet glider ut och fyller ytan i samma rörelse. Redigerarens egen
+   högersidopanel döljs och animeras bort på samma sätt i varje redigerare
+   (se t.ex. AdminTopicEdit.tsx) eftersom den inte är del av AdminLayout. */
 .admin-layout.is-focus-mode .admin-content {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding-top: var(--space-6);
+  max-width: none;
+  padding-top: var(--space-7);
+  transition: padding var(--transition);
 }
 .focus-mode-toggle.is-active {
   color: var(--primary);

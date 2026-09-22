@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import { motion, AnimatePresence } from 'motion/react'
 import type { MapArea, ContentStatus, MapAreaLineStyle, LatLngTuple } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../lib/auth'
@@ -9,6 +10,8 @@ import LucideIcon from '../../lib/lucide'
 import IconPicker from '../../components/admin/IconPicker'
 import Dropzone from '../../components/admin/Dropzone'
 import FocusModeToggle from '../../components/admin/FocusModeToggle'
+import { useFocusMode } from '../../lib/focusMode'
+import { FADE } from '../../lib/motionPresets'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -28,6 +31,7 @@ export default function AdminMapAreaEdit() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { show } = useToast()
+  const { focusMode } = useFocusMode()
   const isNew = id === 'ny' || !id
 
   const [form, setForm] = useState({
@@ -211,10 +215,22 @@ export default function AdminMapAreaEdit() {
   return (
     <div className="fade-in">
       <div className="admin-page-header">
-        <h1>{isNew ? 'Nytt område' : 'Redigera område'}{!isNew && form.title && <span className="admin-edit-subject"> — {form.title}</span>}</h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+        <AnimatePresence initial={false}>
+          {!focusMode && (
+            <motion.h1 key="title" {...FADE}>
+              {isNew ? 'Nytt område' : 'Redigera område'}{!isNew && form.title && <span className="admin-edit-subject"> — {form.title}</span>}
+            </motion.h1>
+          )}
+        </AnimatePresence>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginLeft: 'auto' }}>
           <FocusModeToggle />
-          <Link to="/admin/karta" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+          <AnimatePresence initial={false}>
+            {!focusMode && (
+              <motion.div key="back" {...FADE}>
+                <Link to="/admin/karta" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 

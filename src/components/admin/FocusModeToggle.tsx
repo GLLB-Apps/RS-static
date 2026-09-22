@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from 'motion/react'
 import { Maximize2, Minimize2 } from 'lucide-react'
 import { useFocusMode } from '../../lib/focusMode'
 
@@ -12,7 +13,31 @@ export default function FocusModeToggle() {
       aria-label={focusMode ? 'Lämna fokusläge' : 'Fokusläge'}
       title={focusMode ? 'Lämna fokusläge' : 'Fokusläge'}
     >
-      {focusMode ? <Minimize2 size={15} aria-hidden="true" /> : <Maximize2 size={15} aria-hidden="true" />}
+      <AnimatePresence mode="wait" initial={false}>
+        {focusMode ? (
+          <motion.span
+            key="minimize"
+            style={{ display: 'inline-flex' }}
+            initial={{ opacity: 0, scale: 0.6, rotate: -45 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            exit={{ opacity: 0, scale: 0.6, rotate: 45 }}
+            transition={{ duration: 0.15 }}
+          >
+            <Minimize2 size={15} aria-hidden="true" />
+          </motion.span>
+        ) : (
+          <motion.span
+            key="maximize"
+            style={{ display: 'inline-flex' }}
+            initial={{ opacity: 0, scale: 0.6, rotate: 45 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            exit={{ opacity: 0, scale: 0.6, rotate: -45 }}
+            transition={{ duration: 0.15 }}
+          >
+            <Maximize2 size={15} aria-hidden="true" />
+          </motion.span>
+        )}
+      </AnimatePresence>
     </button>
   )
 }

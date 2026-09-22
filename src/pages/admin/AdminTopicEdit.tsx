@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, useSearchParams, useLocation, Link } from 'react-router-dom'
+import { motion, AnimatePresence } from 'motion/react'
 import type { Topic, ContentBlock, ContentStatus } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../lib/auth'
@@ -13,6 +14,10 @@ import { useAutosave, useDraftRestore, clearDraft } from '../../lib/useAutosave'
 import AutosaveBanner from '../../components/admin/AutosaveBanner'
 import AutosaveStatus from '../../components/admin/AutosaveStatus'
 import FocusModeToggle from '../../components/admin/FocusModeToggle'
+import EditorLayout from '../../components/admin/EditorLayout'
+import EditorSidebar from '../../components/admin/EditorSidebar'
+import { useFocusMode } from '../../lib/focusMode'
+import { FADE } from '../../lib/motionPresets'
 
 interface TopicDraft {
   title: string
@@ -32,6 +37,7 @@ export default function AdminTopicEdit() {
   const location = useLocation()
   const { user } = useAuth()
   const { show } = useToast()
+  const { focusMode } = useFocusMode()
   const isNew = id === 'ny' || !id
 
   const [title, setTitle] = useState('')
@@ -157,17 +163,41 @@ export default function AdminTopicEdit() {
   return (
     <div className="fade-in">
       <div className="admin-page-header">
-        <h1>{isNew ? 'Nytt ämne' : 'Redigera ämne'}{!isNew && title && <span className="admin-edit-subject"> — {title}</span>}</h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+        <AnimatePresence initial={false}>
+          {!focusMode && (
+            <motion.h1 key="title" {...FADE}>
+              {isNew ? 'Nytt ämne' : 'Redigera ämne'}{!isNew && title && <span className="admin-edit-subject"> — {title}</span>}
+            </motion.h1>
+          )}
+        </AnimatePresence>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', marginLeft: 'auto' }}>
           <AutosaveStatus dirty={dirty} savedAt={savedAt} />
+          <AnimatePresence initial={false}>
+            {focusMode && (
+              <motion.div key="focus-actions" style={{ display: 'flex', gap: 'var(--space-2)' }} {...FADE}>
+                <button type="button" className="btn btn-primary btn-sm" onClick={() => save(false)} disabled={saving}>
+                  {saving ? 'Sparar…' : 'Spara'}
+                </button>
+                <button type="button" className="btn btn-secondary btn-sm" onClick={() => save(true)} disabled={saving}>
+                  Publicera
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
           <FocusModeToggle />
-          <Link to="/admin/amnen" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+          <AnimatePresence initial={false}>
+            {!focusMode && (
+              <motion.div key="back" {...FADE}>
+                <Link to="/admin/amnen" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
       {draft && <AutosaveBanner savedAt={draft.savedAt} onRestore={restoreDraft} onDiscard={discardDraft} />}
 
-      <div className="editor-layout">
+      <EditorLayout>
         <div className="editor-main">
           <input
             className="editor-title-input"
@@ -186,7 +216,7 @@ export default function AdminTopicEdit() {
           <TapEditor blocks={content} onChange={setContent} />
         </div>
 
-        <aside className="editor-sidebar">
+        <EditorSidebar>
           <div className="editor-panel">
             <h3>Publicering</h3>
             <div className="form-group">
@@ -233,8 +263,8 @@ export default function AdminTopicEdit() {
           </div>
 
           <ContentStats blocks={content} />
-        </aside>
-      </div>
+        </EditorSidebar>
+      </EditorLayout>
     </div>
   )
 }

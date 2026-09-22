@@ -1,3 +1,4 @@
+import { motion } from 'motion/react'
 import UserAvatar from '../UserAvatar'
 import { thinking } from 'blobatar/expression'
 import { formatDate } from '../../lib/utils'
@@ -13,7 +14,12 @@ export default function AutosaveBanner({ savedAt, onRestore, onDiscard }: {
   onDiscard: () => void
 }) {
   return (
-    <div className="card autosave-banner">
+    <motion.div
+      className="card autosave-banner"
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+    >
       <UserAvatar seed="valkommen-tillbaka" size={48} expression={thinking} title="Ett utkast väntar" />
       <div className="autosave-banner-text">
         <strong>Välkommen tillbaka!</strong>
@@ -26,6 +32,6 @@ export default function AutosaveBanner({ savedAt, onRestore, onDiscard }: {
         <button type="button" className="btn btn-primary btn-sm" onClick={onRestore}>Fortsätt där jag slutade</button>
         <button type="button" className="btn btn-ghost btn-sm" onClick={onDiscard}>Nej tack</button>
       </div>
-    </div>
+    </motion.div>
   )
 }

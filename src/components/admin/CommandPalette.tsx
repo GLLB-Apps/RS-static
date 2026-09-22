@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion, AnimatePresence } from 'motion/react'
 import { Search, LogOut, Sun, Moon, FileText, type LucideIcon } from 'lucide-react'
 import { useAuth } from '../../lib/auth'
 import { usernameFromEmail } from '../../lib/utils'
@@ -93,62 +94,81 @@ export default function CommandPalette({ open, onClose, role, theme, onToggleThe
     if (e.key === 'Enter') { e.preventDefault(); if (filtered[highlighted]) run(filtered[highlighted]); return }
   }
 
-  if (!open) return null
-
   const welcomeName = displayName || (user?.email ? usernameFromEmail(user.email) : '')
   let flatIndex = -1
 
   return (
-    <div className="command-palette-backdrop" onClick={onClose}>
-      <div className="command-palette" role="dialog" aria-modal="true" aria-label="Kommandopalett" onClick={e => e.stopPropagation()}>
-        <div className="command-palette-header">
-          <h2>Vad letar du efter{welcomeName ? <>, {welcomeName}</> : ''}?</h2>
-          <UserAvatar seed={user?.email ?? 'sok'} size={120} caretOf={inputRef} title="Din Rögleblobb" />
-        </div>
-        <div className="command-palette-input-wrap">
-          <Search size={16} aria-hidden="true" />
-          <input
-            ref={inputRef}
-            className="command-palette-input"
-            type="text"
-            value={query}
-            onChange={e => { setQuery(e.target.value); setHighlighted(0) }}
-            onKeyDown={onKeyDown}
-            placeholder="Sök sidor, eller skapa nytt…"
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          className="command-palette-backdrop"
+          onClick={onClose}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+        >
+          <motion.div
+            className="command-palette"
+            role="dialog"
+            aria-modal="true"
             aria-label="Kommandopalett"
-          />
-        </div>
-        <div className="command-palette-results">
-          {grouped.length === 0 ? (
-            <p className="command-palette-empty">Inget matchar "{query}".</p>
-          ) : (
-            grouped.map(({ group, items }) => (
-              <div key={group}>
-                <div className="command-palette-group-label">{group}</div>
-                {items.map(cmd => {
-                  flatIndex += 1
-                  const isActive = flatIndex === highlighted
-                  const Icon = cmd.icon
-                  return (
-                    <button
-                      key={cmd.id}
-                      type="button"
-                      ref={isActive ? el => el?.scrollIntoView({ block: 'nearest' }) : undefined}
-                      className={isActive ? 'command-palette-item is-active' : 'command-palette-item'}
-                      onMouseEnter={() => setHighlighted(flatIndex)}
-                      onMouseDown={e => e.preventDefault()}
-                      onClick={() => run(cmd)}
-                    >
-                      <Icon size={16} aria-hidden="true" />
-                      {cmd.label}
-                    </button>
-                  )
-                })}
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-    </div>
+            onClick={e => e.stopPropagation()}
+            initial={{ opacity: 0, scale: 0.97, y: -8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.97, y: -8 }}
+            transition={{ duration: 0.18 }}
+          >
+            <div className="command-palette-header">
+              <h2>Vad letar du efter{welcomeName ? <>, {welcomeName}</> : ''}?</h2>
+              <UserAvatar seed={user?.email ?? 'sok'} size={120} caretOf={inputRef} title="Din Rögleblobb" />
+            </div>
+            <div className="command-palette-input-wrap">
+              <Search size={16} aria-hidden="true" />
+              <input
+                ref={inputRef}
+                className="command-palette-input"
+                type="text"
+                value={query}
+                onChange={e => { setQuery(e.target.value); setHighlighted(0) }}
+                onKeyDown={onKeyDown}
+                placeholder="Sök sidor, eller skapa nytt…"
+                aria-label="Kommandopalett"
+              />
+            </div>
+            <div className="command-palette-results">
+              {grouped.length === 0 ? (
+                <p className="command-palette-empty">Inget matchar "{query}".</p>
+              ) : (
+                grouped.map(({ group, items }) => (
+                  <div key={group}>
+                    <div className="command-palette-group-label">{group}</div>
+                    {items.map(cmd => {
+                      flatIndex += 1
+                      const isActive = flatIndex === highlighted
+                      const Icon = cmd.icon
+                      return (
+                        <button
+                          key={cmd.id}
+                          type="button"
+                          ref={isActive ? el => el?.scrollIntoView({ block: 'nearest' }) : undefined}
+                          className={isActive ? 'command-palette-item is-active' : 'command-palette-item'}
+                          onMouseEnter={() => setHighlighted(flatIndex)}
+                          onMouseDown={e => e.preventDefault()}
+                          onClick={() => run(cmd)}
+                        >
+                          <Icon size={16} aria-hidden="true" />
+                          {cmd.label}
+                        </button>
+                      )
+                    })}
+                  </div>
+                ))
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }

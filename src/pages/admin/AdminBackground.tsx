@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { motion, AnimatePresence } from 'motion/react'
 import type { SiteSettings, ContentBlock } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../../lib/toast'
@@ -9,6 +10,8 @@ import { useAutosave, useDraftRestore, clearDraft } from '../../lib/useAutosave'
 import AutosaveBanner from '../../components/admin/AutosaveBanner'
 import AutosaveStatus from '../../components/admin/AutosaveStatus'
 import FocusModeToggle from '../../components/admin/FocusModeToggle'
+import { useFocusMode } from '../../lib/focusMode'
+import { FADE } from '../../lib/motionPresets'
 
 const DRAFT_KEY = 'background'
 
@@ -19,6 +22,7 @@ export default function AdminBackground() {
   const [saving, setSaving] = useState(false)
   const { show } = useToast()
   const location = useLocation()
+  const { focusMode } = useFocusMode()
 
   const { draft, discard: discardDraft } = useDraftRestore<{ blocks: ContentBlock[] }>(DRAFT_KEY)
   const { dirty, savedAt } = useAutosave(DRAFT_KEY, { blocks }, { skip: loading })
@@ -66,18 +70,26 @@ export default function AdminBackground() {
   return (
     <div className="fade-in">
       <div className="admin-page-header">
-        <h1>Bakgrund · innehåll</h1>
-        <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+        <AnimatePresence initial={false}>
+          {!focusMode && <motion.h1 key="title" {...FADE}>Bakgrund · innehåll</motion.h1>}
+        </AnimatePresence>
+        <div style={{ display: 'flex', gap: 'var(--space-2)', marginLeft: 'auto' }}>
           <FocusModeToggle />
-          <Link to="/admin/sidor/bakgrund" className="btn btn-ghost btn-sm">← Sidan</Link>
-          <a
-            href="/bakgrund"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-ghost btn-sm"
-          >
-            Förhandsgranska →
-          </a>
+          <AnimatePresence initial={false}>
+            {!focusMode && (
+              <motion.div key="nav" style={{ display: 'flex', gap: 'var(--space-2)' }} {...FADE}>
+                <Link to="/admin/sidor/bakgrund" className="btn btn-ghost btn-sm">← Sidan</Link>
+                <a
+                  href="/bakgrund"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-ghost btn-sm"
+                >
+                  Förhandsgranska →
+                </a>
+              </motion.div>
+            )}
+          </AnimatePresence>
           <button className="btn btn-primary btn-sm" onClick={save} disabled={saving}>
             {saving ? 'Sparar…' : 'Spara'}
           </button>

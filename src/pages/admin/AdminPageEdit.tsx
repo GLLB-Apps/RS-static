@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useLocation, Link } from 'react-router-dom'
+import { motion, AnimatePresence } from 'motion/react'
 import type { ContentBlock } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../../lib/toast'
@@ -10,6 +11,10 @@ import { useAutosave, useDraftRestore, clearDraft } from '../../lib/useAutosave'
 import AutosaveBanner from '../../components/admin/AutosaveBanner'
 import AutosaveStatus from '../../components/admin/AutosaveStatus'
 import FocusModeToggle from '../../components/admin/FocusModeToggle'
+import EditorLayout from '../../components/admin/EditorLayout'
+import EditorSidebar from '../../components/admin/EditorSidebar'
+import { useFocusMode } from '../../lib/focusMode'
+import { FADE } from '../../lib/motionPresets'
 
 interface PageDraft {
   title: string
@@ -23,6 +28,7 @@ export default function AdminPageEdit() {
   const location = useLocation()
   const cfg = slug ? pageBySlug(slug) : undefined
   const { show } = useToast()
+  const { focusMode } = useFocusMode()
   const [title, setTitle] = useState('')
   const [intro, setIntro] = useState('')
   const [texts, setTexts] = useState<Record<string, string>>({})
@@ -82,17 +88,29 @@ export default function AdminPageEdit() {
   return (
     <div className="fade-in">
       <div className="admin-page-header">
-        <h1>Redigera sida<span className="admin-edit-subject"> — {cfg.label}</span></h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+        <AnimatePresence initial={false}>
+          {!focusMode && (
+            <motion.h1 key="title" {...FADE}>
+              Redigera sida<span className="admin-edit-subject"> — {cfg.label}</span>
+            </motion.h1>
+          )}
+        </AnimatePresence>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', marginLeft: 'auto' }}>
           <AutosaveStatus dirty={dirty} savedAt={savedAt} />
           <FocusModeToggle />
-          <Link to="/admin/sidor" className="btn btn-ghost btn-sm">← Alla sidor</Link>
+          <AnimatePresence initial={false}>
+            {!focusMode && (
+              <motion.div key="back" {...FADE}>
+                <Link to="/admin/sidor" className="btn btn-ghost btn-sm">← Alla sidor</Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
       {draft && <AutosaveBanner savedAt={draft.savedAt} onRestore={restoreDraft} onDiscard={discardDraft} />}
 
-      <div className="editor-layout">
+      <EditorLayout>
         <div className="editor-main">
           <div className="admin-form-card" style={{ maxWidth: 'none' }}>
             {!cfg.headerless && (
@@ -146,7 +164,7 @@ export default function AdminPageEdit() {
           </div>
         </div>
 
-        <aside className="editor-sidebar">
+        <EditorSidebar>
           <div className="editor-panel">
             <h3>Dynamiskt innehåll</h3>
             {cfg.manage.length === 0 ? (
@@ -164,8 +182,8 @@ export default function AdminPageEdit() {
           </div>
 
           <ContentStats blocks={blocks} />
-        </aside>
-      </div>
+        </EditorSidebar>
+      </EditorLayout>
     </div>
   )
 }

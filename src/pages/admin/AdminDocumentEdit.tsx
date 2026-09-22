@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import { motion, AnimatePresence } from 'motion/react'
 import type { DocumentItem, ContentStatus, SenderType } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../lib/auth'
 import { useToast } from '../../lib/toast'
 import Dropzone from '../../components/admin/Dropzone'
 import FocusModeToggle from '../../components/admin/FocusModeToggle'
+import { useFocusMode } from '../../lib/focusMode'
+import { FADE } from '../../lib/motionPresets'
 
 // Derive a human file-type label (e.g. "PDF") from a filename or URL.
 function fileTypeFromName(name: string): string {
@@ -19,6 +22,7 @@ export default function AdminDocumentEdit() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { show } = useToast()
+  const { focusMode } = useFocusMode()
   const isNew = id === 'ny' || !id
 
   const [form, setForm] = useState({
@@ -85,10 +89,22 @@ export default function AdminDocumentEdit() {
   return (
     <div className="fade-in">
       <div className="admin-page-header">
-        <h1>{isNew ? 'Nytt dokument' : 'Redigera dokument'}{!isNew && form.title && <span className="admin-edit-subject"> — {form.title}</span>}</h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+        <AnimatePresence initial={false}>
+          {!focusMode && (
+            <motion.h1 key="title" {...FADE}>
+              {isNew ? 'Nytt dokument' : 'Redigera dokument'}{!isNew && form.title && <span className="admin-edit-subject"> — {form.title}</span>}
+            </motion.h1>
+          )}
+        </AnimatePresence>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginLeft: 'auto' }}>
           <FocusModeToggle />
-          <Link to="/admin/dokument" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+          <AnimatePresence initial={false}>
+            {!focusMode && (
+              <motion.div key="back" {...FADE}>
+                <Link to="/admin/dokument" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
       <div className="admin-form-card">
