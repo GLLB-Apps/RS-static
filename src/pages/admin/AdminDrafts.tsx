@@ -6,7 +6,9 @@ import { useAuth } from '../../lib/auth'
 import { useToast } from '../../lib/toast'
 import { useConfirm } from '../../lib/confirm'
 import { useMarkSourceRead } from '../../lib/notifications'
-import { statusLabel, statusBadgeClass } from '../../lib/utils'
+import { statusLabel, statusBadgeClass, formatDateShort } from '../../lib/utils'
+import { listAllDrafts, clearDraft, type FoundDraft } from '../../lib/useAutosave'
+import { DRAFT_ROUTE_FOR, DRAFT_KIND_LABEL, previewForDraft } from '../../lib/draftPreview'
 import {
   DRAFT_SOURCES, DRAFT_STATUSES, DRAFT_SORT_LABELS, sortDrafts,
   type DraftItem, type DraftSort,
@@ -24,9 +26,15 @@ export default function AdminDrafts() {
   const [sort, setSort] = useState<DraftSort>('updated_desc')
   const [typeFilter, setTypeFilter] = useState<string>('')
   const [busy, setBusy] = useState<string | null>(null)
+  const [localDrafts, setLocalDrafts] = useState<FoundDraft[]>([])
   useMarkSourceRead('drafts', !loading)
 
-  useEffect(() => { load() }, [])
+  useEffect(() => { load(); setLocalDrafts(listAllDrafts()) }, [])
+
+  function discardLocal(d: FoundDraft) {
+    clearDraft(d.key)
+    setLocalDrafts(prev => prev.filter(x => x.key !== d.key))
+  }
 
   function load() {
     setLoading(true)
@@ -140,6 +148,43 @@ export default function AdminDrafts() {
           </select>
         </label>
       </div>
+
+      {scope === 'mine' && localDrafts.length > 0 && (
+        <div style={{ marginBottom: 'var(--space-6)' }}>
+          <h2 style={{ fontSize: '1.1rem', marginBottom: 'var(--space-3)', color: 'var(--warning)' }}>
+            Osparade utkast i den här webbläsaren ({localDrafts.length})
+          </h2>
+          <p className="text-muted" style={{ fontSize: '0.82rem', marginTop: 'calc(-1 * var(--space-2))', marginBottom: 'var(--space-3)' }}>
+            Autosparade lokalt men aldrig sparade på servern — syns bara i den här webbläsaren, för dig.
+          </p>
+          <div className="admin-list">
+            {localDrafts.map(d => {
+              const preview = previewForDraft(d.kind, d.value)
+              const path = DRAFT_ROUTE_FOR[d.kind]?.(d.rest)
+              return (
+                <div key={d.key} className="admin-list-item">
+                  <div className="admin-list-item-info">
+                    <div className="admin-list-item-title">{preview.title.trim() || '(namnlös)'}</div>
+                    <div className="admin-list-item-meta">
+                      <span className="badge badge-warning">Osparat lokalt</span>
+                      <span>{DRAFT_KIND_LABEL[d.kind] ?? d.kind}</span>
+                      <span>Autosparat {formatDateShort(d.savedAt)}</span>
+                    </div>
+                  </div>
+                  <div className="admin-table-actions">
+                    {path && (
+                      <Link to={path} state={{ autoRestoreDraft: true }} className="btn btn-secondary btn-sm">
+                        Fortsätt redigera
+                      </Link>
+                    )}
+                    <button className="btn btn-danger btn-sm" onClick={() => discardLocal(d)}>Ta bort</button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {visible.length === 0 ? (
         <div className="empty-state">

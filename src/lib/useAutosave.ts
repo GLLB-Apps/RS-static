@@ -36,13 +36,11 @@ export interface FoundDraft {
 }
 
 /**
- * Letar upp det senast autosparade utkastet över samtliga redigerare, oavsett
- * vilken sida man råkar stå på — se DraftRecoveryDialog.tsx, som visar det
- * som en global "Välkommen tillbaka"-dialog direkt efter inloggning, i
- * stället för att kräva att man själv råkar öppna rätt redigerare igen.
+ * Alla autosparade utkast just nu, nyast först — se AdminDrafts.tsx ("Mina
+ * utkast"), som listar dem vid sidan av de riktiga utkastraderna på servern.
  */
-export function findLatestDraft(): FoundDraft | null {
-  let best: FoundDraft | null = null
+export function listAllDrafts(): FoundDraft[] {
+  const out: FoundDraft[] = []
   try {
     for (let i = 0; i < localStorage.length; i++) {
       const fullKey = localStorage.key(i)
@@ -53,19 +51,28 @@ export function findLatestDraft(): FoundDraft | null {
       try {
         const parsed = JSON.parse(raw) as AutosaveDraft<unknown>
         if (typeof parsed?.savedAt !== 'string') continue
-        if (best && parsed.savedAt <= best.savedAt) continue
         const sep = key.indexOf(':')
-        best = {
+        out.push({
           key,
           kind: sep === -1 ? key : key.slice(0, sep),
           rest: sep === -1 ? '' : key.slice(sep + 1),
           savedAt: parsed.savedAt,
           value: parsed.value,
-        }
+        })
       } catch { /* skadad post — hoppas över */ }
     }
   } catch { /* blockerad lagring m.m. */ }
-  return best
+  return out.sort((a, b) => (a.savedAt < b.savedAt ? 1 : a.savedAt > b.savedAt ? -1 : 0))
+}
+
+/**
+ * Det senast autosparade utkastet, oavsett vilken sida man råkar stå på —
+ * se DraftRecoveryDialog.tsx, som visar det som en global "Välkommen
+ * tillbaka"-dialog direkt efter inloggning, i stället för att kräva att man
+ * själv råkar öppna rätt redigerare igen.
+ */
+export function findLatestDraft(): FoundDraft | null {
+  return listAllDrafts()[0] ?? null
 }
 
 /**

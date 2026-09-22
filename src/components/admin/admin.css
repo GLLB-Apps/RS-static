@@ -1132,22 +1132,36 @@
   color: var(--text-muted);
 }
 .autosave-status svg { flex-shrink: 0; }
+.autosave-status-icon.is-saving { animation: autosavePulse 1.1s ease-in-out infinite; }
+@keyframes autosavePulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
 
 /* Den globala "Välkommen tillbaka"-dialogen (DraftRecoveryDialog) — bredare
    än en vanlig .admin-modal för att rymma förhandsvisningen till höger. */
 .draft-recovery-modal {
-  max-width: 680px;
+  max-width: 720px;
   display: flex;
   align-items: flex-start;
   gap: var(--space-5);
 }
 .draft-recovery-main {
-  flex: 1.2;
+  flex: 1;
   min-width: 0;
   display: flex;
-  align-items: center;
-  gap: var(--space-4);
+  flex-direction: column;
+  gap: var(--space-3);
 }
+/* Blobben hör ihop med namnet, inte med hela hälsningsrutan — därför en egen
+   rad i stället för att vara en flex-syskon till text och knappar. */
+.draft-recovery-greeting {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.draft-recovery-greeting svg { flex-shrink: 0; }
+.draft-recovery-greeting strong { font-size: 1.05rem; }
 .draft-recovery-preview {
   flex: 1;
   min-width: 0;
@@ -1162,6 +1176,17 @@
   white-space: nowrap;
 }
 .draft-recovery-preview p { font-size: 0.85rem; }
+/* Skalar ner det renderade innehållet — det är en förhandsvisning i en
+   dialogruta, inte den publika sidan — och tillåter scroll i stället för att
+   ett långt utkast spränger dialogens höjd. */
+.draft-recovery-preview-blocks {
+  max-height: 220px;
+  overflow-y: auto;
+  font-size: 0.82rem;
+  padding-right: var(--space-2);
+}
+.draft-recovery-preview-blocks .content-blocks { gap: var(--space-3); }
+.draft-recovery-preview-blocks img { max-width: 100%; border-radius: var(--radius-md); }
 @media (max-width: 640px) {
   .draft-recovery-modal { flex-direction: column; }
   .draft-recovery-preview { border-left: none; border-top: 1px solid var(--border); padding-left: 0; padding-top: var(--space-4); width: 100%; }
