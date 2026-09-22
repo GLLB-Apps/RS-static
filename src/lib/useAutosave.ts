@@ -31,6 +31,8 @@ export interface FoundDraft {
   /** Delen efter ":", eller tom sträng — dokumentets id/slug, eller "new". */
   rest: string
   savedAt: string
+  /** Utkastets innehåll, oskadat — DraftRecoveryDialog.tsx tolkar formen utifrån `kind`. */
+  value: unknown
 }
 
 /**
@@ -58,6 +60,7 @@ export function findLatestDraft(): FoundDraft | null {
           kind: sep === -1 ? key : key.slice(0, sep),
           rest: sep === -1 ? '' : key.slice(sep + 1),
           savedAt: parsed.savedAt,
+          value: parsed.value,
         }
       } catch { /* skadad post — hoppas över */ }
     }
