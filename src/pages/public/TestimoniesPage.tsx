@@ -7,7 +7,7 @@ import TestimonyForm from '../../components/public/TestimonyForm'
 import AvatarFacepile from '../../components/AvatarFacepile'
 import UserAvatar from '../../components/UserAvatar'
 import { usePage } from '../../lib/usePage'
-import { truncate } from '../../lib/utils'
+import { truncate, testimonyBlobSeed } from '../../lib/utils'
 import { randomRogleTitle } from '../../lib/rogleTitles'
 import { takeRogleHandoff } from '../../lib/rogleHandoff'
 
@@ -82,7 +82,7 @@ export default function TestimoniesPage() {
       <div className="page-header">
         <div className="page-title-row">
           <h1>{page.title}</h1>
-          <AvatarFacepile seeds={testimonies.map(t => t.id)} />
+          <AvatarFacepile seeds={testimonies.map(t => testimonyBlobSeed(t.author_name ?? '', t.story, t.is_anonymous))} />
         </div>
         {page.intro && <p>{page.intro}</p>}
       </div>
@@ -114,7 +114,7 @@ export default function TestimoniesPage() {
                 {t.title && <h3>{t.title}</h3>}
                 <p className="testimony-quote">"{truncate(t.story, 200)}"</p>
                 <div className="testimony-card-author">
-                  <UserAvatar seed={t.id} size={32} />
+                  <UserAvatar seed={testimonyBlobSeed(t.author_name ?? '', t.story, t.is_anonymous)} size={32} />
                   <p className="testimony-author">
                     {t.is_anonymous ? 'Anonym' : t.author_name ?? 'Anonym'}
                     {t.location && `, ${t.location}`}

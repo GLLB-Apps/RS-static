@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import type { Testimony } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
-import { formatDate } from '../../lib/utils'
+import { formatDate, testimonyBlobSeed } from '../../lib/utils'
 import { useRegisterEditLink } from '../../lib/editLink'
 import UserAvatar from '../../components/UserAvatar'
 import TestimonyMap from '../../components/public/TestimonyMap'
@@ -48,7 +48,7 @@ export default function TestimonyDetailPage() {
       <div className="page-header">
         <Link to="/vittnesmal" className="section-link" style={{ marginBottom: 'var(--space-3)' }}>← Alla vittnesmål</Link>
         <div className="testimony-detail-head">
-          <UserAvatar seed={testimony.id} size={64} gaze title={author} />
+          <UserAvatar seed={testimonyBlobSeed(testimony.author_name ?? '', testimony.story, testimony.is_anonymous)} size={64} gaze title={author} />
           <div>
             <h1>{testimony.title || 'Vittnesmål'}</h1>
             <p className="testimony-detail-meta">

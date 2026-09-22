@@ -6,7 +6,7 @@ import { useAuth } from '../../lib/auth'
 import { useToast } from '../../lib/toast'
 import { useConfirm } from '../../lib/confirm'
 import { useMarkSourceRead } from '../../lib/notifications'
-import { formatDateShort, statusLabel, statusBadgeClass } from '../../lib/utils'
+import { formatDateShort, statusLabel, statusBadgeClass, testimonyBlobSeed } from '../../lib/utils'
 import MapPicker from '../../components/public/MapPicker'
 import UserAvatar from '../../components/UserAvatar'
 
@@ -135,7 +135,7 @@ export default function AdminTestimonies() {
         <div className="card" style={{ marginBottom: 'var(--space-5)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-3)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-              <UserAvatar seed={selected.id} size={36} gaze style={{ flexShrink: 0 }} />
+              <UserAvatar seed={testimonyBlobSeed(selected.author_name ?? '', selected.story, selected.is_anonymous)} size={36} gaze style={{ flexShrink: 0 }} />
               <h3 style={{ margin: 0 }}>{selected.title || 'Utan titel'}</h3>
             </div>
             <button className="btn btn-ghost btn-sm" onClick={() => setSelected(null)}>Stäng</button>
@@ -191,7 +191,7 @@ export default function AdminTestimonies() {
         <div className="admin-list">
           {filtered.map(t => (
             <div key={t.id} className="admin-list-item">
-              <UserAvatar seed={t.id} size={36} style={{ flexShrink: 0 }} />
+              <UserAvatar seed={testimonyBlobSeed(t.author_name ?? '', t.story, t.is_anonymous)} size={36} style={{ flexShrink: 0 }} />
               <div className="admin-list-item-info">
                 <div className="admin-list-item-title">{t.title || 'Utan titel'}</div>
                 <div className="admin-list-item-meta">

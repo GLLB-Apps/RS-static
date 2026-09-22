@@ -4,6 +4,7 @@ import Dropzone from '../admin/Dropzone'
 import MapPicker from './MapPicker'
 import UserAvatar from '../UserAvatar'
 import { randomRogleTitle } from '../../lib/rogleTitles'
+import { testimonyBlobSeed } from '../../lib/utils'
 
 interface TestimonyFormProps {
   onSubmit: (data: Record<string, unknown>) => Promise<void>
@@ -21,18 +22,6 @@ const STEPS = [
   { label: 'Om dig' },
   { label: 'Bild, plats & kontakt' },
 ]
-
-/**
- * Samma formel som `RogleTeaser` (`name || 'rögleskogen'`) så länge
- * berättelsen är tom — annars vore det inte samma figur man precis mötte på
- * startsidan, trots att namnet förts över. Så fort berättelsen får text tar
- * den över och blandas in, vilket är den avsedda "skapas av din berättelse"-
- * övergången.
- */
-function blobSeed(name: string, story: string, anonymous: boolean): string {
-  if (anonymous) return story || 'rögleskogen'
-  return story.trim() ? `${name}|${story}` : (name || 'rögleskogen')
-}
 
 export default function TestimonyForm({ onSubmit, initialName = '', initialTitleWord = '' }: TestimonyFormProps) {
   const page = usePage('vittnesmal')
@@ -114,7 +103,7 @@ export default function TestimonyForm({ onSubmit, initialName = '', initialTitle
             skapas — och bara där. Formen står sedan fast på steg 2–3, för
             inget av fälten där (ort, e-post) rör vid fröet. */}
         <UserAvatar
-          seed={blobSeed(form.author_name, form.story, form.is_anonymous)}
+          seed={testimonyBlobSeed(form.author_name, form.story, form.is_anonymous)}
           size={88}
           gaze={step === 0}
           caretOf={step === 1 ? locationRef : step === 2 ? emailRef : undefined}

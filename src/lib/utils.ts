@@ -282,6 +282,18 @@ export function truncate(text: string, maxLen: number): string {
   return text.substring(0, maxLen).replace(/\s+\S*$/, '') + '…'
 }
 
+/**
+ * Samma frö som vittnesmålsformuläret skapar figuren av medan man skriver
+ * (se TestimonyForm.tsx: namn + berättelse, eller bara berättelsen om
+ * anonymt) — måste vara identiskt överallt vittnesmålets blob visas EFTER
+ * inskicket (admin, listan, den egna sidan, kartan), annars byter personen
+ * figur mellan att skriva och att se sitt eget vittnesmål igen.
+ */
+export function testimonyBlobSeed(name: string, story: string, anonymous: boolean): string {
+  if (anonymous) return story || 'rögleskogen'
+  return story.trim() ? `${name}|${story}` : (name || 'rögleskogen')
+}
+
 /** Padding för fitBounds, delad så att kartorna ramas in likadant. */
 export const MAP_FIT_PADDING: [number, number] = [24, 24]
 

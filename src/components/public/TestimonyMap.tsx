@@ -3,16 +3,19 @@ import L from 'leaflet'
 import { blobatar } from 'blobatar'
 import 'leaflet/dist/leaflet.css'
 import type { Testimony, MapLocation, LatLngTuple } from '../../lib/types'
-import { MAP_FIT_PADDING } from '../../lib/utils'
+import { MAP_FIT_PADDING, testimonyBlobSeed } from '../../lib/utils'
 import { useBlobAvatarsEnabled } from '../../lib/blobSettings'
 import { hueForSeed, NATURE_SHAPES } from '../../lib/blobPalette'
 
 /**
- * Markören som en cirkulär blob — samma figur som syns i listan, kortet och
- * den egna sidan (förankad till id, inte namnet). `blobatar()` är bibliotekets
- * strängbaserade API, byggt för just det här: ren SVG-markup utan React, för
- * Leaflets egna DOM-baserade ikoner. Avstängt i inställningarna faller den
- * tillbaka på samma enfärgade prick som de redaktionella referenspunkterna.
+ * Markören som en cirkulär blob — samma figur som syns i listan, kortet,
+ * den egna sidan och som personen själv mötte i formuläret (frö = namn +
+ * berättelse, se testimonyBlobSeed i utils.ts — inte dokumentets id, det
+ * skulle ge en annan figur än den man skickade in). `blobatar()` är
+ * bibliotekets strängbaserade API, byggt för just det här: ren SVG-markup
+ * utan React, för Leaflets egna DOM-baserade ikoner. Avstängt i
+ * inställningarna faller den tillbaka på samma enfärgade prick som de
+ * redaktionella referenspunkterna.
  */
 function testimonyMarkerHtml(seed: string, size: number, enabled: boolean): string {
   if (!enabled) {
@@ -44,7 +47,7 @@ function popupHtml(t: Testimony, blobsEnabled: boolean) {
   const storyText = t.story.length > 160 ? t.story.slice(0, 160) + '…' : t.story
   const story = `<span style="font-size:0.85rem">${escapeHtml(storyText)}</span><br/>`
   const meta = escapeHtml(t.location ? `${author}, ${t.location}` : author)
-  const avatar = testimonyMarkerHtml(t.id, 22, blobsEnabled)
+  const avatar = testimonyMarkerHtml(testimonyBlobSeed(t.author_name ?? '', t.story, t.is_anonymous), 22, blobsEnabled)
   return `${img}${title}${story}` +
     `<span style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:#666">${avatar}${meta}</span><br/>` +
     `<a href="/vittnesmal/${t.id}" style="font-size:0.8rem">Läs hela vittnesmålet →</a>`
@@ -82,7 +85,7 @@ export default function TestimonyMap({ testimonies, points = [], selectedId, onS
     testimonies.forEach(t => {
       if (t.map_lat == null || t.map_lng == null) return
       const icon = L.divIcon({
-        html: testimonyMarkerHtml(t.id, 34, blobsEnabled),
+        html: testimonyMarkerHtml(testimonyBlobSeed(t.author_name ?? '', t.story, t.is_anonymous), 34, blobsEnabled),
         className: '', iconSize: [34, 34], iconAnchor: [17, 17], popupAnchor: [0, -20],
       })
       const marker = L.marker([t.map_lat, t.map_lng], { icon }).addTo(map)
