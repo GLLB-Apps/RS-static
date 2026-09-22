@@ -96,9 +96,10 @@ export default function MapPreview({ points, areas = [], height = 350, focusId =
       })
         .bindTooltip(area.title, { sticky: true })
         .bindPopup(`
+          ${area.image_url ? `<img src="${area.image_url}" alt="" style="width:100%;height:120px;object-fit:cover;border-radius:6px;margin-bottom:6px"/>` : ''}
           <strong>${area.title}</strong>
           ${area.description ? `<br/><span style="font-size:0.85rem;">${area.description}</span>` : ''}
-        `)
+        `, { maxWidth: 240 })
         .addTo(group)
     })
   }, [areas])
@@ -157,6 +158,7 @@ export default function MapPreview({ points, areas = [], height = 350, focusId =
       const marker = L.marker([point.lat, point.lng], { icon }).addTo(group)
       markersRef.current.set(point.id, marker)
       marker.bindPopup(`
+        ${point.image_url ? `<img src="${point.image_url}" alt="" style="width:100%;height:120px;object-fit:cover;border-radius:6px;margin-bottom:6px"/>` : ''}
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
           <span style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:${color};color:#fff;flex-shrink:0;">${svgFor(iconName)}</span>
           <strong>${point.title}</strong>
@@ -164,7 +166,7 @@ export default function MapPreview({ points, areas = [], height = 350, focusId =
         <span style="font-size:0.85rem;color:#666;">${mapPointTypeLabel(point.point_type)}</span>
         ${point.description ? `<br/><span style="font-size:0.85rem;">${point.description}</span>` : ''}
         ${distanceNote}
-      `)
+      `, { maxWidth: 240 })
     })
   }, [points])
 

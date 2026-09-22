@@ -361,6 +361,8 @@ export interface MapArea {
   fill_opacity: number
   /** Valfri Lucide-ikon (kebab-case) som visas i teckenförklaringen. */
   icon: string | null
+  /** Visas i popupen när någon klickar på området — samma stil som vittnesmålens bild. */
+  image_url: string | null
   /** Yttre ring i ritordning. Stängs automatiskt — upprepa inte första punkten. */
   points: LatLngTuple[]
   sort_order: number

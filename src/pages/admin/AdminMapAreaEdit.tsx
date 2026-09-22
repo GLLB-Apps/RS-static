@@ -7,6 +7,7 @@ import { useToast } from '../../lib/toast'
 import { parseCoordinateText, polygonAreaKm2, MAP_FIT_PADDING } from '../../lib/utils'
 import LucideIcon from '../../lib/lucide'
 import IconPicker from '../../components/admin/IconPicker'
+import Dropzone from '../../components/admin/Dropzone'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -30,7 +31,7 @@ export default function AdminMapAreaEdit() {
 
   const [form, setForm] = useState({
     title: '', description: '', color: '#b94a3d',
-    line_style: 'solid' as MapAreaLineStyle, fill_opacity: 0.1, sort_order: 0,
+    line_style: 'solid' as MapAreaLineStyle, fill_opacity: 0.1, sort_order: 0, image_url: '',
   })
   const [points, setPoints] = useState<LatLngTuple[]>([])
   const [history, setHistory] = useState<LatLngTuple[][]>([])
@@ -77,7 +78,7 @@ export default function AdminMapAreaEdit() {
         setForm({
           title: a.title, description: a.description ?? '', color: a.color || '#b94a3d',
           line_style: a.line_style || 'solid', fill_opacity: a.fill_opacity ?? 0.1,
-          sort_order: a.sort_order ?? 0,
+          sort_order: a.sort_order ?? 0, image_url: a.image_url ?? '',
         })
         setPoints(Array.isArray(a.points) ? a.points : [])
         setIcon(a.icon ?? null)
@@ -185,6 +186,7 @@ export default function AdminMapAreaEdit() {
       fill_opacity: form.fill_opacity,
       sort_order: form.sort_order,
       icon: icon || null,
+      image_url: form.image_url || null,
       points,
       status: saveStatus,
       updated_by: user?.id,
@@ -283,6 +285,25 @@ export default function AdminMapAreaEdit() {
         <div className="form-group">
           <label className="form-label" htmlFor="description">Beskrivning</label>
           <textarea id="description" className="form-textarea" rows={2} value={form.description} onChange={e => update('description', e.target.value)} />
+          <p className="form-hint">Visas i popupen när någon klickar på området.</p>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Bild (valfritt)</label>
+          {form.image_url ? (
+            <div className="testimony-image-preview">
+              <img src={form.image_url} alt="" />
+              <button type="button" className="btn btn-ghost btn-sm" onClick={() => update('image_url', '')}>Ta bort bild</button>
+            </div>
+          ) : (
+            <Dropzone
+              compact
+              label="Dra och släpp en bild här"
+              hint="eller klicka för att välja / ta ett foto"
+              onUploaded={url => update('image_url', url)}
+              onError={m => show('Uppladdning misslyckades: ' + m, 'error')}
+            />
+          )}
           <p className="form-hint">Visas i popupen när någon klickar på området.</p>
         </div>
 

@@ -7,6 +7,7 @@ import { useToast } from '../../lib/toast'
 import { mapPointTypeIconName } from '../../lib/utils'
 import LucideIcon from '../../lib/lucide'
 import IconPicker from '../../components/admin/IconPicker'
+import Dropzone from '../../components/admin/Dropzone'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -166,15 +167,26 @@ export default function AdminMapEdit() {
             {iconOpen && <IconPicker value={icon} onChange={n => { setIcon(n); setIconOpen(false) }} />}
             <p className="form-hint">Lämnas tom = punkttypens standardikon. Klistra in en Lucide-adress i sökrutan för valfri ikon.</p>
           </div>
-          <div className="grid grid-2">
-            <div className="form-group">
-              <label className="form-label" htmlFor="image_url">Bild-URL</label>
-              <input id="image_url" className="form-input" type="url" value={form.image_url} onChange={e => update('image_url', e.target.value)} />
-            </div>
-            <div className="form-group">
-              <label className="form-label" htmlFor="source">Källa</label>
-              <input id="source" className="form-input" type="text" value={form.source} onChange={e => update('source', e.target.value)} />
-            </div>
+          <div className="form-group">
+            <label className="form-label">Bild (valfritt)</label>
+            {form.image_url ? (
+              <div className="testimony-image-preview">
+                <img src={form.image_url} alt="" />
+                <button type="button" className="btn btn-ghost btn-sm" onClick={() => update('image_url', '')}>Ta bort bild</button>
+              </div>
+            ) : (
+              <Dropzone
+                compact
+                label="Dra och släpp en bild här"
+                hint="eller klicka för att välja / ta ett foto"
+                onUploaded={url => update('image_url', url)}
+                onError={m => show('Uppladdning misslyckades: ' + m, 'error')}
+              />
+            )}
+          </div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="source">Källa</label>
+            <input id="source" className="form-input" type="text" value={form.source} onChange={e => update('source', e.target.value)} />
           </div>
           <div className="form-group">
             <label className="form-label" htmlFor="status">Status</label>
