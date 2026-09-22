@@ -8,6 +8,20 @@ import { slugify } from '../../lib/utils'
 import { DEFAULT_NEWS_CATEGORY, NEWS_CATEGORIES, newsCategory, parseTags, postTags } from '../../lib/newsCategories'
 import TapEditor from '../../components/admin/TapEditor'
 import ContentStats from '../../components/admin/ContentStats'
+import { useAutosave, useDraftRestore, clearDraft } from '../../lib/useAutosave'
+import AutosaveBanner from '../../components/admin/AutosaveBanner'
+import AutosaveStatus from '../../components/admin/AutosaveStatus'
+
+interface NewsDraft {
+  form: {
+    title: string; slug: string; excerpt: string; author: string; featured_image: string; image_caption: string
+    is_pinned: boolean; category: string; source: string; external_url: string
+  }
+  tags: string
+  publishedAt: string | null
+  content: ContentBlock[]
+  status: ContentStatus
+}
 
 // <input type="date"> vill ha YYYY-MM-DD; databasen sparar hela tidsstämpeln.
 const toDateInput = (iso: string | null) => (iso ? new Date(iso).toISOString().slice(0, 10) : '')
@@ -39,6 +53,20 @@ export default function AdminNewsEdit() {
   const [status, setStatus] = useState<ContentStatus>('draft')
   const [loading, setLoading] = useState(!isNew)
   const [saving, setSaving] = useState(false)
+
+  const draftKey = `news:${id ?? 'new'}`
+  const { draft, discard: discardDraft } = useDraftRestore<NewsDraft>(draftKey)
+  const { dirty, savedAt } = useAutosave(draftKey, { form, tags, publishedAt, content, status }, { skip: loading })
+
+  function restoreDraft() {
+    if (!draft) return
+    setForm(draft.value.form)
+    setTags(draft.value.tags)
+    setPublishedAt(draft.value.publishedAt)
+    setContent(draft.value.content)
+    setStatus(draft.value.status)
+    discardDraft()
+  }
 
   useEffect(() => {
     if (isNew) return
@@ -95,12 +123,12 @@ export default function AdminNewsEdit() {
       const { error } = await supabase.from('posts').insert({ ...payload, created_by: user?.id })
       setSaving(false)
       if (error) show('Kunde inte spara: ' + error.message, 'error')
-      else { show('Nyhet skapad', 'success'); navigate('/admin/nyheter') }
+      else { clearDraft(draftKey); show('Nyhet skapad', 'success'); navigate('/admin/nyheter') }
     } else {
       const { error } = await supabase.from('posts').update(payload).eq('id', id)
       setSaving(false)
       if (error) show('Kunde inte spara: ' + error.message, 'error')
-      else show(publish ? 'Publicerad' : 'Sparat', 'success')
+      else { clearDraft(draftKey); show(publish ? 'Publicerad' : 'Sparat', 'success') }
     }
   }
 
@@ -110,8 +138,13 @@ export default function AdminNewsEdit() {
     <div className="fade-in">
       <div className="admin-page-header">
         <h1>{isNew ? 'Ny nyhet' : 'Redigera nyhet'}{!isNew && form.title && <span className="admin-edit-subject"> — {form.title}</span>}</h1>
-        <Link to="/admin/nyheter" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+          <AutosaveStatus dirty={dirty} savedAt={savedAt} />
+          <Link to="/admin/nyheter" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+        </div>
       </div>
+
+      {draft && <AutosaveBanner savedAt={draft.savedAt} onRestore={restoreDraft} onDiscard={discardDraft} />}
 
       <div className="editor-layout">
         <div className="editor-main">

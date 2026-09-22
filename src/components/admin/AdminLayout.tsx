@@ -6,6 +6,8 @@ import type { UserRole } from '../../lib/types'
 import { roleLabel } from '../../lib/utils'
 import { PAGES } from '../../lib/pages'
 import { NotificationsProvider, useNotifications, type NotificationSource } from '../../lib/notifications'
+import { EditorDirtyProvider, useIsEditorDirty } from '../../lib/editorDirty'
+import { useConfirm } from '../../lib/confirm'
 import MobileAdminNotice from './MobileAdminNotice'
 import NotificationBell from './NotificationBell'
 
@@ -133,9 +135,22 @@ function initialTheme(): 'light' | 'dark' {
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  // Egen provider här (inte i App.tsx) — dirty-läget ska bara existera medan
+  // adminpanelen faktiskt är monterad, aldrig läcka till den publika sidan
+  // eller intranätet.
+  return (
+    <EditorDirtyProvider>
+      <AdminLayoutInner>{children}</AdminLayoutInner>
+    </EditorDirtyProvider>
+  )
+}
+
+function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   const { user, role, displayName, signOut } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
+  const { confirm } = useConfirm()
+  const isEditorDirty = useIsEditorDirty()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [theme, setTheme] = useState<'light' | 'dark'>(initialTheme)
@@ -171,6 +186,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     .map(seg => decodeURIComponent(seg))
 
   async function handleSignOut() {
+    // Ett osparat utkast (autosparningens debounce har inte hunnit skriva
+    // den senaste ändringen till webbläsaren än) — fråga en gång till, så
+    // att den sista meningen inte försvinner mellan tangenttryck och utloggning.
+    if (isEditorDirty()) {
+      const ok = await confirm({
+        message: 'Du har skrivit något som inte hunnit autosparas än. Vill du verkligen logga ut?',
+        confirmText: 'Logga ut',
+        danger: true,
+      })
+      if (!ok) return
+    }
     await signOut()
     navigate('/admin/login')
   }

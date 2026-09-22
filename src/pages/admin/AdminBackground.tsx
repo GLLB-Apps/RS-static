@@ -5,6 +5,11 @@ import { supabase } from '../../lib/supabase'
 import { useToast } from '../../lib/toast'
 import TapEditor from '../../components/admin/TapEditor'
 import ContentStats from '../../components/admin/ContentStats'
+import { useAutosave, useDraftRestore, clearDraft } from '../../lib/useAutosave'
+import AutosaveBanner from '../../components/admin/AutosaveBanner'
+import AutosaveStatus from '../../components/admin/AutosaveStatus'
+
+const DRAFT_KEY = 'background'
 
 export default function AdminBackground() {
   const [settings, setSettings] = useState<SiteSettings | null>(null)
@@ -12,6 +17,15 @@ export default function AdminBackground() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const { show } = useToast()
+
+  const { draft, discard: discardDraft } = useDraftRestore<{ blocks: ContentBlock[] }>(DRAFT_KEY)
+  const { dirty, savedAt } = useAutosave(DRAFT_KEY, { blocks }, { skip: loading })
+
+  function restoreDraft() {
+    if (!draft) return
+    setBlocks(draft.value.blocks)
+    discardDraft()
+  }
 
   useEffect(() => {
     supabase.from('site_settings').select('*').maybeSingle().then(({ data }) => {
@@ -33,7 +47,7 @@ export default function AdminBackground() {
       .eq('id', settings.id)
     setSaving(false)
     if (error) show('Kunde inte spara: ' + error.message, 'error')
-    else show('Bakgrundssidan sparad', 'success')
+    else { clearDraft(DRAFT_KEY); show('Bakgrundssidan sparad', 'success') }
   }
 
   if (loading) return <div className="loading"><div className="spinner"></div></div>
@@ -57,6 +71,9 @@ export default function AdminBackground() {
           </button>
         </div>
       </div>
+
+      <AutosaveStatus dirty={dirty} savedAt={savedAt} />
+      {draft && <AutosaveBanner savedAt={draft.savedAt} onRestore={restoreDraft} onDiscard={discardDraft} />}
 
       <div className="admin-form-card">
         <p className="text-muted" style={{ marginBottom: 'var(--space-5)', fontSize: '0.9rem' }}>

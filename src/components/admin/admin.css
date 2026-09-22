@@ -1097,6 +1097,35 @@
   letter-spacing: 0.03em;
 }
 
+/* "Välkommen tillbaka"-rutan när ett autosparat utkast hittas */
+.autosave-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+  flex-wrap: wrap;
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+}
+.autosave-banner-text { flex: 1; min-width: 200px; }
+.autosave-banner-text strong { display: block; margin-bottom: var(--space-1); }
+.autosave-banner-actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+/* Litet statusmärke bredvid Spara-knapparna: autosparning till webbläsaren, inte till servern. */
+.autosave-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.autosave-status svg { flex-shrink: 0; }
+
 .editor-image-preview {
   margin-top: var(--space-2);
   width: 100%;

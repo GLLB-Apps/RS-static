@@ -9,6 +9,20 @@ import TapEditor from '../../components/admin/TapEditor'
 import ContentStats from '../../components/admin/ContentStats'
 import IconPicker from '../../components/admin/IconPicker'
 import { topicTemplateByKey } from '../../lib/topicTemplates'
+import { useAutosave, useDraftRestore, clearDraft } from '../../lib/useAutosave'
+import AutosaveBanner from '../../components/admin/AutosaveBanner'
+import AutosaveStatus from '../../components/admin/AutosaveStatus'
+
+interface TopicDraft {
+  title: string
+  slug: string
+  intro: string
+  content: ContentBlock[]
+  status: ContentStatus
+  featuredImage: string
+  icon: string
+  sortOrder: number
+}
 
 export default function AdminTopicEdit() {
   const { id } = useParams<{ id: string }>()
@@ -28,6 +42,23 @@ export default function AdminTopicEdit() {
   const [sortOrder, setSortOrder] = useState(0)
   const [loading, setLoading] = useState(!isNew)
   const [saving, setSaving] = useState(false)
+
+  const draftKey = `topic:${id ?? 'new'}`
+  const { draft, discard: discardDraft } = useDraftRestore<TopicDraft>(draftKey)
+  const { dirty, savedAt } = useAutosave(draftKey, { title, slug, intro, content, status, featuredImage, icon, sortOrder }, { skip: loading })
+
+  function restoreDraft() {
+    if (!draft) return
+    setTitle(draft.value.title)
+    setSlug(draft.value.slug)
+    setIntro(draft.value.intro)
+    setContent(draft.value.content)
+    setStatus(draft.value.status)
+    setFeaturedImage(draft.value.featuredImage)
+    setIcon(draft.value.icon)
+    setSortOrder(draft.value.sortOrder)
+    discardDraft()
+  }
 
   useEffect(() => {
     if (isNew) return
@@ -98,6 +129,7 @@ export default function AdminTopicEdit() {
       setSaving(false)
       if (error) show('Kunde inte spara: ' + error.message, 'error')
       else {
+        clearDraft(draftKey)
         show('Ämne skapat', 'success')
         navigate('/admin/amnen')
       }
@@ -105,7 +137,7 @@ export default function AdminTopicEdit() {
       const { error } = await supabase.from('topics').update(payload).eq('id', id)
       setSaving(false)
       if (error) show('Kunde inte spara: ' + error.message, 'error')
-      else show(publish ? 'Publicerad' : 'Sparat', 'success')
+      else { clearDraft(draftKey); show(publish ? 'Publicerad' : 'Sparat', 'success') }
     }
   }
 
@@ -115,8 +147,13 @@ export default function AdminTopicEdit() {
     <div className="fade-in">
       <div className="admin-page-header">
         <h1>{isNew ? 'Nytt ämne' : 'Redigera ämne'}{!isNew && title && <span className="admin-edit-subject"> — {title}</span>}</h1>
-        <Link to="/admin/amnen" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+          <AutosaveStatus dirty={dirty} savedAt={savedAt} />
+          <Link to="/admin/amnen" className="btn btn-ghost btn-sm">← Tillbaka</Link>
+        </div>
       </div>
+
+      {draft && <AutosaveBanner savedAt={draft.savedAt} onRestore={restoreDraft} onDiscard={discardDraft} />}
 
       <div className="editor-layout">
         <div className="editor-main">

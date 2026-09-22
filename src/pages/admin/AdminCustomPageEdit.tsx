@@ -7,6 +7,17 @@ import { useToast } from '../../lib/toast'
 import { RESERVED_SLUGS, slugify } from '../../lib/pages'
 import TapEditor from '../../components/admin/TapEditor'
 import ContentStats from '../../components/admin/ContentStats'
+import { useAutosave, useDraftRestore, clearDraft } from '../../lib/useAutosave'
+import AutosaveBanner from '../../components/admin/AutosaveBanner'
+import AutosaveStatus from '../../components/admin/AutosaveStatus'
+
+interface CustomPageDraft {
+  title: string
+  slug: string
+  intro: string
+  status: ContentStatus
+  blocks: ContentBlock[]
+}
 
 export default function AdminCustomPageEdit() {
   const { id } = useParams<{ id: string }>()
@@ -23,6 +34,21 @@ export default function AdminCustomPageEdit() {
   const [blocks, setBlocks] = useState<ContentBlock[]>([])
   const [loading, setLoading] = useState(!isNew)
   const [saving, setSaving] = useState(false)
+
+  const draftKey = `custom-page:${id ?? 'new'}`
+  const { draft, discard: discardDraft } = useDraftRestore<CustomPageDraft>(draftKey)
+  const { dirty, savedAt } = useAutosave(draftKey, { title, slug, intro, status, blocks }, { skip: loading })
+
+  function restoreDraft() {
+    if (!draft) return
+    setTitle(draft.value.title)
+    setSlug(draft.value.slug)
+    setSlugTouched(true)
+    setIntro(draft.value.intro)
+    setStatus(draft.value.status)
+    setBlocks(draft.value.blocks)
+    discardDraft()
+  }
 
   useEffect(() => {
     if (isNew) return
@@ -69,12 +95,12 @@ export default function AdminCustomPageEdit() {
       const { error } = await supabase.from('custom_pages').insert({ ...payload, created_by: user?.id, sort_order: 0 })
       setSaving(false)
       if (error) show('Kunde inte spara: ' + error.message, 'error')
-      else { show('Sidan skapad', 'success'); navigate('/admin/egna-sidor') }
+      else { clearDraft(draftKey); show('Sidan skapad', 'success'); navigate('/admin/egna-sidor') }
     } else {
       const { error } = await supabase.from('custom_pages').update(payload).eq('id', id)
       setSaving(false)
       if (error) show('Kunde inte spara: ' + error.message, 'error')
-      else { setStatus(saveStatus); setSlug(finalSlug); show(publish ? 'Publicerad' : 'Sparat', 'success') }
+      else { clearDraft(draftKey); setStatus(saveStatus); setSlug(finalSlug); show(publish ? 'Publicerad' : 'Sparat', 'success') }
     }
   }
 
@@ -84,8 +110,13 @@ export default function AdminCustomPageEdit() {
     <div className="fade-in">
       <div className="admin-page-header">
         <h1>{isNew ? 'Ny sida' : 'Redigera sida'}{!isNew && title && <span className="admin-edit-subject"> — {title}</span>}</h1>
-        <Link to="/admin/egna-sidor" className="btn btn-ghost btn-sm">← Alla fristående sidor</Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+          <AutosaveStatus dirty={dirty} savedAt={savedAt} />
+          <Link to="/admin/egna-sidor" className="btn btn-ghost btn-sm">← Alla fristående sidor</Link>
+        </div>
       </div>
+
+      {draft && <AutosaveBanner savedAt={draft.savedAt} onRestore={restoreDraft} onDiscard={discardDraft} />}
 
       <div className="editor-layout">
         <div className="editor-main">

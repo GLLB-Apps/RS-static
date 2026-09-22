@@ -6,6 +6,16 @@ import { useToast } from '../../lib/toast'
 import { pageBySlug } from '../../lib/pages'
 import TapEditor from '../../components/admin/TapEditor'
 import ContentStats from '../../components/admin/ContentStats'
+import { useAutosave, useDraftRestore, clearDraft } from '../../lib/useAutosave'
+import AutosaveBanner from '../../components/admin/AutosaveBanner'
+import AutosaveStatus from '../../components/admin/AutosaveStatus'
+
+interface PageDraft {
+  title: string
+  intro: string
+  texts: Record<string, string>
+  blocks: ContentBlock[]
+}
 
 export default function AdminPageEdit() {
   const { slug } = useParams<{ slug: string }>()
@@ -17,6 +27,19 @@ export default function AdminPageEdit() {
   const [blocks, setBlocks] = useState<ContentBlock[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+
+  const draftKey = `page:${slug ?? 'unknown'}`
+  const { draft, discard: discardDraft } = useDraftRestore<PageDraft>(draftKey)
+  const { dirty, savedAt } = useAutosave(draftKey, { title, intro, texts, blocks }, { skip: loading })
+
+  function restoreDraft() {
+    if (!draft) return
+    setTitle(draft.value.title)
+    setIntro(draft.value.intro)
+    setTexts(draft.value.texts)
+    setBlocks(draft.value.blocks)
+    discardDraft()
+  }
 
   useEffect(() => {
     if (!slug) return
@@ -39,7 +62,7 @@ export default function AdminPageEdit() {
     const { error } = await supabase.from('pages').upsert(payload)
     setSaving(false)
     if (error) show('Kunde inte spara: ' + error.message, 'error')
-    else show('Sparat', 'success')
+    else { clearDraft(draftKey); show('Sparat', 'success') }
   }
 
   if (!cfg) return <div className="empty-state"><p>Okänd sida.</p></div>
@@ -49,8 +72,13 @@ export default function AdminPageEdit() {
     <div className="fade-in">
       <div className="admin-page-header">
         <h1>Redigera sida<span className="admin-edit-subject"> — {cfg.label}</span></h1>
-        <Link to="/admin/sidor" className="btn btn-ghost btn-sm">← Alla sidor</Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+          <AutosaveStatus dirty={dirty} savedAt={savedAt} />
+          <Link to="/admin/sidor" className="btn btn-ghost btn-sm">← Alla sidor</Link>
+        </div>
       </div>
+
+      {draft && <AutosaveBanner savedAt={draft.savedAt} onRestore={restoreDraft} onDiscard={discardDraft} />}
 
       <div className="editor-layout">
         <div className="editor-main">
