@@ -1138,6 +1138,20 @@
   50% { opacity: 1; }
 }
 
+/* Platshållare medan en blobbs frö (t.ex. en adress som hämtas separat)
+   ännu inte är känt — utan den hinner figuren visas med fel frö och sedan
+   byta utseende när det riktiga fröet dyker upp. */
+.avatar-skeleton {
+  display: inline-block;
+  border-radius: 50%;
+  background: var(--bg-alt);
+  animation: avatarSkeletonPulse 1.3s ease-in-out infinite;
+}
+@keyframes avatarSkeletonPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.9; }
+}
+
 /* Den globala "Välkommen tillbaka"-dialogen (DraftRecoveryDialog) — bredare
    än en vanlig .admin-modal för att rymma förhandsvisningen till höger. */
 .draft-recovery-modal {

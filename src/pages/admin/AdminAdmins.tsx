@@ -58,6 +58,11 @@ export default function AdminAdmins() {
   // via /api/list-users. Funktionen finns bara i den publicerade versionen —
   // lokalt visas namnet utan adress i stället för ett felmeddelande.
   const [emails, setEmails] = useState<Record<string, string | null>>({})
+  // Adresserna kommer via ett separat, långsammare anrop än resten av listan.
+  // Utan den här flaggan hinner blobbarna visas med id som frö och sedan
+  // byta figur när adressen dyker upp — kladdigt. Se renderingen nedan: en
+  // tom platshållare tills adressen faktiskt finns.
+  const [emailsLoaded, setEmailsLoaded] = useState(false)
 
   useEffect(() => { load(); loadEmails() }, [])
 
@@ -74,6 +79,8 @@ export default function AdminAdmins() {
       if (data?.emails) setEmails(data.emails)
     } catch {
       // Går inte att nå (t.ex. otillräcklig behörighet) – listan fungerar ändå.
+    } finally {
+      setEmailsLoaded(true)
     }
   }
 
@@ -283,7 +290,9 @@ export default function AdminAdmins() {
           <div className="admin-list">
             {pending.map(u => (
               <div key={u.id} className="admin-list-item" style={{ flexWrap: 'wrap' }}>
-                <UserAvatar seed={emails[u.id] ?? u.id} size={36} style={{ flexShrink: 0 }} />
+                {emailsLoaded
+                  ? <UserAvatar seed={emails[u.id] ?? u.id} size={36} style={{ flexShrink: 0 }} />
+                  : <span className="avatar-skeleton" style={{ width: 36, height: 36 }} aria-hidden="true" />}
                 <div className="admin-list-item-info">
                   <div className="admin-list-item-title">{u.display_name ?? 'Namnlös användare'}</div>
                   <div className="admin-list-item-meta">
@@ -332,7 +341,9 @@ export default function AdminAdmins() {
             const lockSelf = isSelf && currentRole === 'superadmin'
             return (
               <div key={p.user_id} className="admin-list-item" style={{ flexWrap: 'wrap' }}>
-                <UserAvatar seed={emails[p.user_id] ?? p.user_id} size={36} style={{ flexShrink: 0 }} />
+                {emailsLoaded
+                  ? <UserAvatar seed={emails[p.user_id] ?? p.user_id} size={36} style={{ flexShrink: 0 }} />
+                  : <span className="avatar-skeleton" style={{ width: 36, height: 36 }} aria-hidden="true" />}
                 <div className="admin-list-item-info">
                   <div className="admin-list-item-title">
                     {p.display_name ?? 'Okänd användare'}
