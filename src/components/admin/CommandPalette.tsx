@@ -72,7 +72,11 @@ export default function CommandPalette({ open, onClose, role, theme, onToggleThe
   }, [role, theme])
 
   const q = query.trim().toLowerCase()
-  const filtered = q ? commands.filter(c => c.label.toLowerCase().includes(q)) : commands
+  // Matchar både kommandots egen text och dess kategori — "skapa" ska hitta
+  // hela "Skapa nytt"-gruppen, inte bara ett kommando som råkar heta så.
+  const filtered = q
+    ? commands.filter(c => c.label.toLowerCase().includes(q) || c.group.toLowerCase().includes(q))
+    : commands
   const grouped = GROUP_ORDER
     .map(group => ({ group, items: filtered.filter(c => c.group === group) }))
     .filter(g => g.items.length > 0)
