@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { apiFetch, ApiError } from '../../api/client'
 import { useAuth } from '../../lib/auth'
 import { useToast } from '../../lib/toast'
 import { usernameFromEmail } from '../../lib/utils'
+import { getRememberedAccount, rememberAccount } from '../../lib/lastAccount'
 import MobileAdminNotice from '../../components/admin/MobileAdminNotice'
 import UserAvatar from '../../components/UserAvatar'
-import { thinking, sleepy, happy } from 'blobatar/expression'
+import { thinking, sleepy } from 'blobatar/expression'
 import { Eye, EyeOff } from 'lucide-react'
 
 // Presentationen är obligatorisk vid registrering: den som tilldelar behörighet
@@ -15,26 +16,18 @@ import { Eye, EyeOff } from 'lucide-react'
 const INTRO_MIN = 40
 const INTRO_MAX = 1000
 
-// Hur länge "Välkommen tillbaka"-hälsningen står kvar innan vi navigerar
-// vidare — kort nog för att inte kännas som en väntetid, långt nog för att
-// namnet faktiskt hinner läsas och tona in.
-const WELCOME_DELAY_MS = 1100
-
 export default function AdminLogin() {
   const { session, user, isAdmin, loading, displayName: accountName } = useAuth()
   const { show } = useToast()
-  const navigate = useNavigate()
 
-  // Admins till adminpanelen, alla andra inloggade till intranätet (guarden
-  // där visar ett vänligt meddelande om kontot ännu inte fått medlems-
-  // åtkomst). Dröjer en stund så att "Välkommen tillbaka"-hälsningen syns —
-  // `loading` är redan false här, så accountName har sitt slutgiltiga värde.
+  // Sparar undan kontot man loggar in med, så att rubriken kan hälsa med
+  // namnet nästa gång — se lastAccount.ts. `loading` är klar här (rollen
+  // och visningsnamnet är hämtade), så accountName har sitt slutgiltiga värde.
   useEffect(() => {
-    if (!session) return
-    const t = setTimeout(() => navigate(isAdmin ? '/admin' : '/internt', { replace: true }), WELCOME_DELAY_MS)
-    return () => clearTimeout(t)
-  }, [session, isAdmin, navigate])
+    if (session && !loading && user?.email) rememberAccount(user.email, accountName)
+  }, [session, loading, user, accountName])
 
+  const [remembered] = useState(getRememberedAccount)
   const [logo, setLogo] = useState('')
   useEffect(() => {
     let cancelled = false
@@ -46,7 +39,7 @@ export default function AdminLogin() {
   }, [])
 
   const [mode, setMode] = useState<'login' | 'signup' | 'forgot'>('login')
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState(() => remembered?.email ?? '')
   const [password, setPassword] = useState('')
   const [displayName, setDisplayName] = useState('')
   const [intro, setIntro] = useState('')
@@ -64,19 +57,16 @@ export default function AdminLogin() {
       </div>
     )
   }
-  // Kontot är hittat (inloggad session, rollen klar) — en kort hälsning med
-  // namnet, inte adressen, innan useEffect ovan navigerar vidare.
-  if (session) {
-    const welcomeName = accountName || (user?.email ? usernameFromEmail(user.email) : '')
-    return (
-      <div className="admin-login-page admin-login-loading">
-        <UserAvatar seed={user?.email ?? 'rogleskogen'} size={72} expression={happy} title="Välkommen tillbaka" />
-        <p className="admin-login-welcome fade-in">
-          Välkommen tillbaka{welcomeName ? <>, <strong>{welcomeName}</strong></> : ''}!
-        </p>
-      </div>
-    )
-  }
+  // Admins till adminpanelen, alla andra inloggade till intranätet (guarden där
+  // visar ett vänligt meddelande om kontot ännu inte fått medlemsåtkomst).
+  if (session) return <Navigate to={isAdmin ? '/admin' : '/internt'} replace />
+
+  // Känner webbläsaren igen adressen som skrivs (se lastAccount.ts) hälsar
+  // rubriken med namnet i stället för den generiska texten — redan innan
+  // man loggat in.
+  const welcomeName = remembered && email.trim().toLowerCase() === remembered.email.toLowerCase()
+    ? (remembered.displayName || usernameFromEmail(remembered.email))
+    : null
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -173,7 +163,9 @@ export default function AdminLogin() {
           ) : (
             <div className="admin-login-card">
               <h2 className="admin-login-title">
-                {mode === 'login' ? 'Välkommen tillbaka' : mode === 'signup' ? 'Skapa konto' : 'Glömt lösenordet'}
+                {mode === 'login'
+                  ? (welcomeName ? <>Välkommen tillbaka, <strong className="fade-in">{welcomeName}</strong>!</> : 'Välkommen tillbaka')
+                  : mode === 'signup' ? 'Skapa konto' : 'Glömt lösenordet'}
               </h2>
               {mode !== 'forgot' && (
                 <p className="admin-login-subtitle">
