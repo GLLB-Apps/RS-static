@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Sun, Moon } from 'lucide-react'
 import { useAuth } from '../../lib/auth'
 import type { UserRole } from '../../lib/types'
-import { roleLabel } from '../../lib/utils'
+import { roleLabel, usernameFromEmail } from '../../lib/utils'
 import { PAGES } from '../../lib/pages'
 import { NotificationsProvider, useNotifications, type NotificationSource } from '../../lib/notifications'
 import { EditorDirtyProvider, useIsEditorDirty } from '../../lib/editorDirty'
@@ -190,8 +190,9 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
     // den senaste ändringen till webbläsaren än) — fråga en gång till, så
     // att den sista meningen inte försvinner mellan tangenttryck och utloggning.
     if (isEditorDirty()) {
+      const name = displayName || (user?.email ? usernameFromEmail(user.email) : '')
       const ok = await confirm({
-        message: 'Du har skrivit något som inte hunnit autosparas än. Vill du verkligen logga ut?',
+        message: `Du har skrivit något som inte hunnit autosparas än${name ? `, ${name}` : ''}. Vill du verkligen logga ut?`,
         confirmText: 'Logga ut',
         danger: true,
       })

@@ -810,9 +810,16 @@
 
 .admin-login-loading {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: var(--space-4);
   min-height: 100vh;
+}
+.admin-login-welcome {
+  font-size: 1.1rem;
+  color: var(--text-heading);
+  margin: 0;
 }
 
 .admin-login-card {

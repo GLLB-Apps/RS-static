@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { apiFetch, ApiError } from '../../api/client'
 import { useAuth } from '../../lib/auth'
 import { useToast } from '../../lib/toast'
+import { usernameFromEmail } from '../../lib/utils'
 import MobileAdminNotice from '../../components/admin/MobileAdminNotice'
 import UserAvatar from '../../components/UserAvatar'
-import { thinking, sleepy } from 'blobatar/expression'
+import { thinking, sleepy, happy } from 'blobatar/expression'
 import { Eye, EyeOff } from 'lucide-react'
 
 // Presentationen är obligatorisk vid registrering: den som tilldelar behörighet
@@ -14,9 +15,25 @@ import { Eye, EyeOff } from 'lucide-react'
 const INTRO_MIN = 40
 const INTRO_MAX = 1000
 
+// Hur länge "Välkommen tillbaka"-hälsningen står kvar innan vi navigerar
+// vidare — kort nog för att inte kännas som en väntetid, långt nog för att
+// namnet faktiskt hinner läsas och tona in.
+const WELCOME_DELAY_MS = 1100
+
 export default function AdminLogin() {
-  const { session, isAdmin, loading } = useAuth()
+  const { session, user, isAdmin, loading, displayName: accountName } = useAuth()
   const { show } = useToast()
+  const navigate = useNavigate()
+
+  // Admins till adminpanelen, alla andra inloggade till intranätet (guarden
+  // där visar ett vänligt meddelande om kontot ännu inte fått medlems-
+  // åtkomst). Dröjer en stund så att "Välkommen tillbaka"-hälsningen syns —
+  // `loading` är redan false här, så accountName har sitt slutgiltiga värde.
+  useEffect(() => {
+    if (!session) return
+    const t = setTimeout(() => navigate(isAdmin ? '/admin' : '/internt', { replace: true }), WELCOME_DELAY_MS)
+    return () => clearTimeout(t)
+  }, [session, isAdmin, navigate])
 
   const [logo, setLogo] = useState('')
   useEffect(() => {
@@ -47,9 +64,19 @@ export default function AdminLogin() {
       </div>
     )
   }
-  // Admins till adminpanelen, alla andra inloggade till intranätet (guarden där
-  // visar ett vänligt meddelande om kontot ännu inte fått medlemsåtkomst).
-  if (session) return <Navigate to={isAdmin ? '/admin' : '/internt'} replace />
+  // Kontot är hittat (inloggad session, rollen klar) — en kort hälsning med
+  // namnet, inte adressen, innan useEffect ovan navigerar vidare.
+  if (session) {
+    const welcomeName = accountName || (user?.email ? usernameFromEmail(user.email) : '')
+    return (
+      <div className="admin-login-page admin-login-loading">
+        <UserAvatar seed={user?.email ?? 'rogleskogen'} size={72} expression={happy} title="Välkommen tillbaka" />
+        <p className="admin-login-welcome fade-in">
+          Välkommen tillbaka{welcomeName ? <>, <strong>{welcomeName}</strong></> : ''}!
+        </p>
+      </div>
+    )
+  }
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
