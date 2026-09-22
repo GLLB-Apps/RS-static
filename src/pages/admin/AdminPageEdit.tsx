@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, useLocation, Link } from 'react-router-dom'
 import type { ContentBlock } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../../lib/toast'
@@ -19,6 +19,7 @@ interface PageDraft {
 
 export default function AdminPageEdit() {
   const { slug } = useParams<{ slug: string }>()
+  const location = useLocation()
   const cfg = slug ? pageBySlug(slug) : undefined
   const { show } = useToast()
   const [title, setTitle] = useState('')
@@ -40,6 +41,15 @@ export default function AdminPageEdit() {
     setBlocks(draft.value.blocks)
     discardDraft()
   }
+
+  // Kom hit via DraftRecoveryDialog.tsx (den globala "Välkommen tillbaka"-
+  // dialogen) — återställ automatiskt, men först när sidans egna data hunnit
+  // laddas in (annars skriver den laddningen över återställningen).
+  useEffect(() => {
+    if (loading) return
+    if (location.state?.autoRestoreDraft) restoreDraft()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading])
 
   useEffect(() => {
     if (!slug) return

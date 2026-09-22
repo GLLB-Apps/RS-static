@@ -9,6 +9,7 @@ import { NotificationsProvider, useNotifications, type NotificationSource } from
 import { EditorDirtyProvider, useIsEditorDirty } from '../../lib/editorDirty'
 import { useConfirm } from '../../lib/confirm'
 import MobileAdminNotice from './MobileAdminNotice'
+import DraftRecoveryDialog from './DraftRecoveryDialog'
 import NotificationBell from './NotificationBell'
 
 // `source` kopplar menyposten till en notiskälla: den får en badge med antalet
@@ -206,6 +207,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
     <NotificationsProvider>
     <div className="admin-layout">
       <MobileAdminNotice />
+      <DraftRecoveryDialog />
       <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="admin-sidebar-header">
           <Link to="/admin" className="admin-logo">Rögleskogen</Link>

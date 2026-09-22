@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams, useLocation, Link } from 'react-router-dom'
 import type { Topic, ContentBlock, ContentStatus } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../lib/auth'
@@ -28,6 +28,7 @@ export default function AdminTopicEdit() {
   const { id } = useParams<{ id: string }>()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
+  const location = useLocation()
   const { user } = useAuth()
   const { show } = useToast()
   const isNew = id === 'ny' || !id
@@ -59,6 +60,15 @@ export default function AdminTopicEdit() {
     setSortOrder(draft.value.sortOrder)
     discardDraft()
   }
+
+  // Kom hit via DraftRecoveryDialog.tsx (den globala "Välkommen tillbaka"-
+  // dialogen) — återställ automatiskt, men först när sidans egna data hunnit
+  // laddas in (annars skriver den laddningen över återställningen).
+  useEffect(() => {
+    if (loading) return
+    if (location.state?.autoRestoreDraft) restoreDraft()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading])
 
   useEffect(() => {
     if (isNew) return

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom'
 import type { CustomPage, ContentBlock, ContentStatus } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../lib/auth'
@@ -22,6 +22,7 @@ interface CustomPageDraft {
 export default function AdminCustomPageEdit() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const location = useLocation()
   const { user } = useAuth()
   const { show } = useToast()
   const isNew = id === 'ny' || !id
@@ -49,6 +50,15 @@ export default function AdminCustomPageEdit() {
     setBlocks(draft.value.blocks)
     discardDraft()
   }
+
+  // Kom hit via DraftRecoveryDialog.tsx (den globala "Välkommen tillbaka"-
+  // dialogen) — återställ automatiskt, men först när sidans egna data hunnit
+  // laddas in (annars skriver den laddningen över återställningen).
+  useEffect(() => {
+    if (loading) return
+    if (location.state?.autoRestoreDraft) restoreDraft()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading])
 
   useEffect(() => {
     if (isNew) return

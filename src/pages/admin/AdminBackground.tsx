@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import type { SiteSettings, ContentBlock } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../../lib/toast'
@@ -17,6 +17,7 @@ export default function AdminBackground() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const { show } = useToast()
+  const location = useLocation()
 
   const { draft, discard: discardDraft } = useDraftRestore<{ blocks: ContentBlock[] }>(DRAFT_KEY)
   const { dirty, savedAt } = useAutosave(DRAFT_KEY, { blocks }, { skip: loading })
@@ -26,6 +27,15 @@ export default function AdminBackground() {
     setBlocks(draft.value.blocks)
     discardDraft()
   }
+
+  // Kom hit via DraftRecoveryDialog.tsx (den globala "Välkommen tillbaka"-
+  // dialogen) — återställ automatiskt, men först när sidans egna data hunnit
+  // laddas in (annars skriver den laddningen över återställningen).
+  useEffect(() => {
+    if (loading) return
+    if (location.state?.autoRestoreDraft) restoreDraft()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading])
 
   useEffect(() => {
     supabase.from('site_settings').select('*').maybeSingle().then(({ data }) => {

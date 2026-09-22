@@ -23,6 +23,48 @@ export function clearDraft(key: string) {
   try { localStorage.removeItem(PREFIX + key) } catch { /* blockerad lagring m.m. */ }
 }
 
+export interface FoundDraft {
+  /** Nyckeln utan prefix, t.ex. "topic:ny" — det AdminAdmins/redigerarna använder mot loadDraft/clearDraft. */
+  key: string
+  /** Delen före ":" (eller hela nyckeln om det inte finns någon) — vilken redigerare utkastet hör till. */
+  kind: string
+  /** Delen efter ":", eller tom sträng — dokumentets id/slug, eller "new". */
+  rest: string
+  savedAt: string
+}
+
+/**
+ * Letar upp det senast autosparade utkastet över samtliga redigerare, oavsett
+ * vilken sida man råkar stå på — se DraftRecoveryDialog.tsx, som visar det
+ * som en global "Välkommen tillbaka"-dialog direkt efter inloggning, i
+ * stället för att kräva att man själv råkar öppna rätt redigerare igen.
+ */
+export function findLatestDraft(): FoundDraft | null {
+  let best: FoundDraft | null = null
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const fullKey = localStorage.key(i)
+      if (!fullKey || !fullKey.startsWith(PREFIX)) continue
+      const key = fullKey.slice(PREFIX.length)
+      const raw = localStorage.getItem(fullKey)
+      if (!raw) continue
+      try {
+        const parsed = JSON.parse(raw) as AutosaveDraft<unknown>
+        if (typeof parsed?.savedAt !== 'string') continue
+        if (best && parsed.savedAt <= best.savedAt) continue
+        const sep = key.indexOf(':')
+        best = {
+          key,
+          kind: sep === -1 ? key : key.slice(0, sep),
+          rest: sep === -1 ? '' : key.slice(sep + 1),
+          savedAt: parsed.savedAt,
+        }
+      } catch { /* skadad post — hoppas över */ }
+    }
+  } catch { /* blockerad lagring m.m. */ }
+  return best
+}
+
 /**
  * Autosparar `value` till localStorage med debounce, så ett påbörjat men
  * osparat utkast överlever en krasch, en stängd flik eller en omstart av
