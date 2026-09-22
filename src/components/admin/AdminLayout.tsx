@@ -1,75 +1,17 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Sun, Moon } from 'lucide-react'
+import { Search, Sun, Moon } from 'lucide-react'
 import { useAuth } from '../../lib/auth'
 import type { UserRole } from '../../lib/types'
 import { roleLabel, usernameFromEmail } from '../../lib/utils'
-import { PAGES } from '../../lib/pages'
-import { NotificationsProvider, useNotifications, type NotificationSource } from '../../lib/notifications'
+import { MENU_GROUPS } from '../../lib/adminMenu'
+import { NotificationsProvider, useNotifications } from '../../lib/notifications'
 import { EditorDirtyProvider, useIsEditorDirty } from '../../lib/editorDirty'
 import { useConfirm } from '../../lib/confirm'
 import MobileAdminNotice from './MobileAdminNotice'
 import DraftRecoveryDialog from './DraftRecoveryDialog'
+import CommandPalette from './CommandPalette'
 import NotificationBell from './NotificationBell'
-
-// `source` kopplar menyposten till en notiskälla: den får en badge med antalet
-// nya, och att öppna posten markerar just den källan som läst.
-type MenuItem = { label: string; path: string; roles: UserRole[]; source?: NotificationSource }
-const MENU_GROUPS: { title: string | null; items: MenuItem[] }[] = [
-  {
-    title: null,
-    items: [
-      { label: 'Översikt', path: '/admin', roles: ['superadmin', 'redaktor', 'skribent'] },
-      { label: 'Utkast', path: '/admin/utkast', roles: ['superadmin', 'redaktor', 'skribent'], source: 'drafts' },
-    ],
-  },
-  {
-    title: 'Innehåll',
-    items: [
-      { label: 'Sidor', path: '/admin/sidor', roles: ['superadmin', 'redaktor'] },
-      { label: 'Fristående sidor', path: '/admin/egna-sidor', roles: ['superadmin', 'redaktor'] },
-      { label: 'Nyheter', path: '/admin/nyheter', roles: ['superadmin', 'redaktor', 'skribent'] },
-      { label: 'Ämnesområden', path: '/admin/amnen', roles: ['superadmin', 'redaktor', 'skribent'] },
-      { label: 'Dokument', path: '/admin/dokument', roles: ['superadmin', 'redaktor', 'skribent'] },
-      { label: 'Media', path: '/admin/media', roles: ['superadmin', 'redaktor', 'skribent'] },
-      { label: 'Karta', path: '/admin/karta', roles: ['superadmin', 'redaktor'] },
-      { label: 'Tidslinje', path: '/admin/tidslinje', roles: ['superadmin', 'redaktor'] },
-      { label: 'FAQ', path: '/admin/faq', roles: ['superadmin', 'redaktor'] },
-    ],
-  },
-  {
-    title: 'Kommunikation',
-    items: [
-      { label: 'Vittnesmål', path: '/admin/vittnesmal', roles: ['superadmin', 'redaktor'], source: 'testimonies' },
-      { label: 'Meddelanden', path: '/admin/meddelanden', roles: ['superadmin', 'redaktor'], source: 'messages' },
-      { label: 'Kontakter', path: '/admin/kontakter', roles: ['superadmin', 'redaktor'] },
-      { label: 'Sponsorer', path: '/admin/sponsorer', roles: ['superadmin', 'redaktor'] },
-    ],
-  },
-  {
-    title: 'Webbplats',
-    items: [
-      { label: 'Hero (startsida)', path: '/admin/hero', roles: ['superadmin', 'redaktor'] },
-      { label: 'Sidfot', path: '/admin/sidfot', roles: ['superadmin', 'redaktor'] },
-      { label: 'Meny', path: '/admin/meny', roles: ['superadmin', 'redaktor'] },
-      { label: 'Inställningar', path: '/admin/inställningar', roles: ['superadmin'] },
-      { label: 'Användare', path: '/admin/administratörer', roles: ['superadmin'] },
-    ],
-  },
-  {
-    title: 'Internt',
-    items: [
-      { label: 'Internt arbetsrum', path: '/internt', roles: ['superadmin', 'redaktor', 'skribent'] },
-    ],
-  },
-  {
-    title: 'Hjälp',
-    items: [
-      { label: 'Handbok', path: '/admin/handbok', roles: ['superadmin', 'redaktor', 'skribent'] },
-      { label: 'Ändringslogg', path: '/admin/andringslogg', roles: ['superadmin', 'redaktor', 'skribent'] },
-    ],
-  },
-]
 
 /**
  * Egen komponent eftersom AdminLayout själv tillhandahåller NotificationsProvider
@@ -100,6 +42,7 @@ function AdminMenu({ role, pathname, onNavigate }: {
               const count = item.path === '/internt'
                 ? newBySource.notices + newBySource.notes + newBySource.tasks + newBySource.documents
                 : item.source ? newBySource[item.source] : 0
+              const Icon = item.icon
               return (
                 <Link
                   key={item.path}
@@ -107,6 +50,7 @@ function AdminMenu({ role, pathname, onNavigate }: {
                   className={isActive ? 'admin-menu-link active' : 'admin-menu-link'}
                   onClick={onNavigate}
                 >
+                  <Icon size={16} aria-hidden="true" />
                   <span className="admin-menu-label">{item.label}</span>
                   {count > 0 && (
                     <span className="admin-menu-badge" aria-label={`${count} nya`}>{count > 99 ? '99+' : count}</span>
@@ -153,8 +97,8 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   const { confirm } = useConfirm()
   const isEditorDirty = useIsEditorDirty()
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [query, setQuery] = useState('')
   const [theme, setTheme] = useState<'light' | 'dark'>(initialTheme)
+  const [paletteOpen, setPaletteOpen] = useState(false)
 
   // Sätts på <html> (inte bara .admin-layout) så att toasts och dialogrutor
   // också nås — ToastProvider/ConfirmProvider monteras i App.tsx ovanför hela
@@ -166,20 +110,17 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
     return () => { delete document.documentElement.dataset.theme }
   }, [theme])
 
-  const destinations = useMemo(() => {
-    const items: { label: string; path: string }[] = []
-    for (const group of MENU_GROUPS) {
-      for (const item of group.items) {
-        if (role && item.roles.includes(role)) items.push({ label: item.label, path: item.path })
+  // Ctrl/Cmd+K öppnar kommandopaletten var man än står i adminpanelen.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setPaletteOpen(v => !v)
       }
     }
-    for (const p of PAGES) items.push({ label: `Sida · ${p.label}`, path: `/admin/sidor/${p.slug}` })
-    return items
-  }, [role])
-
-  const q = query.trim().toLowerCase()
-  const results = q ? destinations.filter(d => d.label.toLowerCase().includes(q)).slice(0, 8) : []
-  function go(path: string) { setQuery(''); navigate(path) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   const breadcrumbs = location.pathname
     .split('/')
@@ -231,34 +172,11 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
             ☰
           </button>
 
-          <div className="admin-search">
-            <input
-              className="admin-search-input"
-              type="text"
-              placeholder="Sök – hoppa till valfri sida eller sektion…"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter' && results[0]) go(results[0].path)
-                if (e.key === 'Escape') setQuery('')
-              }}
-              aria-label="Sök i adminpanelen"
-            />
-            {results.length > 0 && (
-              <div className="admin-search-results">
-                {results.map(r => (
-                  <button
-                    key={r.path}
-                    type="button"
-                    className="admin-search-result"
-                    onMouseDown={e => { e.preventDefault(); go(r.path) }}
-                  >
-                    {r.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          <button type="button" className="admin-search-trigger" onClick={() => setPaletteOpen(true)}>
+            <Search size={15} aria-hidden="true" />
+            <span>Sök, eller skapa nytt…</span>
+            <kbd>Ctrl K</kbd>
+          </button>
 
           <nav className="admin-breadcrumbs" aria-label="Brödsmulor">
             <Link to="/admin">Admin</Link>
@@ -292,6 +210,14 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       </div>
+      <CommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        role={role}
+        theme={theme}
+        onToggleTheme={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+        onSignOut={handleSignOut}
+      />
     </div>
     </NotificationsProvider>
   )

@@ -582,53 +582,116 @@
   border: none;
 }
 
-/* Quick-jump search */
-.admin-search {
-  position: relative;
+/* Sökrutan i toppbaren är bara en knapp som öppnar kommandopaletten
+   (CommandPalette.tsx) — antingen via klick eller Ctrl/Cmd+K var man än
+   står i adminpanelen. */
+.admin-search-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   flex: 1;
   max-width: 400px;
-}
-
-.admin-search-input {
-  width: 100%;
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--bg-alt);
+  color: var(--text-muted);
   font-size: 0.9rem;
-  color: var(--text);
+  cursor: pointer;
+  text-align: left;
 }
-.admin-search-input:focus { outline: none; border-color: var(--primary); background: var(--bg-card); }
+.admin-search-trigger:hover { border-color: var(--primary); color: var(--text); }
+.admin-search-trigger span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.admin-search-trigger kbd {
+  font-size: 0.72rem;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  background: var(--bg-card);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
 
-.admin-search-results {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  z-index: 120;
+/* Kommandopaletten — helskärmsvariant av sökrutan (Ctrl/Cmd+K), i shadcn/
+   cmdk-anda: en central dialog med en hälsning + den egna blobben överst,
+   sedan sökfältet och en grupperad, tangentbordsnavigerbar resultatlista. */
+.command-palette-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  flex-direction: column;
-  gap: 1px;
-  max-height: 340px;
+  justify-content: center;
+  padding: 8vh var(--space-4) var(--space-4);
   overflow-y: auto;
-  padding: var(--space-1);
+}
+.command-palette {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 560px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg, 0 10px 40px rgba(0, 0, 0, 0.3));
+  overflow: hidden;
 }
-
-.admin-search-result {
+.command-palette-header {
+  padding: var(--space-6) var(--space-5) var(--space-5);
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+.command-palette-header h2 { margin: 0; font-size: 1.05rem; }
+.command-palette-header svg { transition: none; } /* blobatarens egna morph sköter övergången */
+.command-palette-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+}
+.command-palette-input {
+  flex: 1;
+  border: none;
+  background: none;
+  color: var(--text);
+  font-size: 0.95rem;
+  padding: var(--space-2) 0;
+}
+.command-palette-input:focus { outline: none; }
+.command-palette-results { overflow-y: auto; padding: var(--space-3); flex: 1; }
+.command-palette-group-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  padding: var(--space-3) var(--space-3) var(--space-1);
+}
+.command-palette-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
   text-align: left;
   padding: var(--space-2) var(--space-3);
   border: none;
+  border-radius: var(--radius-md);
   background: none;
-  border-radius: var(--radius-sm);
-  font-size: 0.9rem;
   color: var(--text);
+  font-size: 0.88rem;
   cursor: pointer;
 }
-.admin-search-result:hover { background: var(--primary-bg); color: var(--primary); }
+.command-palette-item svg { flex-shrink: 0; color: var(--text-muted); }
+.command-palette-item:hover, .command-palette-item.is-active { background: var(--primary-bg); color: var(--primary); }
+.command-palette-item:hover svg, .command-palette-item.is-active svg { color: var(--primary); }
+.command-palette-empty { padding: var(--space-6); text-align: center; color: var(--text-muted); font-size: 0.88rem; }
 
 .admin-breadcrumbs {
   flex: 1;
