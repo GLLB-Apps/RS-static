@@ -164,7 +164,7 @@ export default function AdminLogin() {
             <div className="admin-login-card">
               <h2 className="admin-login-title">
                 {mode === 'login'
-                  ? (welcomeName ? <>Välkommen tillbaka, <strong className="fade-in">{welcomeName}</strong>!</> : 'Välkommen tillbaka')
+                  ? (welcomeName ? <>Välkommen tillbaka, <strong>{welcomeName}</strong>!</> : 'Välkommen tillbaka')
                   : mode === 'signup' ? 'Skapa konto' : 'Glömt lösenordet'}
               </h2>
               {mode !== 'forgot' && (
