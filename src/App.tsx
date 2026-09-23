@@ -4,6 +4,7 @@ import { AuthProvider } from './lib/auth'
 import { ToastProvider } from './lib/toast'
 import { ConfirmProvider } from './lib/confirm'
 import { BlobAvatarsProvider } from './lib/blobSettings'
+import { ThemeProvider } from './lib/theme'
 import IntroLoader from './components/IntroLoader'
 import './index.css'
 import './components/public/public.css'
@@ -97,6 +98,7 @@ function NotFound() {
 export default function App() {
   return (
     <BrowserRouter>
+      <ThemeProvider>
       <IntroLoader />
       <BlobAvatarsProvider>
       <AuthProvider>
@@ -186,6 +188,7 @@ export default function App() {
         </ToastProvider>
       </AuthProvider>
       </BlobAvatarsProvider>
+      </ThemeProvider>
     </BrowserRouter>
   )
 }

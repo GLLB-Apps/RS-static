@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence, MotionConfig } from 'motion/react'
-import { Search, Sun, Moon, PanelLeftClose, PanelLeftOpen, ExternalLink } from 'lucide-react'
+import { Search, PanelLeftClose, PanelLeftOpen, ExternalLink } from 'lucide-react'
 import { useAuth } from '../../lib/auth'
 import type { UserRole } from '../../lib/types'
 import { roleLabel, usernameFromEmail } from '../../lib/utils'
@@ -9,11 +9,13 @@ import { MENU_GROUPS } from '../../lib/adminMenu'
 import { NotificationsProvider, useNotifications } from '../../lib/notifications'
 import { EditorDirtyProvider, useIsEditorDirty } from '../../lib/editorDirty'
 import { FocusModeProvider, useFocusMode } from '../../lib/focusMode'
+import { useTheme } from '../../lib/theme'
 import { useConfirm } from '../../lib/confirm'
 import MobileAdminNotice from './MobileAdminNotice'
 import DraftRecoveryDialog from './DraftRecoveryDialog'
 import CommandPalette from './CommandPalette'
 import NotificationBell from './NotificationBell'
+import ThemeToggle from '../ThemeToggle'
 
 /** Delad övergång för menytexter som fälls in/ut — kort och odramatisk. */
 const LABEL_MOTION = {
@@ -91,23 +93,10 @@ function AdminMenu({ role, pathname, onNavigate, collapsed }: {
   )
 }
 
-const THEME_KEY = 'ncc-rs:admin-theme'
 const SIDEBAR_COLLAPSED_KEY = 'ncc-rs:admin-sidebar-collapsed'
 const SIDEBAR_WIDTH = 260
 const SIDEBAR_WIDTH_COLLAPSED = 68
 const TOPBAR_HEIGHT = 56
-
-/** Sparat val, annars systemets färgschema, annars ljust. */
-function initialTheme(): 'light' | 'dark' {
-  try {
-    const saved = window.localStorage.getItem(THEME_KEY)
-    if (saved === 'light' || saved === 'dark') return saved
-  } catch { /* privat läge, blockerad lagring m.m. */ }
-  try {
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark'
-  } catch { /* okänd preferens */ }
-  return 'light'
-}
 
 function initialSidebarCollapsed(): boolean {
   try { return window.localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === '1' } catch { return false }
@@ -138,9 +127,9 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   const { confirm } = useConfirm()
   const isEditorDirty = useIsEditorDirty()
   const { focusMode } = useFocusMode()
+  const { theme, toggleTheme } = useTheme()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(initialSidebarCollapsed)
-  const [theme, setTheme] = useState<'light' | 'dark'>(initialTheme)
   const [paletteOpen, setPaletteOpen] = useState(false)
 
   // Fäll in menyn till bara ikoner för en renare, mer fokuserad redigerings-
@@ -148,16 +137,6 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try { window.localStorage.setItem(SIDEBAR_COLLAPSED_KEY, sidebarCollapsed ? '1' : '0') } catch { /* ignore */ }
   }, [sidebarCollapsed])
-
-  // Sätts på <html> (inte bara .admin-layout) så att toasts och dialogrutor
-  // också nås — ToastProvider/ConfirmProvider monteras i App.tsx ovanför hela
-  // routningen, utanför AdminLayouts eget DOM-träd. Tas bort vid unmount så
-  // publika sidan/intranätet aldrig ärver det.
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme
-    try { window.localStorage.setItem(THEME_KEY, theme) } catch { /* ignore */ }
-    return () => { delete document.documentElement.dataset.theme }
-  }, [theme])
 
   // Ctrl/Cmd+K öppnar kommandopaletten var man än står i adminpanelen.
   useEffect(() => {
@@ -303,15 +282,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
                 ))}
               </nav>
               <div className="admin-user-menu">
-                <button
-                  type="button"
-                  className="admin-bell-button"
-                  onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
-                  aria-label={theme === 'dark' ? 'Byt till ljust läge' : 'Byt till mörkt läge'}
-                  title={theme === 'dark' ? 'Byt till ljust läge' : 'Byt till mörkt läge'}
-                >
-                  {theme === 'dark' ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
-                </button>
+                <ThemeToggle className="admin-bell-button" />
                 <NotificationBell
                   avatarSeed={user?.email ?? ''}
                   email={user?.email ?? ''}
@@ -332,7 +303,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
         onClose={() => setPaletteOpen(false)}
         role={role}
         theme={theme}
-        onToggleTheme={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+        onToggleTheme={toggleTheme}
         onSignOut={handleSignOut}
       />
     </div>

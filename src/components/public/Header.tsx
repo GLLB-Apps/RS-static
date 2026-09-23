@@ -10,6 +10,7 @@ import LucideIcon, { resolveIconName } from '../../lib/lucide'
 import CountUp from './CountUp'
 import { getCampaign } from '../../lib/campaign'
 import CampaignLink from './CampaignLink'
+import ThemeToggle from '../ThemeToggle'
 
 export default function Header({ settings }: { settings: SiteSettings | null }) {
   const [navItems, setNavItems] = useState<NavigationItem[]>([])
@@ -163,6 +164,7 @@ export default function Header({ settings }: { settings: SiteSettings | null }) 
             </button>
           )}
           {campaign && <CampaignLink campaign={campaign} className="btn btn-primary btn-sm" />}
+          <ThemeToggle className="theme-toggle" />
           <button
             className={mobileOpen ? 'mobile-toggle open' : 'mobile-toggle'}
             onClick={() => setMobileOpen(!mobileOpen)}

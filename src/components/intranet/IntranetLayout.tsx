@@ -5,6 +5,7 @@ import { useAuth } from '../../lib/auth'
 import { IntranetNotificationsProvider, useIntranetNotifications, type IntranetSource } from '../../lib/intranetNotifications'
 import MobileAdminNotice from '../admin/MobileAdminNotice'
 import IntranetBell from './IntranetBell'
+import ThemeToggle from '../ThemeToggle'
 
 // `source` kopplar en menypost till en notiskälla → badge med antal nya.
 type Item = { label: string; path: string; icon: typeof LayoutGrid; source: IntranetSource }
@@ -84,6 +85,7 @@ export default function IntranetLayout({ children }: { children: React.ReactNode
             <button className="admin-sidebar-toggle" onClick={() => setOpen(!open)} aria-label="Visa/dölj meny">☰</button>
             <div className="intranet-topbar-title">Internt arbetsrum</div>
             <div className="admin-user-menu">
+              <ThemeToggle className="admin-bell-button" />
               <IntranetBell
                 avatarSeed={user?.email ?? ''}
                 email={user?.email ?? ''}

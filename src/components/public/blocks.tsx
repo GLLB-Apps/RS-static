@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import type { ContentBlock } from '../../lib/types'
 import LucideIcon from '../../lib/lucide'
 import { headingLevel, internalPath, normalizeUrl, splitParagraphs } from '../../lib/utils'
+import ImageGallery from './ImageGallery'
 
 // Renders a single content block. Shared across pages that show free-form
 // block content (background, press, …).
@@ -89,11 +90,27 @@ export function RenderBlock({ block }: { block: ContentBlock }) {
 }
 
 // Renders a list of content blocks inside a `.content-blocks` wrapper.
+// Intilliggande 'image'-block (en eller flera i rad) grupperas till en enda
+// ImageGallery i stället för att staplas var för sig — se ImageGallery.tsx.
 export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
   if (!blocks.length) return null
+  const groups: (ContentBlock[] | { images: ContentBlock[] })[] = []
+  for (const block of blocks) {
+    if (block.type === 'image') {
+      const last = groups[groups.length - 1]
+      if (last && !Array.isArray(last)) last.images.push(block)
+      else groups.push({ images: [block] })
+    } else {
+      groups.push([block])
+    }
+  }
   return (
     <div className="content-blocks">
-      {blocks.map((block, i) => <RenderBlock key={i} block={block} />)}
+      {groups.map((group, i) => (
+        Array.isArray(group)
+          ? <RenderBlock key={i} block={group[0]} />
+          : <ImageGallery key={i} blocks={group.images} />
+      ))}
     </div>
   )
 }

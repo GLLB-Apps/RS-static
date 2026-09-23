@@ -7,6 +7,9 @@
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
 }
+:root[data-theme="dark"] .site-header {
+  background: rgba(18, 24, 26, 0.9);
+}
 
 .status-bar {
   background: var(--primary-dark);
@@ -223,6 +226,24 @@
   .header-logout-label { display: none; }
 }
 
+/* Måne/sol — längst till höger i menyn, alltid synlig (även på mobil,
+   till skillnad från .main-nav som fälls in i hamburgermenyn). */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  color: var(--text);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+.theme-toggle:hover { background: var(--primary-bg); color: var(--primary); }
+
 .mobile-toggle {
   display: none;
   flex-direction: column;
@@ -275,7 +296,7 @@
   z-index: 200;
   width: min(86vw, 340px);
   padding: calc(var(--space-9) + var(--space-2)) var(--space-5) var(--space-6);
-  background: #ffffff;
+  background: var(--bg-card);
   color: var(--text);
   border-left: 1px solid var(--border);
   box-shadow: -12px 0 40px rgba(0, 0, 0, 0.18);
@@ -1822,6 +1843,187 @@ a.testimony-card:focus-visible {
   font-size: 0.85rem;
   color: var(--text-muted);
   margin-top: var(--space-2);
+}
+
+/* Bildgalleri — en eller flera intilliggande bilder i innehållet (se
+   ImageGallery.tsx, som ContentBlocks i blocks.tsx grupperar dem till).
+   En ensam bild får en enkel themad ram; två eller fler läggs i ett
+   masonry-rutnät (CSS columns) som anpassar sig efter antalet bilder. */
+.image-gallery {
+  margin: var(--space-5) 0;
+}
+
+.image-gallery-item {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  overflow: hidden;
+  cursor: zoom-in;
+  font: inherit;
+  text-align: left;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition), border-color var(--transition);
+}
+.image-gallery-item:hover,
+.image-gallery-item:focus-visible {
+  border-color: var(--primary-border);
+  box-shadow: var(--shadow-md);
+}
+
+.image-gallery-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.image-gallery-item:hover img,
+.image-gallery-item:focus-visible img {
+  transform: scale(1.045);
+}
+
+.image-gallery-caption {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-light);
+}
+
+/* En ensam bild — ingen masonry, bara en centrerad, begränsad bredd så den
+   inte spränger textkolumnen på breda skärmar. */
+.image-gallery-1 {
+  max-width: 640px;
+}
+
+/* Två eller fler — masonry via CSS columns, ordnat efter antal och
+   skärmbredd. break-inside: avoid håller varje bild (och dess bildtext)
+   ihop i en enda kolumn i stället för att kapa den mitt i. */
+.image-gallery-2,
+.image-gallery-3plus {
+  column-gap: var(--space-4);
+}
+.image-gallery-2 { column-count: 2; }
+.image-gallery-3plus { column-count: 3; }
+.image-gallery-2 .image-gallery-item,
+.image-gallery-3plus .image-gallery-item {
+  margin-bottom: var(--space-4);
+  break-inside: avoid;
+}
+
+@media (max-width: 640px) {
+  .image-gallery-2, .image-gallery-3plus { column-count: 1; }
+}
+@media (min-width: 641px) and (max-width: 900px) {
+  .image-gallery-3plus { column-count: 2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .image-gallery-item img { transition: none; }
+}
+
+/* Bildgalleriets lightbox — helskärmsvisning med </>-navigering
+   (Lightbox.tsx). Eget klassprefix (content-lightbox-*) för att inte
+   krocka med mediasidans egen .lightbox (MediaPage.tsx). Bakgrunden är
+   medvetet en neutral mörk skärm oavsett sajtens tema (kontrast mot
+   bilden), men bildpanelen (ram, bildtext) följer temat via var(--bg-card)
+   m.fl. så den känns som en del av sajten och inte ett generiskt bibliotek. */
+.content-lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 14, 11, 0.92);
+  padding: var(--space-6);
+}
+
+.content-lightbox-figure {
+  position: relative;
+  margin: 0;
+  max-width: min(92vw, 1100px);
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.content-lightbox-figure img {
+  display: block;
+  max-width: 100%;
+  max-height: 78vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  margin: 0 auto;
+}
+.content-lightbox-caption {
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+}
+
+.content-lightbox-close,
+.content-lightbox-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.content-lightbox-close:hover,
+.content-lightbox-nav:hover { background: rgba(255, 255, 255, 0.24); }
+
+.content-lightbox-close {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+}
+
+.content-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+}
+.content-lightbox-nav-prev { left: var(--space-5); }
+.content-lightbox-nav-next { right: var(--space-5); }
+
+.content-lightbox-counter {
+  position: absolute;
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 640px) {
+  .content-lightbox-backdrop { padding: var(--space-3); }
+  .content-lightbox-nav { width: 38px; height: 38px; }
+  .content-lightbox-nav-prev { left: var(--space-2); }
+  .content-lightbox-nav-next { right: var(--space-2); }
+  .content-lightbox-close { top: var(--space-2); right: var(--space-2); }
 }
 
 .block-divider {
