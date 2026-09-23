@@ -10,8 +10,8 @@
    Attributet sätts bara medan AdminLayout är monterad, så publika sidan och
    intranätet påverkas aldrig. */
 :root[data-theme="dark"] {
-  --primary: #4f9268;
-  --primary-dark: #3a6d4d;
+  --primary: #437c58;
+  --primary-dark: #325c41;
   --primary-light: #8fd1a8;
   --primary-bg: #17301f;
   --primary-border: rgba(143, 209, 168, 0.3);
@@ -25,7 +25,7 @@
   --accent-bg: #2c2317;
   --accent-border: rgba(194, 160, 113, 0.3);
 
-  --success: #4f9268;
+  --success: #437c58;
   --success-bg: #17301f;
   --warning: #d9ae49;
   --warning-bg: #332a10;
@@ -46,7 +46,7 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
-  --shadow-focus: 0 0 0 3px rgba(79, 146, 104, 0.35);
+  --shadow-focus: 0 0 0 3px rgba(67, 124, 88, 0.35);
 
   /* Inbyggda formulärkontroller (kryssrutor, <select>, scrollbars) följer med. */
   color-scheme: dark;
