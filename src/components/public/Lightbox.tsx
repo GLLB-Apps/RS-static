@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 
@@ -34,9 +34,21 @@ export default function Lightbox({ images, index, onClose, onIndexChange }: Prop
     return () => window.removeEventListener('keydown', onKey)
   }, [index, images.length, hasMultiple, onClose, onIndexChange])
 
-  useEffect(() => {
+  // useLayoutEffect (inte useEffect) — låset måste sitta INNAN webbläsaren
+  // hinner måla första bilden, annars syns en bildruta där sidan fortfarande
+  // har sin rullningslist, som sedan försvinner och knuffar innehållet ett
+  // par pixlar — det är den "blinkningen" precis när lightboxen öppnas.
+  // Kompenserar bredden med padding-right så sidan inte alls ändrar bredd.
+  useLayoutEffect(() => {
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+    const prevOverflow = document.body.style.overflow
+    const prevPaddingRight = document.body.style.paddingRight
     document.body.style.overflow = 'hidden'
-    return () => { document.body.style.overflow = '' }
+    if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`
+    return () => {
+      document.body.style.overflow = prevOverflow
+      document.body.style.paddingRight = prevPaddingRight
+    }
   }, [])
 
   if (!current) return null
@@ -78,7 +90,7 @@ export default function Lightbox({ images, index, onClose, onIndexChange }: Prop
           exit={{ opacity: 0, scale: 0.97 }}
           transition={{ duration: 0.15 }}
         >
-          <img src={current.url} alt={current.alt} />
+          <img src={current.url} alt={current.alt} decoding="async" />
           {current.caption && <figcaption className="content-lightbox-caption">{current.caption}</figcaption>}
         </motion.figure>
       </AnimatePresence>
