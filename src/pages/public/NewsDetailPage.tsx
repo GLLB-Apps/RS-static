@@ -4,7 +4,7 @@ import type { Post } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { formatDate } from '../../lib/utils'
 import { newsCategoryBadge, newsCategoryLabel, postTags } from '../../lib/newsCategories'
-import { RenderBlock } from '../../components/public/blocks'
+import { ContentBlocks } from '../../components/public/blocks'
 import { useRegisterEditLink } from '../../lib/editLink'
 import UserAvatar from '../../components/UserAvatar'
 
@@ -72,9 +72,7 @@ export default function NewsDetailPage() {
       )}
 
       {Array.isArray(post.content) && post.content.length > 0 ? (
-        <div className="content-blocks">
-          {post.content.map((block, i) => <RenderBlock key={i} block={block} />)}
-        </div>
+        <ContentBlocks blocks={post.content} />
       ) : (
         // Ett pressklipp behöver ingen egen brödtext – källknappen är innehållet.
         !post.external_url && <p className="text-muted">Innehåll saknas.</p>

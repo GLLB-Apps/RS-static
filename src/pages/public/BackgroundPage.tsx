@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import type { SiteSettings, ContentBlock } from '../../lib/types'
 import PageHeader from '../../components/public/PageHeader'
-import { RenderBlock } from '../../components/public/blocks'
+import { ContentBlocks } from '../../components/public/blocks'
 
 export default function BackgroundPage() {
   const { settings } = useOutletContext<{ settings: SiteSettings | null }>()
@@ -23,10 +23,8 @@ export default function BackgroundPage() {
       </div>
 
       {hasBlocks ? (
-        <div className="content-blocks" style={{ marginBottom: 'var(--space-9)' }}>
-          {blocks.map((block, i) => (
-            <RenderBlock key={i} block={block} />
-          ))}
+        <div style={{ marginBottom: 'var(--space-9)' }}>
+          <ContentBlocks blocks={blocks} />
         </div>
       ) : (
         <div className="empty-state" style={{ marginBottom: 'var(--space-9)' }}>

@@ -4,7 +4,7 @@ import type { Topic } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { formatDate } from '../../lib/utils'
 import LucideIcon from '../../lib/lucide'
-import { RenderBlock } from '../../components/public/blocks'
+import { ContentBlocks } from '../../components/public/blocks'
 import { useRegisterEditLink } from '../../lib/editLink'
 
 export default function TopicDetailPage() {
@@ -62,11 +62,7 @@ export default function TopicDetailPage() {
       )}
 
       {Array.isArray(topic.content) && topic.content.length > 0 ? (
-        <div className="content-blocks">
-          {topic.content.map((block, i) => (
-            <RenderBlock key={i} block={block} />
-          ))}
-        </div>
+        <ContentBlocks blocks={topic.content} />
       ) : (
         <p className="text-muted">Innehåll saknas för detta ämne.</p>
       )}
