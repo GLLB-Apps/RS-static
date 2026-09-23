@@ -477,6 +477,11 @@
   position: relative;
   overflow: hidden;
 }
+/* Egen, mörkare grön i mörkt läge — --primary där är ljusad för läsbarhet
+   mot mörka kort och skulle sett urblekt ut som en hel sidfotsyta. */
+:root[data-theme="dark"] .site-footer {
+  background: #295338;
+}
 .site-footer > .footer-cta,
 .site-footer > .footer-inner,
 .site-footer > .footer-bottom { position: relative; z-index: 1; }
@@ -1925,61 +1930,20 @@ a.testimony-card:focus-visible {
   .image-gallery-item img { transition: none; }
 }
 
-/* Bildgalleriets lightbox — helskärmsvisning med </>-navigering
-   (Lightbox.tsx). Eget klassprefix (content-lightbox-*) för att inte
-   krocka med mediasidans egen .lightbox (MediaPage.tsx). Bakgrunden är
-   medvetet en neutral mörk skärm oavsett sajtens tema (kontrast mot
-   bilden), men bildpanelen (ram, bildtext) följer temat via var(--bg-card)
-   m.fl. så den känns som en del av sajten och inte ett generiskt bibliotek. */
-.content-lightbox-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(10, 14, 11, 0.92);
-  padding: var(--space-6);
-}
-
-.content-lightbox-figure {
-  position: relative;
-  margin: 0;
-  max-width: min(92vw, 1100px);
-  max-height: 86vh;
-  display: flex;
-  flex-direction: column;
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
-}
-.content-lightbox-figure img {
-  display: block;
-  max-width: 100%;
-  max-height: 78vh;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  margin: 0 auto;
-}
-.content-lightbox-caption {
-  padding: var(--space-3) var(--space-4);
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  background: var(--bg-card);
-  border-top: 1px solid var(--border);
-}
-
-/* Position, storlek, bakgrund m.m. för stängknapp/pilar/räknare sätts inline
-   i Lightbox.tsx (inte här) — de får då aldrig bli osynliga av en cache-
-   eller specificitetskrock i den här delade stilmallen. Bara hover-tonen
-   (som inline style inte kan uttrycka utan JS) styrs via CSS. */
-.content-lightbox-close:hover,
-.content-lightbox-nav:hover { background: rgba(255, 255, 255, 0.28) !important; }
-
-@media (max-width: 640px) {
-  .content-lightbox-backdrop { padding: var(--space-3); }
+/* Bildgalleriets lightbox — yet-another-react-lightbox (ImageGallery.tsx),
+   inte en egenbyggd modal. Biblioteket themas helt via sina egna
+   --yarl__*-variabler (dokumenterat i dess styles.css), så ingen egen
+   klass/markup behövs här. Bakgrunden är medvetet en neutral mörk skärm
+   oavsett sajtens tema (kontrast mot bilden); bildtextraden är en mörk,
+   halvtransparent list ovanpå bilden (bibliotekets egen struktur) snarare
+   än ett eget kort. */
+:root {
+  --yarl__color_backdrop: rgba(10, 14, 11, 0.92);
+  --yarl__color_button: rgba(255, 255, 255, 0.85);
+  --yarl__color_button_active: #fff;
+  --yarl__slide_captions_container_background: rgba(15, 20, 16, 0.72);
+  --yarl__slide_description_color: rgba(255, 255, 255, 0.85);
+  --yarl__counter_color: rgba(255, 255, 255, 0.75);
 }
 
 .block-divider {

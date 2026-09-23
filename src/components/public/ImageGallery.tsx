@@ -1,13 +1,19 @@
 import { useState } from 'react'
-import { AnimatePresence } from 'motion/react'
+import Lightbox from 'yet-another-react-lightbox'
+import Captions from 'yet-another-react-lightbox/plugins/captions'
+import Counter from 'yet-another-react-lightbox/plugins/counter'
+import 'yet-another-react-lightbox/styles.css'
+import 'yet-another-react-lightbox/plugins/captions.css'
+import 'yet-another-react-lightbox/plugins/counter.css'
 import type { ContentBlock } from '../../lib/types'
-import Lightbox from './Lightbox'
 
 /**
  * Ett eller flera intilliggande 'image'-block i innehållet (se ContentBlocks
  * i blocks.tsx, som grupperar dem hit innan de renderas). En ensam bild får
  * en enkel themad ram; två eller fler läggs i ett masonry-rutnät som anpassar
- * sig efter antalet. Klick öppnar en helskärmslightbox med </>-navigering.
+ * sig efter antalet. Klick öppnar en helskärmslightbox (yet-another-react-
+ * lightbox — stabil, väl underhållen, noll extra beroenden) themad via
+ * --yarl__*-variablerna i public.css i stället för en egenbyggd modal.
  */
 export default function ImageGallery({ blocks }: { blocks: ContentBlock[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
@@ -32,17 +38,18 @@ export default function ImageGallery({ blocks }: { blocks: ContentBlock[] }) {
           </button>
         ))}
       </div>
-      <AnimatePresence>
-        {openIndex !== null && (
-          <Lightbox
-            key="lightbox"
-            images={items.map(b => ({ url: b.image_url ?? '', alt: b.alt_text ?? '', caption: b.text || undefined }))}
-            index={openIndex}
-            onClose={() => setOpenIndex(null)}
-            onIndexChange={setOpenIndex}
-          />
-        )}
-      </AnimatePresence>
+      <Lightbox
+        open={openIndex !== null}
+        close={() => setOpenIndex(null)}
+        index={openIndex ?? 0}
+        slides={items.map(b => ({
+          src: b.image_url ?? '',
+          alt: b.alt_text ?? '',
+          description: b.text || undefined,
+        }))}
+        plugins={[Captions, Counter]}
+        animation={{ fade: 200, swipe: 250 }}
+      />
     </>
   )
 }
