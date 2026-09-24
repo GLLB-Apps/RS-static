@@ -2725,3 +2725,37 @@ a.testimony-card:focus-visible {
   font-weight: 500;
 }
 .map-jump-select { width: 100%; }
+
+/* Förhandsgranskning (/visa/:seed, PreviewPage.tsx) — fokuserad vy utan
+   sajtens header/nav/sidfot. En smal bar överst gör klart att det INTE är
+   den riktiga publicerade sidan. */
+.preview-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+.preview-page-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+}
+.preview-page-bar .badge-muted { display: inline-flex; align-items: center; gap: 6px; }
+.preview-page-body {
+  flex: 1;
+  padding-top: var(--space-7);
+  padding-bottom: var(--space-9);
+}
+.preview-page-intro {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-5);
+}

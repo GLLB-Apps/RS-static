@@ -10,6 +10,7 @@ import { useAutosave, useDraftRestore, clearDraft } from '../../lib/useAutosave'
 import AutosaveBanner from '../../components/admin/AutosaveBanner'
 import AutosaveStatus from '../../components/admin/AutosaveStatus'
 import FocusModeToggle from '../../components/admin/FocusModeToggle'
+import PreviewButton from '../../components/admin/PreviewButton'
 import { useFocusMode } from '../../lib/focusMode'
 import { FADE } from '../../lib/motionPresets'
 
@@ -74,6 +75,7 @@ export default function AdminBackground() {
           {!focusMode && <motion.h1 key="title" {...FADE}>Bakgrund · innehåll</motion.h1>}
         </AnimatePresence>
         <div style={{ display: 'flex', gap: 'var(--space-2)', marginLeft: 'auto' }}>
+          <PreviewButton getPayload={() => ({ title: 'Bakgrund', blocks })} />
           <FocusModeToggle />
           <AnimatePresence initial={false}>
             {!focusMode && (

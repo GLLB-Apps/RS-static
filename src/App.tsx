@@ -30,6 +30,7 @@ const PressPage = lazy(() => import('./pages/public/PressPage'))
 const FaqPage = lazy(() => import('./pages/public/FaqPage'))
 const ContactPage = lazy(() => import('./pages/public/ContactPage'))
 const CustomPage = lazy(() => import('./pages/public/CustomPage'))
+const PreviewPage = lazy(() => import('./pages/public/PreviewPage'))
 
 // Admin pages — lazy
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
@@ -126,6 +127,10 @@ export default function App() {
                 {/* Egna sidor: fångar omatchade toppnivå-adresser (explicita rutter vinner). */}
                 <Route path="/:slug" element={<CustomPage />} />
               </Route>
+
+              {/* Förhandsgranskning — egen, fokuserad vy utanför PublicLayout
+                  (ingen header/nav/sidfot). Se lib/preview.ts. */}
+              <Route path="/visa/:seed" element={<PreviewPage />} />
 
               {/* Admin routes */}
               <Route path="/admin/login" element={<AdminLogin />} />

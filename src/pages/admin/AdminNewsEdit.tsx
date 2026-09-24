@@ -13,6 +13,7 @@ import { useAutosave, useDraftRestore, clearDraft } from '../../lib/useAutosave'
 import AutosaveBanner from '../../components/admin/AutosaveBanner'
 import AutosaveStatus from '../../components/admin/AutosaveStatus'
 import FocusModeToggle from '../../components/admin/FocusModeToggle'
+import PreviewButton from '../../components/admin/PreviewButton'
 import EditorLayout from '../../components/admin/EditorLayout'
 import EditorSidebar from '../../components/admin/EditorSidebar'
 import { useFocusMode } from '../../lib/focusMode'
@@ -175,6 +176,7 @@ export default function AdminNewsEdit() {
               </motion.div>
             )}
           </AnimatePresence>
+          <PreviewButton getPayload={() => ({ title: form.title, intro: form.excerpt, blocks: content })} />
           <FocusModeToggle />
           <AnimatePresence initial={false}>
             {!focusMode && (
