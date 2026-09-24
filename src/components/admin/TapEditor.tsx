@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
+import { ArrowLeft, Undo2, Redo2 } from 'lucide-react'
 import type { ContentBlock, DocumentItem } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../../lib/toast'
@@ -354,6 +355,12 @@ interface TapActions {
   applyText: (type: TextType, extra?: Partial<ContentBlock>) => void
   applyHeading: (level: number) => void
   insertColumns: ((choice: ColumnsChoice) => void) | null
+  /** Bara satt när aktiv instans är nästlad i en kolumnruta — se ArrowLeft-knappen. */
+  escape: (() => void) | null
+  undo: () => void
+  redo: () => void
+  canUndo: boolean
+  canRedo: boolean
   focusedType: ContentBlock['type'] | null
   focusedLevel: number | null
 }
@@ -424,8 +431,40 @@ export default function TapEditor({ blocks, onChange, nested, onEscape }: Props)
     setMdCaret(null)
   }, [mdCaret])
 
+  // Historik för Ångra/Gör om — helt lokal per TapEditor-instans (en
+  // kolumnrutas historik är alltså skild från huvuddokumentets). Snabba
+  // ändringar i följd (t.ex. skrivande) slås ihop till ETT steg om de
+  // kommer inom HISTORY_MERGE_MS av varandra, annars skulle Ångra bara
+  // sudda ett tecken i taget.
+  const HISTORY_MERGE_MS = 600
+  const pastRef = useRef<ContentBlock[][]>([])
+  const futureRef = useRef<ContentBlock[][]>([])
+  const lastCommitAtRef = useRef(0)
+
   function commit(next: ContentBlock[]) {
+    const now = Date.now()
+    if (now - lastCommitAtRef.current > HISTORY_MERGE_MS) {
+      pastRef.current = [...pastRef.current, list].slice(-50)
+      futureRef.current = []
+    }
+    lastCommitAtRef.current = now
     onChange(next.length ? next : [{ type: 'paragraph', text: '' }])
+  }
+  function undo() {
+    if (pastRef.current.length === 0) return
+    const previous = pastRef.current[pastRef.current.length - 1]
+    pastRef.current = pastRef.current.slice(0, -1)
+    futureRef.current = [list, ...futureRef.current]
+    lastCommitAtRef.current = 0 // nästa ändring ska inte slås ihop med den här återställningen
+    onChange(previous)
+  }
+  function redo() {
+    if (futureRef.current.length === 0) return
+    const next = futureRef.current[0]
+    futureRef.current = futureRef.current.slice(1)
+    pastRef.current = [...pastRef.current, list]
+    lastCommitAtRef.current = 0
+    onChange(next)
   }
   function set(index: number, updates: Partial<ContentBlock>) {
     commit(list.map((b, i) => (i === index ? { ...b, ...updates } : b)))
@@ -643,7 +682,13 @@ export default function TapEditor({ blocks, onChange, nested, onEscape }: Props)
   const activeCtx = useContext(TapActiveContext)
   const [activeRef, setActiveRef] = useState<TapActionsRef | null>(null)
   const selfActionsRef = useRef<TapActions>(null!)
-  selfActionsRef.current = { addBlock, applyText, applyHeading, insertColumns: nested ? null : insertColumns, focusedType, focusedLevel }
+  selfActionsRef.current = {
+    addBlock, applyText, applyHeading,
+    insertColumns: nested ? null : insertColumns,
+    escape: nested ? (onEscape ?? null) : null,
+    undo, redo, canUndo: pastRef.current.length > 0, canRedo: futureRef.current.length > 0,
+    focusedType, focusedLevel,
+  }
   const effective: TapActions = (nested ? null : activeRef?.current) ?? selfActionsRef.current
 
   /** Anropas när något i DEN HÄR editorn får fokus — nästlad lämnar sin ref
@@ -664,6 +709,18 @@ export default function TapEditor({ blocks, onChange, nested, onEscape }: Props)
     <div className="tap-editor" onKeyDown={onEditorKeyDown}>
       {!nested && (
       <div className="tap-toolbar">
+        {/* Ångra/Gör om verkar alltid på effective, precis som övriga knappar
+            — syns oavsett om man står i huvuddokumentet eller i en
+            kolumnruta, eftersom varje TapEditor-instans har sin egen historik. */}
+        <div className="tap-toolbar-group">
+          <button type="button" title="Ångra" className="tap-tool" disabled={!effective.canUndo} onMouseDown={e => e.preventDefault()} onClick={() => effective.undo()}>
+            <Undo2 size={15} aria-hidden="true" />
+          </button>
+          <button type="button" title="Gör om" className="tap-tool" disabled={!effective.canRedo} onMouseDown={e => e.preventDefault()} onClick={() => effective.redo()}>
+            <Redo2 size={15} aria-hidden="true" />
+          </button>
+        </div>
+        <span className="tap-toolbar-sep" />
         <div className="tap-mode-switch" role="group" aria-label="Redigeringsläge">
           <button type="button" className={markdown == null ? 'tap-mode active' : 'tap-mode'} title="Vanlig editor – ett block i taget" onMouseDown={e => e.preventDefault()} onClick={() => setMarkdown(null)}>Vanlig</button>
           <button type="button" className={markdown != null ? 'tap-mode active' : 'tap-mode'} title="Markdown – hela innehållet som text" onMouseDown={e => e.preventDefault()} onClick={enterMarkdown}>MD</button>
@@ -676,6 +733,12 @@ export default function TapEditor({ blocks, onChange, nested, onEscape }: Props)
           <button type="button" title="Text (Ctrl+Alt+T)" className={effective.focusedType === 'paragraph' ? 'tap-tool active' : 'tap-tool'} onMouseDown={e => e.preventDefault()} onClick={() => effective.applyText('paragraph')}>Text</button>
           <HeadingMenu level={effective.focusedLevel} onPick={effective.applyHeading} />
           <button type="button" title="Citat (Ctrl+Alt+C)" className={effective.focusedType === 'quote' ? 'tap-tool active' : 'tap-tool'} onMouseDown={e => e.preventDefault()} onClick={() => effective.applyText('quote')}>Citat</button>
+          {/* Bara synlig när man står i en kolumnruta — se escape i TapActions. */}
+          {effective.escape && (
+            <button type="button" title="Lämna kolumnen (Esc)" className="tap-tool" onMouseDown={e => e.preventDefault()} onClick={() => effective.escape?.()}>
+              <ArrowLeft size={15} aria-hidden="true" />
+            </button>
+          )}
         </div>
         <span className="tap-toolbar-sep" />
         <div className="tap-toolbar-group">
