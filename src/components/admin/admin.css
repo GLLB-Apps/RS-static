@@ -1687,7 +1687,10 @@
   display: grid;
   align-items: stretch;
   gap: 0 var(--space-2);
-  margin: var(--space-2) 0;
+  /* Extra utrymme upptill — annars hamnar högerspaltens egen (nästlade)
+     verktygsrad rakt under .tap-block-ctrls (flytta upp/ner/ta bort för hela
+     kolumnblocket) och gör dem oåtkomliga. */
+  margin: 32px 0 var(--space-2);
 }
 .tap-column {
   position: relative;
@@ -1702,7 +1705,10 @@
 .tap-column-label {
   position: absolute;
   top: -9px;
-  right: var(--space-3);
+  /* Vänster, inte höger — annars konkurrerar den om utrymme med
+     .tap-block-ctrls (flytta/ta bort för hela kolumnblocket) uppe till höger
+     om hela raden. */
+  left: var(--space-3);
   z-index: 1;
   font-size: 0.68rem;
   font-weight: 600;
