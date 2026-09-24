@@ -12,6 +12,7 @@ import AutosaveStatus from '../../components/admin/AutosaveStatus'
 import FocusModeToggle from '../../components/admin/FocusModeToggle'
 import PreviewButton from '../../components/admin/PreviewButton'
 import { useFocusMode } from '../../lib/focusMode'
+import { usePreviewSync } from '../../lib/preview'
 import { FADE } from '../../lib/motionPresets'
 
 const DRAFT_KEY = 'background'
@@ -21,6 +22,8 @@ export default function AdminBackground() {
   const [blocks, setBlocks] = useState<ContentBlock[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [previewSeed, setPreviewSeed] = useState<string | null>(null)
+  usePreviewSync(previewSeed, 'Bakgrund', undefined, blocks)
   const { show } = useToast()
   const location = useLocation()
   const { focusMode } = useFocusMode()
@@ -75,7 +78,7 @@ export default function AdminBackground() {
           {!focusMode && <motion.h1 key="title" {...FADE}>Bakgrund · innehåll</motion.h1>}
         </AnimatePresence>
         <div style={{ display: 'flex', gap: 'var(--space-2)', marginLeft: 'auto' }}>
-          <PreviewButton getPayload={() => ({ title: 'Bakgrund', blocks })} />
+          <PreviewButton getPayload={() => ({ title: 'Bakgrund', blocks })} onOpen={setPreviewSeed} />
           <FocusModeToggle />
           <AnimatePresence initial={false}>
             {!focusMode && (

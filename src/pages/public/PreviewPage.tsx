@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Eye, X } from 'lucide-react'
-import { readActivePreview, closePreview, type PreviewPayload } from '../../lib/preview'
+import { readActivePreview, closePreview, PREVIEW_KEY, type PreviewPayload } from '../../lib/preview'
 import { ContentBlocks } from '../../components/public/blocks'
 
 /**
@@ -9,11 +9,30 @@ import { ContentBlocks } from '../../components/public/blocks'
  * av PreviewButton.tsx i en ny flik. Innehållet kommer aldrig från servern
  * (se preview.ts): matchar seeden inte det som ligger i localStorage just nu
  * — eller om man klickat "Stäng" — visas samma "inte längre tillgänglig"-vy.
+ *
+ * Uppdateras live medan man skriver i redigerarfliken: den skriver till
+ * samma localStorage-nyckel (usePreviewSync), vilket utlöser ett
+ * "storage"-event här (bara i ANDRA flikar än den som skrev) — ingen
+ * omladdning behövs.
  */
 export default function PreviewPage() {
   const { seed } = useParams<{ seed: string }>()
-  const [payload] = useState<PreviewPayload | null>(() => (seed ? readActivePreview(seed) : null))
+  const [payload, setPayload] = useState<PreviewPayload | null>(() => (seed ? readActivePreview(seed) : null))
   const [closed, setClosed] = useState(false)
+
+  useEffect(() => {
+    function onStorage(e: StorageEvent) {
+      if (e.key !== PREVIEW_KEY) return
+      if (!e.newValue) { setPayload(null); return }
+      try {
+        const data = JSON.parse(e.newValue) as PreviewPayload
+        if (data.seed !== seed) { setPayload(null); return }
+        setPayload(data)
+      } catch { /* ignore */ }
+    }
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
+  }, [seed])
 
   function handleClose() {
     closePreview()

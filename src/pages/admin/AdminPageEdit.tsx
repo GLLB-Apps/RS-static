@@ -15,6 +15,7 @@ import PreviewButton from '../../components/admin/PreviewButton'
 import EditorLayout from '../../components/admin/EditorLayout'
 import EditorSidebar from '../../components/admin/EditorSidebar'
 import { useFocusMode } from '../../lib/focusMode'
+import { usePreviewSync } from '../../lib/preview'
 import { FADE } from '../../lib/motionPresets'
 
 interface PageDraft {
@@ -36,6 +37,8 @@ export default function AdminPageEdit() {
   const [blocks, setBlocks] = useState<ContentBlock[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [previewSeed, setPreviewSeed] = useState<string | null>(null)
+  usePreviewSync(previewSeed, title, intro, cfg?.hasBlocks ? blocks : [])
 
   const draftKey = `page:${slug ?? 'unknown'}`
   const { draft, discard: discardDraft } = useDraftRestore<PageDraft>(draftKey)
@@ -98,7 +101,7 @@ export default function AdminPageEdit() {
         </AnimatePresence>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', marginLeft: 'auto' }}>
           <AutosaveStatus dirty={dirty} savedAt={savedAt} />
-          <PreviewButton getPayload={() => ({ title, intro, blocks: cfg.hasBlocks ? blocks : [] })} />
+          <PreviewButton getPayload={() => ({ title, intro, blocks: cfg.hasBlocks ? blocks : [] })} onOpen={setPreviewSeed} />
           <FocusModeToggle />
           <AnimatePresence initial={false}>
             {!focusMode && (

@@ -17,6 +17,7 @@ import PreviewButton from '../../components/admin/PreviewButton'
 import EditorLayout from '../../components/admin/EditorLayout'
 import EditorSidebar from '../../components/admin/EditorSidebar'
 import { useFocusMode } from '../../lib/focusMode'
+import { usePreviewSync } from '../../lib/preview'
 import { FADE } from '../../lib/motionPresets'
 
 interface NewsDraft {
@@ -62,6 +63,8 @@ export default function AdminNewsEdit() {
   const [status, setStatus] = useState<ContentStatus>('draft')
   const [loading, setLoading] = useState(!isNew)
   const [saving, setSaving] = useState(false)
+  const [previewSeed, setPreviewSeed] = useState<string | null>(null)
+  usePreviewSync(previewSeed, form.title, form.excerpt, content)
 
   const draftKey = `news:${id ?? 'new'}`
   const { draft, discard: discardDraft } = useDraftRestore<NewsDraft>(draftKey)
@@ -176,7 +179,7 @@ export default function AdminNewsEdit() {
               </motion.div>
             )}
           </AnimatePresence>
-          <PreviewButton getPayload={() => ({ title: form.title, intro: form.excerpt, blocks: content })} />
+          <PreviewButton getPayload={() => ({ title: form.title, intro: form.excerpt, blocks: content })} onOpen={setPreviewSeed} />
           <FocusModeToggle />
           <AnimatePresence initial={false}>
             {!focusMode && (

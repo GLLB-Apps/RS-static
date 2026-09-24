@@ -18,6 +18,7 @@ import PreviewButton from '../../components/admin/PreviewButton'
 import EditorLayout from '../../components/admin/EditorLayout'
 import EditorSidebar from '../../components/admin/EditorSidebar'
 import { useFocusMode } from '../../lib/focusMode'
+import { usePreviewSync } from '../../lib/preview'
 import { FADE } from '../../lib/motionPresets'
 
 interface TopicDraft {
@@ -51,6 +52,8 @@ export default function AdminTopicEdit() {
   const [sortOrder, setSortOrder] = useState(0)
   const [loading, setLoading] = useState(!isNew)
   const [saving, setSaving] = useState(false)
+  const [previewSeed, setPreviewSeed] = useState<string | null>(null)
+  usePreviewSync(previewSeed, title, intro, content)
 
   const draftKey = `topic:${id ?? 'new'}`
   const { draft, discard: discardDraft } = useDraftRestore<TopicDraft>(draftKey)
@@ -185,7 +188,7 @@ export default function AdminTopicEdit() {
               </motion.div>
             )}
           </AnimatePresence>
-          <PreviewButton getPayload={() => ({ title, intro, blocks: content })} />
+          <PreviewButton getPayload={() => ({ title, intro, blocks: content })} onOpen={setPreviewSeed} />
           <FocusModeToggle />
           <AnimatePresence initial={false}>
             {!focusMode && (
