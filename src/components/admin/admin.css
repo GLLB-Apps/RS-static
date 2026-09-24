@@ -1687,9 +1687,9 @@
   display: grid;
   align-items: stretch;
   gap: 0 var(--space-2);
-  /* Extra utrymme upptill — annars hamnar högerspaltens egen (nästlade)
-     verktygsrad rakt under .tap-block-ctrls (flytta upp/ner/ta bort för hela
-     kolumnblocket) och gör dem oåtkomliga. */
+  /* Extra utrymme upptill — annars hamnar första blockets innehåll (i
+     högerspalten) rakt under .tap-block-ctrls (flytta upp/ner/ta bort för
+     hela kolumnblocket) och gör dem oåtkomliga. */
   margin: 32px 0 var(--space-2);
 }
 .tap-column {
@@ -1700,24 +1700,7 @@
   background: var(--bg-alt);
 }
 .tap-column .tap-editor { border: none; background: none; }
-.tap-column .tap-toolbar { flex-wrap: wrap; padding: var(--space-2); }
 .tap-column .tap-doc { padding: var(--space-2) var(--space-3); }
-.tap-column-label {
-  position: absolute;
-  top: -9px;
-  /* Vänster, inte höger — annars konkurrerar den om utrymme med
-     .tap-block-ctrls (flytta/ta bort för hela kolumnblocket) uppe till höger
-     om hela raden. */
-  left: var(--space-3);
-  z-index: 1;
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 1px 7px;
-}
 .tap-column-splitter {
   align-self: stretch;
   width: 14px;
@@ -1728,6 +1711,28 @@
   touch-action: none;
   position: relative;
 }
+/* Breddprocenten — bara synlig vid hovring/drag, inte som en permanent
+   etikett (den tog för mycket visuell plats för vad den faktiskt behövs). */
+.tap-column-splitter-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  white-space: nowrap;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 1px 7px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+.tap-column-splitter:hover .tap-column-splitter-value,
+.tap-column-splitter.is-dragging .tap-column-splitter-value { opacity: 1; }
 .tap-column-splitter::before {
   content: '';
   position: absolute;

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
 import type { ContentBlock, DocumentItem } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
@@ -343,11 +343,32 @@ function autosize(el: HTMLTextAreaElement | null) {
   el.style.height = el.scrollHeight + 'px'
 }
 
+/**
+ * Verktygsradens knappar verkar på VILKEN redigerare som senast fick fokus —
+ * bara den yttersta instansen ritar en verktygsrad (se Props.nested), så en
+ * kolumnrutas egen editor måste kunna "äga" knapparna medan man skriver där.
+ * insertColumns är null för en nästlad instans (inga kolumner-i-kolumner).
+ */
+interface TapActions {
+  addBlock: (type: ContentBlock['type']) => void
+  applyText: (type: TextType, extra?: Partial<ContentBlock>) => void
+  applyHeading: (level: number) => void
+  insertColumns: ((choice: ColumnsChoice) => void) | null
+  focusedType: ContentBlock['type'] | null
+  focusedLevel: number | null
+}
+type TapActionsRef = { current: TapActions }
+/** En nästlad editor lämnar sin (alltid färska) actions-ref hit när något i
+ * den får fokus — den yttersta instansen läser den för att rikta knapparna
+ * rätt, och tar tillbaka den när man klickar i sitt eget innehåll igen. */
+const TapActiveContext = createContext<((ref: TapActionsRef | null) => void) | null>(null)
+
 interface Props {
   blocks: ContentBlock[]
   onChange: (blocks: ContentBlock[]) => void
-  /** Sant för editorn inuti en kolumnruta — döljer kolumnverktyget (inga
-   * kolumner-i-kolumner) och den långa hjälptexten, för en lugnare yta. */
+  /** Sant för editorn inuti en kolumnruta — döljer sin egen verktygsrad helt
+   * (bara den yttersta har en, se TapActiveContext ovan) och den långa
+   * hjälptexten, för en lugnare yta. */
   nested?: boolean
 }
 
@@ -596,13 +617,33 @@ export default function TapEditor({ blocks, onChange, nested }: Props) {
   const focusedType = focusedIsText ? list[focused!].type : null
   const focusedLevel = focusedType === 'heading' ? headingLevel(list[focused!].level) : null
 
+  // Skrivs om varje render (inte i en effekt) så den ALDRIG är inaktuell när
+  // verktygsraden läser den senare — annars skulle t.ex. en knapptryckning
+  // strax efter någon skrivit något i en kolumnruta committa en "list" som
+  // saknar det senast skrivna (en instängd closure från fokus-tillfället).
+  const activeCtx = useContext(TapActiveContext)
+  const [activeRef, setActiveRef] = useState<TapActionsRef | null>(null)
+  const selfActionsRef = useRef<TapActions>(null!)
+  selfActionsRef.current = { addBlock, applyText, applyHeading, insertColumns: nested ? null : insertColumns, focusedType, focusedLevel }
+  const effective: TapActions = (nested ? null : activeRef?.current) ?? selfActionsRef.current
+
+  /** Anropas när något i DEN HÄR editorn får fokus — nästlad lämnar sin ref
+   * uppåt, den yttersta återtar sig själv (annars skulle den senast aktiva
+   * kolumnrutan äga knapparna för alltid, även efter man klickat tillbaka
+   * i huvuddokumentet). */
+  function claimActive() {
+    if (nested) activeCtx?.(selfActionsRef)
+    else setActiveRef(null)
+  }
+
   const placeholder = (block: ContentBlock, index: number) =>
     block.type === 'heading' ? `Rubrik ${headingLevel(block.level)}`
       : block.type === 'quote' ? 'Citat…'
         : index === 0 ? 'Börja skriva…' : 'Skriv här…'
 
-  return (
+  const editor = (
     <div className="tap-editor" onKeyDown={onEditorKeyDown}>
+      {!nested && (
       <div className="tap-toolbar">
         <div className="tap-mode-switch" role="group" aria-label="Redigeringsläge">
           <button type="button" className={markdown == null ? 'tap-mode active' : 'tap-mode'} title="Vanlig editor – ett block i taget" onMouseDown={e => e.preventDefault()} onClick={() => setMarkdown(null)}>Vanlig</button>
@@ -610,22 +651,27 @@ export default function TapEditor({ blocks, onChange, nested }: Props) {
         </div>
         <span className="tap-toolbar-sep" />
         <div className="tap-toolbar-group">
-          <button type="button" title="Text (Ctrl+Alt+T)" className={focusedType === 'paragraph' ? 'tap-tool active' : 'tap-tool'} onMouseDown={e => e.preventDefault()} onClick={() => applyText('paragraph')}>Text</button>
-          <HeadingMenu level={focusedLevel} onPick={applyHeading} />
-          <button type="button" title="Citat (Ctrl+Alt+C)" className={focusedType === 'quote' ? 'tap-tool active' : 'tap-tool'} onMouseDown={e => e.preventDefault()} onClick={() => applyText('quote')}>Citat</button>
+          {/* Knapparna verkar på effective — den senast fokuserade editorn,
+              vilket kan vara en kolumnrutas egen (nästlade) instans. Se
+              TapActiveContext ovan och claimActive(). */}
+          <button type="button" title="Text (Ctrl+Alt+T)" className={effective.focusedType === 'paragraph' ? 'tap-tool active' : 'tap-tool'} onMouseDown={e => e.preventDefault()} onClick={() => effective.applyText('paragraph')}>Text</button>
+          <HeadingMenu level={effective.focusedLevel} onPick={effective.applyHeading} />
+          <button type="button" title="Citat (Ctrl+Alt+C)" className={effective.focusedType === 'quote' ? 'tap-tool active' : 'tap-tool'} onMouseDown={e => e.preventDefault()} onClick={() => effective.applyText('quote')}>Citat</button>
         </div>
         <span className="tap-toolbar-sep" />
         <div className="tap-toolbar-group">
           {/* Kolumner har ingen markdown-form och kan inte innehålla ett till
-              kolumnblock — döljs därför i MD-läge och i en nästlad kolumnruta. */}
-          {!nested && markdown == null && <ColumnsMenu onPick={insertColumns} />}
+              kolumnblock — döljs därför i MD-läge och när en kolumnrutas
+              egen editor äger knapparna. */}
+          {markdown == null && effective.insertColumns && <ColumnsMenu onPick={effective.insertColumns} />}
           {INSERTS.map(ins => (
-            <button key={ins.type} type="button" title={`${ins.label} (Ctrl+Alt+${SHORTCUT_KEY[ins.type]})`} className="tap-tool tap-tool-insert" onMouseDown={e => e.preventDefault()} onClick={() => addBlock(ins.type)}>
+            <button key={ins.type} type="button" title={`${ins.label} (Ctrl+Alt+${SHORTCUT_KEY[ins.type]})`} className="tap-tool tap-tool-insert" onMouseDown={e => e.preventDefault()} onClick={() => effective.addBlock(ins.type)}>
               + {ins.label} <span className="tap-tool-key">{SHORTCUT_KEY[ins.type]}</span>
             </button>
           ))}
         </div>
       </div>
+      )}
 
       {markdown != null && (
         <div className="tap-md-pane">
@@ -673,7 +719,7 @@ export default function TapEditor({ blocks, onChange, nested }: Props) {
                 value={block.text ?? ''}
                 rows={1}
                 placeholder={placeholder(block, i)}
-                onFocus={() => setFocused(i)}
+                onFocus={e => { setFocused(i); e.stopPropagation(); claimActive() }}
                 onChange={e => {
                   if (autoHeading(i, e.target.value)) return
                   set(i, { text: e.target.value })
@@ -682,7 +728,7 @@ export default function TapEditor({ blocks, onChange, nested }: Props) {
                 onKeyDown={e => onTextKeyDown(e, i)}
               />
             ) : (
-              <div className="tap-element" onFocus={() => setFocused(i)}>
+              <div className="tap-element" onFocus={e => { setFocused(i); e.stopPropagation(); claimActive() }}>
                 <span className="tap-element-tag">{blockLabel(block.type)}</span>
 
                 {block.type === 'divider' && <hr className="tap-divider" />}
@@ -888,5 +934,12 @@ export default function TapEditor({ blocks, onChange, nested }: Props) {
       <p className="tap-hint">Klicka och skriv. Tryck <kbd>Enter</kbd> för ny rad. I ett citat ger <kbd>Skift</kbd>+<kbd>Enter</kbd> ett nytt stycke inuti citatet. Markera en rad och tryck <strong>Rubrik</strong> (nivå 1–6 i listan, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>1</kbd>–<kbd>6</kbd>, eller <code>##</code> först på raden) eller <strong>Citat</strong> för att ändra stil. Står du i en ruta (bild, faktaruta …) kan du trycka <strong>Text</strong>, <strong>Rubrik</strong> eller <strong>Citat</strong> för att fortsätta skriva under den. Håll <kbd>Ctrl</kbd>+<kbd>Alt</kbd> och tryck bokstaven på en knapp: står du <strong>mitt i</strong> ett block byter det typ på blocket med innehållet kvar, står du i slutet av raden eller på en tom rad läggs blocket till.</p>
       ))}
     </div>
+  )
+
+  // Bara den yttersta instansen behöver dela ut sin claim-funktion — en
+  // nästlad instans har ingen egen kolumnruta att härbärgera (inga
+  // kolumner-i-kolumner) och behöver därför inte vara en egen Provider.
+  return nested ? editor : (
+    <TapActiveContext.Provider value={setActiveRef}>{editor}</TapActiveContext.Provider>
   )
 }
