@@ -14,9 +14,11 @@ import TapEditor from './TapEditor'
 const MIN_WIDTH = 15
 const MAX_WIDTH = 85
 
-export default function ColumnsBlockEditor({ columns, onChange }: {
+export default function ColumnsBlockEditor({ columns, onChange, onEscape }: {
   columns: LayoutColumn[]
   onChange: (columns: LayoutColumn[]) => void
+  /** Esc i endera kolumnen — hoppar till nästa block i huvuddokumentet. */
+  onEscape?: () => void
 }) {
   const rowRef = useRef<HTMLDivElement>(null)
   const [dragging, setDragging] = useState(false)
@@ -48,8 +50,8 @@ export default function ColumnsBlockEditor({ columns, onChange }: {
 
   return (
     <div className="tap-columns" ref={rowRef} style={{ gridTemplateColumns: `${cols[0].width}fr 14px ${cols[1].width}fr` }}>
-      <div className="tap-column">
-        <TapEditor blocks={cols[0].blocks} onChange={blocks => setColumnBlocks(0, blocks)} nested />
+      <div className="tap-column" title="Tryck Esc för att lämna kolumnen">
+        <TapEditor blocks={cols[0].blocks} onChange={blocks => setColumnBlocks(0, blocks)} nested onEscape={onEscape} />
       </div>
       <button
         type="button"
@@ -60,8 +62,8 @@ export default function ColumnsBlockEditor({ columns, onChange }: {
       >
         <span className="tap-column-splitter-value">{Math.round(cols[0].width)}% / {Math.round(cols[1].width)}%</span>
       </button>
-      <div className="tap-column">
-        <TapEditor blocks={cols[1].blocks} onChange={blocks => setColumnBlocks(1, blocks)} nested />
+      <div className="tap-column" title="Tryck Esc för att lämna kolumnen">
+        <TapEditor blocks={cols[1].blocks} onChange={blocks => setColumnBlocks(1, blocks)} nested onEscape={onEscape} />
       </div>
     </div>
   )

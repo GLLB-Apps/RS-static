@@ -370,9 +370,12 @@ interface Props {
    * (bara den yttersta har en, se TapActiveContext ovan) och den långa
    * hjälptexten, för en lugnare yta. */
   nested?: boolean
+  /** Bara relevant när nested: Esc anropar den här i stället för att göra
+   * något inuti kolumnen — se escapeColumns() där ColumnsBlockEditor renderas. */
+  onEscape?: () => void
 }
 
-export default function TapEditor({ blocks, onChange, nested }: Props) {
+export default function TapEditor({ blocks, onChange, nested, onEscape }: Props) {
   const refs = useRef<(HTMLTextAreaElement | null)[]>([])
   const [focused, setFocused] = useState<number | null>(null)
   const [pending, setPending] = useState<{ index: number; caret: number } | null>(null)
@@ -450,6 +453,13 @@ export default function TapEditor({ blocks, onChange, nested }: Props) {
     const at = index == null ? list.length : onBlankLine ? index : index + 1
     commit([...list.slice(0, at), block, ...list.slice(onBlankLine ? at + 1 : at)])
     if (isText(type)) setPending({ index: at, caret: 0 })
+  }
+  /** Esc i en kolumnruta (se ColumnsBlockEditor nedan) — hoppar till blocket
+   * efter kolumnblocket, eller lägger till ett nytt om det inte redan finns. */
+  function escapeColumns(columnsIndex: number) {
+    const after = list[columnsIndex + 1]
+    if (after && isText(after.type)) setPending({ index: columnsIndex + 1, caret: 0 })
+    else insertAfter(columnsIndex, 'paragraph')
   }
   // The text-style buttons double as a way to "break free" from an element
   // block: with a text line focused they convert it, but with an element
@@ -544,6 +554,15 @@ export default function TapEditor({ blocks, onChange, nested }: Props) {
   // samma tangenttryck bubbla vidare och hanteras EN GÅNG TILL av den yttre
   // editorns instans av den här funktionen.
   function onEditorKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    // Esc lämnar en kolumnruta — utan den finns inget tangentbordssätt att ta
+    // sig ur en kolumn och vidare i huvuddokumentet (Enter lägger bara till
+    // ett nytt block INUTI kolumnen den redan står i).
+    if (nested && e.key === 'Escape') {
+      e.preventDefault()
+      e.stopPropagation()
+      onEscape?.()
+      return
+    }
     // Ctrl+Shift+1…6 sätter rubriknivå. Siffrorna kan inte ligga på Ctrl+Alt:
     // det är AltGr på svenskt tangentbord och skriver @, £, $ …
     if (e.ctrlKey && e.shiftKey && !e.altKey && !e.metaKey) {
@@ -711,6 +730,7 @@ export default function TapEditor({ blocks, onChange, nested }: Props) {
               <ColumnsBlockEditor
                 columns={block.layout_columns ?? []}
                 onChange={cols => set(i, { layout_columns: cols })}
+                onEscape={() => escapeColumns(i)}
               />
             ) : isText(block.type) ? (
               <textarea
@@ -931,7 +951,7 @@ export default function TapEditor({ blocks, onChange, nested }: Props) {
           Innehåll som inte finns i vanlig markdown (faktarutor, videor, uppmaningar …) står som <code>:::</code>-block och följer med tillbaka oförändrat.
         </p>
       ) : (
-      <p className="tap-hint">Klicka och skriv. Tryck <kbd>Enter</kbd> för ny rad. I ett citat ger <kbd>Skift</kbd>+<kbd>Enter</kbd> ett nytt stycke inuti citatet. Markera en rad och tryck <strong>Rubrik</strong> (nivå 1–6 i listan, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>1</kbd>–<kbd>6</kbd>, eller <code>##</code> först på raden) eller <strong>Citat</strong> för att ändra stil. Står du i en ruta (bild, faktaruta …) kan du trycka <strong>Text</strong>, <strong>Rubrik</strong> eller <strong>Citat</strong> för att fortsätta skriva under den. Håll <kbd>Ctrl</kbd>+<kbd>Alt</kbd> och tryck bokstaven på en knapp: står du <strong>mitt i</strong> ett block byter det typ på blocket med innehållet kvar, står du i slutet av raden eller på en tom rad läggs blocket till.</p>
+      <p className="tap-hint">Klicka och skriv. Tryck <kbd>Enter</kbd> för ny rad. I ett citat ger <kbd>Skift</kbd>+<kbd>Enter</kbd> ett nytt stycke inuti citatet. Markera en rad och tryck <strong>Rubrik</strong> (nivå 1–6 i listan, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>1</kbd>–<kbd>6</kbd>, eller <code>##</code> först på raden) eller <strong>Citat</strong> för att ändra stil. Står du i en ruta (bild, faktaruta …) kan du trycka <strong>Text</strong>, <strong>Rubrik</strong> eller <strong>Citat</strong> för att fortsätta skriva under den. Håll <kbd>Ctrl</kbd>+<kbd>Alt</kbd> och tryck bokstaven på en knapp: står du <strong>mitt i</strong> ett block byter det typ på blocket med innehållet kvar, står du i slutet av raden eller på en tom rad läggs blocket till. Står du i en kolumnruta tar <kbd>Esc</kbd> dig ur den och vidare i huvuddokumentet.</p>
       ))}
     </div>
   )
