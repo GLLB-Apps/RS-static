@@ -105,6 +105,12 @@ export interface SiteSettings {
    * Osatt (äldre rader) tolkas som 'everywhere' — se blobSettings.tsx.
    */
   blob_avatars: 'off' | 'admin' | 'everywhere' | null
+  /**
+   * Innehållets maxbredd i pixlar (.container-narrow) — bara till för att
+   * ge kolumnblocket ("Kolumner") mer plats. Kan bara göras BREDARE än
+   * standard (800), aldrig smalare. Osatt (äldre rader) = 800.
+   */
+  content_width: number | null
 }
 
 /**

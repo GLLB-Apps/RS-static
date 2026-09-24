@@ -22,6 +22,17 @@ export default function PublicLayout() {
       .then(({ data }) => setSettings(data as SiteSettings | null))
   }, [])
 
+  // Sidobredden (Admin → Inställningar) — samma :root-variabel som
+  // .container-narrow läser, satt globalt så hela sajten följer den. Tas
+  // bort vid unmount så adminpanelen (som inte använder variabeln) aldrig
+  // ärver ett gammalt värde mellan navigeringar.
+  useEffect(() => {
+    if (settings?.content_width) {
+      document.documentElement.style.setProperty('--content-width', `${settings.content_width}px`)
+    }
+    return () => { document.documentElement.style.removeProperty('--content-width') }
+  }, [settings?.content_width])
+
   return (
     <EditLinkProvider>
       <div className="public-layout">

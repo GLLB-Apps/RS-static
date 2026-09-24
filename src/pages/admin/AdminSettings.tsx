@@ -12,6 +12,58 @@ const BLOB_MODES: { value: NonNullable<SiteSettings['blob_avatars']>; label: str
   { value: 'everywhere', label: 'Överallt', desc: 'Syns även publikt: vittnesmål, startsidan, kontaktsidan, kartan.' },
 ]
 
+const CONTENT_WIDTH_MIN = 800
+const CONTENT_WIDTH_MAX = 1100
+// Skala ner pixelbredden till en liten förhandsvisningsruta, inte den
+// riktiga bredden — annars skulle rutan spränga inställningspanelen.
+const CONTENT_WIDTH_PREVIEW_SCALE = 0.28
+
+/**
+ * Sidobreddens slider — bara till för att ge kolumnblocket ("Kolumner") mer
+ * plats. Kan inte göras smalare än standard (800px, samma som innan
+ * inställningen fanns), och den övre gränsen (1100px) är medvetet
+ * begränsad så vanlig löptext inte blir orimligt bred bara för att någon
+ * annan sida använder kolumner. En liten ruta ovanför slidern — bara synlig
+ * medan man drar/har fokus i den — visar bredden proportionerligt.
+ */
+function ContentWidthField({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+  const [active, setActive] = useState(false)
+  const pct = (value - CONTENT_WIDTH_MIN) / (CONTENT_WIDTH_MAX - CONTENT_WIDTH_MIN)
+
+  return (
+    <div className="content-width-field">
+      <div className="content-width-track">
+        {active && (
+          <div
+            className="content-width-preview"
+            style={{ width: value * CONTENT_WIDTH_PREVIEW_SCALE, left: `calc(${pct * 100}% - ${pct * 20}px + 10px)` }}
+          >
+            {value}px
+          </div>
+        )}
+        <input
+          id="content_width"
+          className="content-width-slider"
+          type="range"
+          min={CONTENT_WIDTH_MIN}
+          max={CONTENT_WIDTH_MAX}
+          step={10}
+          value={value}
+          onChange={e => onChange(Number(e.target.value))}
+          onFocus={() => setActive(true)}
+          onBlur={() => setActive(false)}
+          onPointerDown={() => setActive(true)}
+          onPointerUp={() => setActive(false)}
+        />
+      </div>
+      <div className="content-width-scale">
+        <span>{CONTENT_WIDTH_MIN}px (standard)</span>
+        <span>{CONTENT_WIDTH_MAX}px</span>
+      </div>
+    </div>
+  )
+}
+
 export default function AdminSettings() {
   const [settings, setSettings] = useState<SiteSettings | null>(null)
   const [loading, setLoading] = useState(true)
@@ -78,6 +130,7 @@ export default function AdminSettings() {
       status_message: settings.status_message,
       status_phase: settings.status_phase,
       blob_avatars: settings.blob_avatars ?? 'everywhere',
+      content_width: settings.content_width ?? CONTENT_WIDTH_MIN,
       important_dates: sortedDates,
       // Speglar det närmast kommande datumet, så att äldre läsare av fältet
       // fortsätter visa rätt sak.
@@ -141,6 +194,21 @@ export default function AdminSettings() {
             <label className="form-label" htmlFor="favicon_url">Favicon (URL)</label>
             <input id="favicon_url" className="form-input" type="url" value={settings.favicon_url ?? ''} onChange={e => update('favicon_url', e.target.value || null)} />
           </div>
+        </div>
+      </div>
+
+      <div className="admin-form-card" style={{ marginTop: 'var(--space-5)' }}>
+        <h3 style={{ marginBottom: 'var(--space-2)' }}>Sidobredd</h3>
+        <p className="text-muted" style={{ fontSize: '0.85rem', marginBottom: 'var(--space-4)' }}>
+          Hur brett textinnehållet visas på webbplatsen. Ger kolumnblocket ("Kolumner" i redigeraren)
+          mer plats — går bara att göra bredare än standard, aldrig smalare.
+        </p>
+        <div className="form-group">
+          <label className="form-label" htmlFor="content_width">Innehållets maxbredd</label>
+          <ContentWidthField
+            value={settings.content_width ?? CONTENT_WIDTH_MIN}
+            onChange={v => update('content_width', v)}
+          />
         </div>
       </div>
 

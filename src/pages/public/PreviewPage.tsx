@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom'
 import { Eye, X } from 'lucide-react'
 import { readActivePreview, closePreview, PREVIEW_KEY, type PreviewPayload } from '../../lib/preview'
 import { ContentBlocks } from '../../components/public/blocks'
+import { supabase } from '../../lib/supabase'
+import type { SiteSettings } from '../../lib/types'
 
 /**
  * /visa/:seed — fokuserad förhandsgranskning utan sajtens meny/sidfot, öppnad
@@ -33,6 +35,17 @@ export default function PreviewPage() {
     window.addEventListener('storage', onStorage)
     return () => window.removeEventListener('storage', onStorage)
   }, [seed])
+
+  // Öppnas i en helt ny flik (window.open) — ärver inte :root-variabeln
+  // PublicLayout.tsx satt i den ursprungliga fliken, så sidobredden hämtas
+  // här igen för att förhandsgranskningen ska stämma med den riktiga sajten.
+  useEffect(() => {
+    supabase.from('site_settings').select('*').maybeSingle().then(({ data }) => {
+      const s = data as SiteSettings | null
+      if (s?.content_width) document.documentElement.style.setProperty('--content-width', `${s.content_width}px`)
+    })
+    return () => { document.documentElement.style.removeProperty('--content-width') }
+  }, [])
 
   function handleClose() {
     closePreview()

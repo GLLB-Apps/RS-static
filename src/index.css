@@ -138,7 +138,10 @@ input, textarea, select {
 }
 
 .container-narrow {
-  max-width: 800px;
+  /* Satt av PublicLayout.tsx/PreviewPage.tsx från site_settings.content_width
+     — se Admin → Inställningar → Sidobredd. Fallback 800px = samma bredd
+     som innan den inställningen fanns. */
+  max-width: var(--content-width, 800px);
   margin: 0 auto;
   padding: 0 var(--space-5);
 }
