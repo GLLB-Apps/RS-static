@@ -141,8 +141,8 @@ export default function AdminSponsors() {
           {sponsors.map((sp, i) => (
             <div key={sp.id} className={sp.is_active ? 'admin-list-item' : 'admin-list-item is-inactive'}>
               <div className="sponsor-row-order">
-                <button className="btn btn-ghost btn-xs" onClick={() => move(sp, -1)} disabled={i === 0} title="Flytta vänster (upp)" aria-label="Flytta vänster">↑</button>
-                <button className="btn btn-ghost btn-xs" onClick={() => move(sp, 1)} disabled={i === sponsors.length - 1} title="Flytta höger (ned)" aria-label="Flytta höger">↓</button>
+                <button className="btn btn-ghost btn-xs" onClick={() => move(sp, -1)} disabled={i === 0} data-tooltip="Flytta vänster (upp)" aria-label="Flytta vänster">↑</button>
+                <button className="btn btn-ghost btn-xs" onClick={() => move(sp, 1)} disabled={i === sponsors.length - 1} data-tooltip="Flytta höger (ned)" aria-label="Flytta höger">↓</button>
               </div>
               <div className="sponsor-row-logo">
                 {sp.image_url ? <img src={sp.image_url} alt={sp.name} /> : <span className="sponsor-row-noimg">Ingen bild</span>}

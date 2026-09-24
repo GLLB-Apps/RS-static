@@ -6,7 +6,7 @@ import { Save } from 'lucide-react'
 export default function AutosaveStatus({ dirty, savedAt }: { dirty: boolean; savedAt: string | null }) {
   if (!dirty && !savedAt) return null
   return (
-    <span className="autosave-status" title={dirty ? 'Sparar utkast i webbläsaren…' : 'Utkastet är autosparat i webbläsaren'}>
+    <span className="autosave-status" data-tooltip={dirty ? 'Sparar utkast i webbläsaren…' : 'Utkastet är autosparat i webbläsaren'}>
       <Save size={14} aria-hidden="true" className={dirty ? 'autosave-status-icon is-saving' : 'autosave-status-icon'} />
       <span className="autosave-status-label">{dirty ? 'Sparar utkast…' : 'Utkast sparat'}</span>
     </span>

@@ -11,7 +11,7 @@ export default function FocusModeToggle() {
       className={`btn btn-ghost btn-sm focus-mode-toggle ${focusMode ? 'is-active' : ''}`.trim()}
       onClick={toggle}
       aria-label={focusMode ? 'Lämna fokusläge' : 'Fokusläge'}
-      title={focusMode ? 'Lämna fokusläge' : 'Fokusläge'}
+      data-tooltip={focusMode ? 'Lämna fokusläge' : 'Fokusläge'}
     >
       <AnimatePresence mode="wait" initial={false}>
         {focusMode ? (

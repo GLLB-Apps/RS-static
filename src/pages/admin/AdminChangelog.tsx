@@ -250,7 +250,7 @@ export default function AdminChangelog() {
                       <div className="changelog-actions">
                         <button
                           className="intdoc-icon-btn"
-                          title="Redigera"
+                          data-tooltip="Redigera"
                           aria-label={`Redigera ${e.title}`}
                           onClick={() => setDraft({
                             id: e.id,
@@ -265,7 +265,7 @@ export default function AdminChangelog() {
                         </button>
                         <button
                           className="intdoc-icon-btn danger"
-                          title="Ta bort"
+                          data-tooltip="Ta bort"
                           aria-label={`Ta bort ${e.title}`}
                           onClick={() => remove(e)}
                         >

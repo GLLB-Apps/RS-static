@@ -243,10 +243,10 @@ export default function AdminNavigation() {
         onDrop={e => { e.preventDefault(); dropOnto(item.id) }}
         onDragEnd={endDrag}
       >
-        <span className="menu-row-grip" title="Dra för att flytta" aria-hidden="true">⠿</span>
+        <span className="menu-row-grip" data-tooltip="Dra för att flytta" aria-hidden="true">⠿</span>
         <div className="menu-row-reorder">
-          <button className="menu-icon-btn" onClick={() => move(item, -1)} disabled={index === 0} title="Flytta upp" aria-label="Flytta upp">↑</button>
-          <button className="menu-icon-btn" onClick={() => move(item, 1)} disabled={index === siblingCount - 1} title="Flytta ned" aria-label="Flytta ned">↓</button>
+          <button className="menu-icon-btn" onClick={() => move(item, -1)} disabled={index === 0} data-tooltip="Flytta upp" aria-label="Flytta upp">↑</button>
+          <button className="menu-icon-btn" onClick={() => move(item, 1)} disabled={index === siblingCount - 1} data-tooltip="Flytta ned" aria-label="Flytta ned">↓</button>
         </div>
 
         {editing ? (
@@ -268,12 +268,12 @@ export default function AdminNavigation() {
         {!editing && (
           <div className="menu-row-tools">
             {isChild
-              ? <button className="menu-icon-btn" onClick={() => outdent(item)} title="Gör till toppnivå" aria-label="Gör till toppnivå">⇤</button>
-              : <button className="menu-icon-btn" onClick={() => indent(item)} disabled={!canIndent} title="Gör till underval (av valet ovanför)" aria-label="Gör till underval">⇥</button>}
-            <button className={iconPickerFor === item.id ? 'menu-icon-btn is-on' : 'menu-icon-btn'} onClick={() => setIconPickerFor(iconPickerFor === item.id ? null : item.id)} title="Välj ikon" aria-label="Välj ikon">✦</button>
-            <button className="menu-icon-btn" onClick={() => toggleActive(item)} title={item.is_active ? 'Dölj' : 'Visa'} aria-label={item.is_active ? 'Dölj' : 'Visa'}>{item.is_active ? '👁' : '🚫'}</button>
-            <button className="menu-icon-btn" onClick={() => startEdit(item)} title="Redigera" aria-label="Redigera">✎</button>
-            <button className="menu-icon-btn danger" onClick={() => remove(item)} title="Ta bort" aria-label="Ta bort">✕</button>
+              ? <button className="menu-icon-btn" onClick={() => outdent(item)} data-tooltip="Gör till toppnivå" aria-label="Gör till toppnivå">⇤</button>
+              : <button className="menu-icon-btn" onClick={() => indent(item)} disabled={!canIndent} data-tooltip="Gör till underval (av valet ovanför)" aria-label="Gör till underval">⇥</button>}
+            <button className={iconPickerFor === item.id ? 'menu-icon-btn is-on' : 'menu-icon-btn'} onClick={() => setIconPickerFor(iconPickerFor === item.id ? null : item.id)} data-tooltip="Välj ikon" aria-label="Välj ikon">✦</button>
+            <button className="menu-icon-btn" onClick={() => toggleActive(item)} data-tooltip={item.is_active ? 'Dölj' : 'Visa'} aria-label={item.is_active ? 'Dölj' : 'Visa'}>{item.is_active ? '👁' : '🚫'}</button>
+            <button className="menu-icon-btn" onClick={() => startEdit(item)} data-tooltip="Redigera" aria-label="Redigera">✎</button>
+            <button className="menu-icon-btn danger" onClick={() => remove(item)} data-tooltip="Ta bort" aria-label="Ta bort">✕</button>
           </div>
         )}
 
@@ -307,7 +307,7 @@ export default function AdminNavigation() {
         ) : (
           <div className="menu-page-choices">
             {availablePages.map(p => (
-              <button key={p.url} className="menu-page-choice" onClick={() => addPage(p)} title={`Lägg till ${p.label}`}>
+              <button key={p.url} className="menu-page-choice" onClick={() => addPage(p)} data-tooltip={`Lägg till ${p.label}`}>
                 <span className="menu-page-choice-icon"><LucideIcon icon={p.icon} size={20} /></span>
                 <span className="menu-page-choice-text">
                   <span className="menu-page-choice-label">{p.label}</span>

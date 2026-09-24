@@ -205,13 +205,13 @@ export default function AdminInternalDocs() {
                   </div>
                   <div className="intdoc-actions">
                     {canPreview(doc.file_type) && doc.file_url && (
-                      <button className="intdoc-icon-btn" title="Förhandsvisa" onClick={() => setPreview(doc)}><Eye size={16} /></button>
+                      <button className="intdoc-icon-btn" data-tooltip="Förhandsvisa" aria-label="Förhandsvisa" onClick={() => setPreview(doc)}><Eye size={16} /></button>
                     )}
                     {doc.file_url && (
-                      <a className="intdoc-icon-btn" title="Ladda ner" href={doc.file_url} download={doc.file_name ?? undefined} target="_blank" rel="noopener noreferrer"><Download size={16} /></a>
+                      <a className="intdoc-icon-btn" data-tooltip="Ladda ner" aria-label="Ladda ner" href={doc.file_url} download={doc.file_name ?? undefined} target="_blank" rel="noopener noreferrer"><Download size={16} /></a>
                     )}
-                    {canWriteIntranet && <button className="intdoc-icon-btn" title="Redigera" onClick={() => setEditing(doc)}><Pencil size={16} /></button>}
-                    {canWriteIntranet && <button className="intdoc-icon-btn danger" title="Ta bort" onClick={() => removeDoc(doc)}><Trash2 size={16} /></button>}
+                    {canWriteIntranet && <button className="intdoc-icon-btn" data-tooltip="Redigera" aria-label="Redigera" onClick={() => setEditing(doc)}><Pencil size={16} /></button>}
+                    {canWriteIntranet && <button className="intdoc-icon-btn danger" data-tooltip="Ta bort" aria-label="Ta bort" onClick={() => removeDoc(doc)}><Trash2 size={16} /></button>}
                   </div>
                 </div>
               ))}
@@ -277,7 +277,7 @@ export default function AdminInternalDocs() {
                 {categories.map(c => (
                   <span key={c.id} className="intdoc-cat-chip">
                     {c.name}
-                    <button className="intdoc-cat-remove" title="Ta bort kategori" onClick={() => removeCategory(c)}>×</button>
+                    <button className="intdoc-cat-remove" data-tooltip="Ta bort kategori" aria-label={`Ta bort kategorin ${c.name}`} onClick={() => removeCategory(c)}>×</button>
                   </span>
                 ))}
               </div>

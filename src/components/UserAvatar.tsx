@@ -108,7 +108,7 @@ export default function UserAvatar({
     return (
       <span
         className={className}
-        title={title}
+        data-tooltip={title}
         style={{
           width: size, height: size, borderRadius: '50%',
           background: 'var(--bg-alt)', color: 'var(--text-muted)',
@@ -121,6 +121,12 @@ export default function UserAvatar({
     )
   }
 
+  // `title` går ändå till Blobatar: den blir en <title> INUTI SVG:n (namnger
+  // den för skärmläsare — se blobatar/src/react.tsx), inte bara en tooltip,
+  // så den behövs kvar av tillgänglighetsskäl. `data-tooltip` känner
+  // Blobatar inte igen och hamnar därför direkt på samma rot-element
+  // (spreadas via `...rest`) — den egna, temaanpassade tooltipen hinner
+  // synas långt innan webbläsarens inbyggda SVG-title-tooltip ens dyker upp.
   return (
     <Blobatar
       ref={active ? gazeRef : undefined}
@@ -132,6 +138,7 @@ export default function UserAvatar({
       animate={active || expression ? 'always' : animate}
       expression={expression}
       title={title}
+      data-tooltip={title}
       className={className}
       style={style}
     />

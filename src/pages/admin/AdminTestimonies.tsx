@@ -199,17 +199,17 @@ export default function AdminTestimonies() {
                   <span>{t.is_anonymous ? 'Anonym' : t.author_name ?? 'Anonym'}</span>
                   <span>{formatDateShort(t.created_at)}</span>
                   {t.featured_image && (
-                    <span className="testimony-flag" title="Har bild">
+                    <span className="testimony-flag" data-tooltip="Har bild">
                       <ImageIcon size={14} aria-hidden="true" /><span className="sr-only">Har bild</span>
                     </span>
                   )}
                   {t.map_lat != null && t.map_lng != null && (
-                    <span className="testimony-flag" title="Utpekad plats på kartan">
+                    <span className="testimony-flag" data-tooltip="Utpekad plats på kartan">
                       <MapPin size={14} aria-hidden="true" /><span className="sr-only">Utpekad plats på kartan</span>
                     </span>
                   )}
                   {t.consent_marketing && (
-                    <span className="testimony-flag is-ok" title="Godkänd för marknadsföring">
+                    <span className="testimony-flag is-ok" data-tooltip="Godkänd för marknadsföring">
                       <Megaphone size={14} aria-hidden="true" /><span className="sr-only">Godkänd för marknadsföring</span>
                     </span>
                   )}

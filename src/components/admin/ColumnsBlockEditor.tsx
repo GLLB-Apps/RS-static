@@ -50,7 +50,11 @@ export default function ColumnsBlockEditor({ columns, onChange, onEscape }: {
 
   return (
     <div className="tap-columns" ref={rowRef} style={{ gridTemplateColumns: `${cols[0].width}fr 14px ${cols[1].width}fr` }}>
-      <div className="tap-column" title="Tryck Esc för att lämna kolumnen">
+      {/* Ingen egen tooltip på hela kolumnrutan längre — den ArrowLeft-knapp
+          som syns i verktygsraden när man står här (se TapEditor.tsx) är en
+          bättre, alltid synlig påminnelse om Esc än en tooltip man bara ser
+          om man råkar hovra på rätt ställe. */}
+      <div className="tap-column">
         <TapEditor blocks={cols[0].blocks} onChange={blocks => setColumnBlocks(0, blocks)} nested onEscape={onEscape} />
       </div>
       <button
@@ -58,11 +62,11 @@ export default function ColumnsBlockEditor({ columns, onChange, onEscape }: {
         className={dragging ? 'tap-column-splitter is-dragging' : 'tap-column-splitter'}
         onPointerDown={startDrag}
         aria-label="Dra för att ändra bredd mellan kolumnerna"
-        title="Dra för att ändra bredd"
+        data-tooltip="Dra för att ändra bredd"
       >
         <span className="tap-column-splitter-value">{Math.round(cols[0].width)}% / {Math.round(cols[1].width)}%</span>
       </button>
-      <div className="tap-column" title="Tryck Esc för att lämna kolumnen">
+      <div className="tap-column">
         <TapEditor blocks={cols[1].blocks} onChange={blocks => setColumnBlocks(1, blocks)} nested onEscape={onEscape} />
       </div>
     </div>

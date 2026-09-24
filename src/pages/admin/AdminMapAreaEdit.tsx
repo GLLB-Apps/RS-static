@@ -352,7 +352,7 @@ export default function AdminMapAreaEdit() {
                 onClick={() => update('color', c.value)}
                 aria-label={c.label}
                 aria-pressed={form.color === c.value}
-                title={c.label}
+                data-tooltip={c.label}
               />
             ))}
             <input

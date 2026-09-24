@@ -44,7 +44,7 @@ export default function VoteWidget({ settings }: { settings: SiteSettings | null
   return (
     <>
       <aside className={collapsed ? 'vote-widget is-collapsed' : 'vote-widget'} aria-label={asideLabel} aria-hidden={collapsed}>
-        <button className="vote-widget-fold" onClick={() => setCollapsed(true)} aria-label="Fäll ihop" title="Fäll ihop">›</button>
+        <button className="vote-widget-fold" onClick={() => setCollapsed(true)} aria-label="Fäll ihop" data-tooltip="Fäll ihop">›</button>
         {c.showSignatures ? (
           <>
             <span className="vote-widget-label">Underskrifter</span>
@@ -61,7 +61,7 @@ export default function VoteWidget({ settings }: { settings: SiteSettings | null
         className={collapsed ? 'vote-widget-tab is-visible' : 'vote-widget-tab'}
         onClick={() => setCollapsed(false)}
         aria-label={'Visa ' + asideLabel.toLowerCase()}
-        title={asideLabel}
+        data-tooltip={asideLabel}
       >
         {c.mode === 'consult' ? <Envelope /> : <Bullhorn />}
       </button>

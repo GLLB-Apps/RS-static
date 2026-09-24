@@ -130,7 +130,7 @@ export default function PasswordField({
             tabIndex={-1}
             aria-pressed={shown}
             aria-label={shown ? 'Dölj lösenord' : 'Visa lösenord'}
-            title={shown ? 'Dölj lösenord' : 'Visa lösenord'}
+            data-tooltip={shown ? 'Dölj lösenord' : 'Visa lösenord'}
             onClick={() => { setShown(s => !s); input.current?.focus() }}
             className="blobatar-password-field-toggle"
           >

@@ -132,7 +132,7 @@ export default function AdminMedia() {
         <>
           <div className="vb-grid">
             {pageItems.map(t => (
-              <button key={t.id} className="vb-cell" onClick={() => setSelectedT(t.id)} title={t.title || 'Vittnesmål'}>
+              <button key={t.id} className="vb-cell" onClick={() => setSelectedT(t.id)} data-tooltip={t.title || 'Vittnesmål'} aria-label={t.title || 'Vittnesmål'}>
                 <img src={t.featured_image ?? ''} alt="" loading="lazy" />
                 {t.map_lat != null && <span className="vb-cell-pin" aria-hidden="true">📍</span>}
               </button>

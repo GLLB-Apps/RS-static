@@ -103,7 +103,7 @@ export default function IconPicker({ value, onChange, allowNone = true, autoFocu
           <button
             type="button"
             className={`icon-picker-btn icon-picker-none${!value ? ' active' : ''}`}
-            title="Ingen ikon"
+            data-tooltip="Ingen ikon"
             onClick={() => onChange(null)}
           >
             Ingen
@@ -117,7 +117,7 @@ export default function IconPicker({ value, onChange, allowNone = true, autoFocu
               <button
                 type="button"
                 className={`icon-picker-btn${value === candidate ? ' active' : ''}`}
-                title={candidate}
+                data-tooltip={candidate}
                 aria-label={candidate}
                 aria-pressed={value === candidate}
                 onClick={() => onChange(candidate)}
@@ -145,7 +145,7 @@ export default function IconPicker({ value, onChange, allowNone = true, autoFocu
                   <button
                     type="button"
                     className={`icon-picker-btn${value === i.name ? ' active' : ''}`}
-                    title={i.label || i.name}
+                    data-tooltip={i.label || i.name}
                     aria-label={i.label || i.name}
                     aria-pressed={value === i.name}
                     onClick={() => onChange(i.name)}
@@ -155,7 +155,7 @@ export default function IconPicker({ value, onChange, allowNone = true, autoFocu
                   <button
                     type="button"
                     className="icon-picker-own-remove"
-                    title={`Ta bort ${i.name} ur samlingen`}
+                    data-tooltip={`Ta bort ${i.name} ur samlingen`}
                     aria-label={`Ta bort ${i.name} ur samlingen`}
                     disabled={busy}
                     onClick={() => removeIcon(i.id, i.name)}
@@ -177,7 +177,7 @@ export default function IconPicker({ value, onChange, allowNone = true, autoFocu
                   key={d.name}
                   type="button"
                   className={`icon-picker-btn${value === d.name ? ' active' : ''}`}
-                  title={d.label}
+                  data-tooltip={d.label}
                   aria-label={d.label}
                   aria-pressed={value === d.name}
                   onClick={() => onChange(d.name)}

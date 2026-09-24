@@ -97,12 +97,12 @@ export default function IntranetNotices() {
                 <h2 className="intranet-notice-title">{n.pinned && <Pin size={14} aria-hidden="true" />} {n.title}</h2>
                 <div className="intranet-notice-actions">
                   {canWriteIntranet && (
-                    <button className="intdoc-icon-btn" title={n.pinned ? 'Lossa' : 'Nåla fast'} onClick={() => togglePin(n)}>
+                    <button className="intdoc-icon-btn" data-tooltip={n.pinned ? 'Lossa' : 'Nåla fast'} aria-label={n.pinned ? 'Lossa' : 'Nåla fast'} onClick={() => togglePin(n)}>
                       {n.pinned ? <PinOff size={15} /> : <Pin size={15} />}
                     </button>
                   )}
                   {(n.author_id === user?.id || isAdmin) && (
-                    <button className="intdoc-icon-btn danger" title="Ta bort" onClick={() => remove(n)}><Trash2 size={15} /></button>
+                    <button className="intdoc-icon-btn danger" data-tooltip="Ta bort" aria-label="Ta bort" onClick={() => remove(n)}><Trash2 size={15} /></button>
                   )}
                 </div>
               </div>

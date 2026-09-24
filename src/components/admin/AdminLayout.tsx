@@ -70,7 +70,8 @@ function AdminMenu({ role, pathname, onNavigate, collapsed }: {
                   to={item.path}
                   className={isActive ? 'admin-menu-link active' : 'admin-menu-link'}
                   onClick={onNavigate}
-                  title={item.label}
+                  data-tooltip={item.label}
+                  aria-label={item.label}
                 >
                   <Icon size={16} aria-hidden="true" />
                   <AnimatePresence initial={false}>
@@ -210,14 +211,14 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
                 className="admin-sidebar-collapse-toggle"
                 onClick={() => setSidebarCollapsed(v => !v)}
                 aria-label={sidebarCollapsed ? 'Visa menytexter' : 'Fäll in menyn till ikoner'}
-                title={sidebarCollapsed ? 'Visa menytexter' : 'Fäll in menyn till ikoner'}
+                data-tooltip={sidebarCollapsed ? 'Visa menytexter' : 'Fäll in menyn till ikoner'}
               >
                 {sidebarCollapsed ? <PanelLeftOpen size={18} aria-hidden="true" /> : <PanelLeftClose size={18} aria-hidden="true" />}
               </button>
             </div>
             <AdminMenu role={role} pathname={location.pathname} onNavigate={() => setSidebarOpen(false)} collapsed={sidebarCollapsed} />
             <div className="admin-sidebar-footer">
-              <Link to="/" className="admin-menu-link" target="_blank" title="Visa webbplats">
+              <Link to="/" className="admin-menu-link" target="_blank" data-tooltip="Visa webbplats" aria-label="Visa webbplats">
                 <ExternalLink size={16} aria-hidden="true" />
                 <AnimatePresence initial={false}>
                   {!sidebarCollapsed && (

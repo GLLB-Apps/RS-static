@@ -27,7 +27,7 @@ export default function EditPageButton() {
   if (!to) return null
 
   return (
-    <Link to={to} className="edit-page-fab" title="Redigera denna sida" aria-label="Redigera denna sida">
+    <Link to={to} className="edit-page-fab" data-tooltip="Redigera denna sida" aria-label="Redigera denna sida">
       <Pencil size={26} aria-hidden="true" />
       <span className="edit-page-fab-label">Redigera sidan</span>
     </Link>

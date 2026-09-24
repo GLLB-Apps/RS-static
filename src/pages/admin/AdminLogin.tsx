@@ -219,7 +219,7 @@ export default function AdminLogin() {
                       <button
                         type="button" tabIndex={-1}
                         aria-pressed={loginShown} aria-label={loginShown ? 'Dölj lösenord' : 'Visa lösenord'}
-                        title={loginShown ? 'Dölj lösenord' : 'Visa lösenord'}
+                        data-tooltip={loginShown ? 'Dölj lösenord' : 'Visa lösenord'}
                         onClick={() => { setLoginShown(s => !s); loginPasswordRef.current?.focus() }}
                         className="blobatar-password-field-toggle"
                       >
@@ -299,7 +299,7 @@ export default function AdminLogin() {
                       <button
                         type="button" tabIndex={-1}
                         aria-pressed={signupShown} aria-label={signupShown ? 'Dölj lösenord' : 'Visa lösenord'}
-                        title={signupShown ? 'Dölj lösenord' : 'Visa lösenord'}
+                        data-tooltip={signupShown ? 'Dölj lösenord' : 'Visa lösenord'}
                         onClick={() => setSignupShown(s => !s)}
                         className="blobatar-password-field-toggle"
                       >

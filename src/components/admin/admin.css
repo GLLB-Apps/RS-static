@@ -1072,8 +1072,9 @@
   padding-top: 40px;
 }
 .content-width-slider {
+  /* Utseendet (spår/tumme) kommer från den globala input[type="range"]-regeln
+     i index.css — bara bredden är specifik för den här sliderns layout. */
   width: 100%;
-  accent-color: var(--primary);
 }
 .content-width-preview {
   position: absolute;

@@ -713,29 +713,29 @@ export default function TapEditor({ blocks, onChange, nested, onEscape }: Props)
             — syns oavsett om man står i huvuddokumentet eller i en
             kolumnruta, eftersom varje TapEditor-instans har sin egen historik. */}
         <div className="tap-toolbar-group">
-          <button type="button" title="Ångra" className="tap-tool" disabled={!effective.canUndo} onMouseDown={e => e.preventDefault()} onClick={() => effective.undo()}>
+          <button type="button" data-tooltip="Ångra" aria-label="Ångra" className="tap-tool" disabled={!effective.canUndo} onMouseDown={e => e.preventDefault()} onClick={() => effective.undo()}>
             <Undo2 size={15} aria-hidden="true" />
           </button>
-          <button type="button" title="Gör om" className="tap-tool" disabled={!effective.canRedo} onMouseDown={e => e.preventDefault()} onClick={() => effective.redo()}>
+          <button type="button" data-tooltip="Gör om" aria-label="Gör om" className="tap-tool" disabled={!effective.canRedo} onMouseDown={e => e.preventDefault()} onClick={() => effective.redo()}>
             <Redo2 size={15} aria-hidden="true" />
           </button>
         </div>
         <span className="tap-toolbar-sep" />
         <div className="tap-mode-switch" role="group" aria-label="Redigeringsläge">
-          <button type="button" className={markdown == null ? 'tap-mode active' : 'tap-mode'} title="Vanlig editor – ett block i taget" onMouseDown={e => e.preventDefault()} onClick={() => setMarkdown(null)}>Vanlig</button>
-          <button type="button" className={markdown != null ? 'tap-mode active' : 'tap-mode'} title="Markdown – hela innehållet som text" onMouseDown={e => e.preventDefault()} onClick={enterMarkdown}>MD</button>
+          <button type="button" className={markdown == null ? 'tap-mode active' : 'tap-mode'} data-tooltip="Vanlig editor – ett block i taget" onMouseDown={e => e.preventDefault()} onClick={() => setMarkdown(null)}>Vanlig</button>
+          <button type="button" className={markdown != null ? 'tap-mode active' : 'tap-mode'} data-tooltip="Markdown – hela innehållet som text" onMouseDown={e => e.preventDefault()} onClick={enterMarkdown}>MD</button>
         </div>
         <span className="tap-toolbar-sep" />
         <div className="tap-toolbar-group">
           {/* Knapparna verkar på effective — den senast fokuserade editorn,
               vilket kan vara en kolumnrutas egen (nästlade) instans. Se
               TapActiveContext ovan och claimActive(). */}
-          <button type="button" title="Text (Ctrl+Alt+T)" className={effective.focusedType === 'paragraph' ? 'tap-tool active' : 'tap-tool'} onMouseDown={e => e.preventDefault()} onClick={() => effective.applyText('paragraph')}>Text</button>
+          <button type="button" data-tooltip="Text (Ctrl+Alt+T)" className={effective.focusedType === 'paragraph' ? 'tap-tool active' : 'tap-tool'} onMouseDown={e => e.preventDefault()} onClick={() => effective.applyText('paragraph')}>Text</button>
           <HeadingMenu level={effective.focusedLevel} onPick={effective.applyHeading} />
-          <button type="button" title="Citat (Ctrl+Alt+C)" className={effective.focusedType === 'quote' ? 'tap-tool active' : 'tap-tool'} onMouseDown={e => e.preventDefault()} onClick={() => effective.applyText('quote')}>Citat</button>
+          <button type="button" data-tooltip="Citat (Ctrl+Alt+C)" className={effective.focusedType === 'quote' ? 'tap-tool active' : 'tap-tool'} onMouseDown={e => e.preventDefault()} onClick={() => effective.applyText('quote')}>Citat</button>
           {/* Bara synlig när man står i en kolumnruta — se escape i TapActions. */}
           {effective.escape && (
-            <button type="button" title="Lämna kolumnen (Esc)" className="tap-tool" onMouseDown={e => e.preventDefault()} onClick={() => effective.escape?.()}>
+            <button type="button" data-tooltip="Lämna kolumnen (Esc)" aria-label="Lämna kolumnen (Esc)" className="tap-tool" onMouseDown={e => e.preventDefault()} onClick={() => effective.escape?.()}>
               <ArrowLeft size={15} aria-hidden="true" />
             </button>
           )}
@@ -747,7 +747,7 @@ export default function TapEditor({ blocks, onChange, nested, onEscape }: Props)
               egen editor äger knapparna. */}
           {markdown == null && effective.insertColumns && <ColumnsMenu onPick={effective.insertColumns} />}
           {INSERTS.map(ins => (
-            <button key={ins.type} type="button" title={`${ins.label} (Ctrl+Alt+${SHORTCUT_KEY[ins.type]})`} className="tap-tool tap-tool-insert" onMouseDown={e => e.preventDefault()} onClick={() => effective.addBlock(ins.type)}>
+            <button key={ins.type} type="button" data-tooltip={`${ins.label} (Ctrl+Alt+${SHORTCUT_KEY[ins.type]})`} className="tap-tool tap-tool-insert" onMouseDown={e => e.preventDefault()} onClick={() => effective.addBlock(ins.type)}>
               + {ins.label} <span className="tap-tool-key">{SHORTCUT_KEY[ins.type]}</span>
             </button>
           ))}

@@ -138,9 +138,9 @@ export default function IntranetNotes() {
               <div className="intranet-note-head">
                 <h2 className="intranet-note-title">{n.title}</h2>
                 <div className="intranet-note-actions">
-                  {canWriteIntranet && <button className="intdoc-icon-btn" title={n.pinned ? 'Lossa' : 'Nåla fast'} onClick={() => togglePin(n)}><Pin size={15} /></button>}
-                  {canEdit(n) && <button className="intdoc-icon-btn" title="Redigera" onClick={() => setEditing(n)}><Pencil size={15} /></button>}
-                  {canEdit(n) && <button className="intdoc-icon-btn danger" title="Ta bort" onClick={() => remove(n)}><Trash2 size={15} /></button>}
+                  {canWriteIntranet && <button className="intdoc-icon-btn" data-tooltip={n.pinned ? 'Lossa' : 'Nåla fast'} aria-label={n.pinned ? 'Lossa' : 'Nåla fast'} onClick={() => togglePin(n)}><Pin size={15} /></button>}
+                  {canEdit(n) && <button className="intdoc-icon-btn" data-tooltip="Redigera" aria-label="Redigera" onClick={() => setEditing(n)}><Pencil size={15} /></button>}
+                  {canEdit(n) && <button className="intdoc-icon-btn danger" data-tooltip="Ta bort" aria-label="Ta bort" onClick={() => remove(n)}><Trash2 size={15} /></button>}
                 </div>
               </div>
               {n.category && <span className="intdoc-item-cat">{n.category}</span>}

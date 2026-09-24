@@ -78,7 +78,7 @@ export default function NewsPage() {
         <PageHeader
           slug="nyheter"
           titleExtra={editorSeeds.length > 0 && (
-            <div className="news-editors" title="Redaktionen">
+            <div className="news-editors" data-tooltip="Redaktionen">
               <AvatarFacepile seeds={editorSeeds} size={36} />
               <span className="news-editors-label">Redaktionen</span>
             </div>

@@ -70,7 +70,7 @@ export default function HeadingMenu({ level, onPick }: Props) {
       <button
         ref={btnRef}
         type="button"
-        title="Rubrik (Ctrl+Alt+R) – klicka för att välja nivå"
+        data-tooltip="Rubrik (Ctrl+Alt+R) – klicka för att välja nivå"
         className={level ? 'tap-tool active' : 'tap-tool'}
         aria-haspopup="menu"
         aria-expanded={open}

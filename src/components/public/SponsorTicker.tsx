@@ -38,7 +38,7 @@ export default function SponsorTicker() {
               return (
                 <div className="sponsor-item" key={i} aria-hidden={i >= base.length}>
                   {s.link_url
-                    ? <a href={s.link_url} target="_blank" rel="noopener noreferrer" title={s.name}>{img}</a>
+                    ? <a href={s.link_url} target="_blank" rel="noopener noreferrer" data-tooltip={s.name}>{img}</a>
                     : img}
                 </div>
               )

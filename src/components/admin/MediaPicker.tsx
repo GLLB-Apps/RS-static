@@ -111,7 +111,7 @@ export default function MediaPicker({ onPick, onClose }: Props) {
                 type="button"
                 className="media-card media-picker-card"
                 onClick={() => onPick({ url: m.file_url ?? '', alt: m.alt_text ?? '' })}
-                title={m.title}
+                data-tooltip={m.title}
               >
                 <div className="media-card-thumb">
                   <img src={m.file_url ?? ''} alt={m.alt_text ?? m.title} loading="lazy" />

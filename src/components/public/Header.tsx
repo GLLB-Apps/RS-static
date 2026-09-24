@@ -156,7 +156,7 @@ export default function Header({ settings }: { settings: SiteSettings | null }) 
               type="button"
               className="btn btn-ghost btn-sm header-logout"
               onClick={() => signOut()}
-              title="Logga ut"
+              data-tooltip="Logga ut"
               aria-label="Logga ut"
             >
               <LogOut size={16} aria-hidden="true" />

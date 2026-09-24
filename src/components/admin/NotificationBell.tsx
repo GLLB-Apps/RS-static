@@ -104,7 +104,7 @@ export default function NotificationBell({ avatarSeed, email, displayName, roleL
                   type="button"
                   className="admin-bell-mark"
                   onClick={clearRead}
-                  title="Döljer lästa notiser. Olästa står kvar."
+                  data-tooltip="Döljer lästa notiser. Olästa står kvar."
                 >
                   Rensa lästa ({clearableCount})
                 </button>

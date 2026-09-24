@@ -18,7 +18,7 @@ export default function PreviewButton({ getPayload, onOpen }: {
       className="btn btn-ghost btn-sm"
       onClick={() => onOpen?.(openPreview(getPayload()))}
       aria-label="Förhandsgranska"
-      title="Förhandsgranska"
+      data-tooltip="Förhandsgranska"
     >
       <Eye size={15} aria-hidden="true" />
     </button>

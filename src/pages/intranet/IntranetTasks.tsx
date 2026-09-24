@@ -198,7 +198,7 @@ export default function IntranetTasks() {
                   {canWriteIntranet && (
                     <button
                       className="intdoc-icon-btn intranet-task-rename"
-                      title="Byt namn på gruppen"
+                      data-tooltip="Byt namn på gruppen"
                       aria-label={`Byt namn på gruppen ${name}`}
                       onClick={() => startEditGroup(name)}
                     >
@@ -233,10 +233,10 @@ export default function IntranetTasks() {
                         <span className="intranet-task-text">{t.text}</span>
                         {t.done && t.done_by && <span className="intranet-task-by">{t.done_by}</span>}
                         {canWriteIntranet && (
-                          <button className="intdoc-icon-btn intranet-task-edit-btn" title="Ändra texten" aria-label="Ändra texten" onClick={() => startEditTask(t)}><Pencil size={14} /></button>
+                          <button className="intdoc-icon-btn intranet-task-edit-btn" data-tooltip="Ändra texten" aria-label="Ändra texten" onClick={() => startEditTask(t)}><Pencil size={14} /></button>
                         )}
                         {canRemove(t) && (
-                          <button className="intdoc-icon-btn danger intranet-task-remove" title="Ta bort" onClick={() => remove(t)}><Trash2 size={14} /></button>
+                          <button className="intdoc-icon-btn danger intranet-task-remove" data-tooltip="Ta bort" aria-label="Ta bort" onClick={() => remove(t)}><Trash2 size={14} /></button>
                         )}
                       </>
                     )}

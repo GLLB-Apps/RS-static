@@ -11,7 +11,7 @@ export default function ThemeToggle({ className }: { className?: string }) {
       className={className}
       onClick={toggleTheme}
       aria-label={theme === 'dark' ? 'Byt till ljust läge' : 'Byt till mörkt läge'}
-      title={theme === 'dark' ? 'Byt till ljust läge' : 'Byt till mörkt läge'}
+      data-tooltip={theme === 'dark' ? 'Byt till ljust läge' : 'Byt till mörkt läge'}
     >
       {theme === 'dark' ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
     </button>

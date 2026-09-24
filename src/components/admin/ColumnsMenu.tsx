@@ -69,7 +69,7 @@ export default function ColumnsMenu({ onPick }: { onPick: (choice: ColumnsChoice
       <button
         ref={btnRef}
         type="button"
-        title="Kolumner – lägg innehåll sida vid sida"
+        data-tooltip="Kolumner – lägg innehåll sida vid sida"
         className="tap-tool tap-tool-insert"
         aria-haspopup="menu"
         aria-expanded={open}
@@ -96,7 +96,8 @@ export default function ColumnsMenu({ onPick }: { onPick: (choice: ColumnsChoice
                     className="tap-columns-menu-ratio"
                     onMouseDown={e => e.preventDefault()}
                     onClick={() => pick({ ratio, preset: group.key })}
-                    title={`${ratio[0]}% / ${ratio[1]}%`}
+                    data-tooltip={`${ratio[0]}% / ${ratio[1]}%`}
+                    aria-label={`${group.label}, ${ratio[0]}% / ${ratio[1]}%`}
                   >
                     <span className="tap-columns-menu-bar" style={{ flexGrow: ratio[0] }} />
                     <span className="tap-columns-menu-bar tap-columns-menu-bar-alt" style={{ flexGrow: ratio[1] }} />

@@ -426,7 +426,7 @@ export default function AdminAdmins() {
                     className="btn btn-secondary btn-sm"
                     disabled={pwdBusy || sendingPwd === p.user_id || pwdValue.length < 8}
                     onClick={() => emailUserPassword(p.user_id)}
-                    title="Sätter det inskrivna lösenordet och mejlar samma lösenord till personen"
+                    data-tooltip="Sätter det inskrivna lösenordet och mejlar samma lösenord till personen"
                   >
                     {sendingPwd === p.user_id ? 'Skickar…' : 'Mejla lösenordet'}
                   </button>
