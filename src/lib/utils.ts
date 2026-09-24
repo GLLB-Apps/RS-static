@@ -266,15 +266,24 @@ export interface ContentStats {
   readingMinutes: number
 }
 
+/** Räknar rakt igenom, inklusive kolumnblockets nästlade block — annars
+ * skulle text i en kolumnruta osynligt saknas i ord- och lästidssumman. */
+function flattenBlocks(blocks: ContentBlock[]): ContentBlock[] {
+  return blocks.flatMap(b => b.type === 'columns'
+    ? [b, ...flattenBlocks((b.layout_columns ?? []).flatMap(c => c.blocks))]
+    : [b])
+}
+
 /** Ord/stycken/lästid över hela innehållet, för redigerarens sidofält. */
 export function contentStats(blocks: ContentBlock[]): ContentStats {
+  const flat = flattenBlocks(blocks)
   let words = 0
-  for (const b of blocks) {
+  for (const b of flat) {
     const texts = [b.text, b.title, ...(b.items ?? [])].filter((t): t is string => !!t?.trim())
     for (const t of texts) words += (t.trim().match(/\S+/g) ?? []).length
   }
-  const paragraphs = blocks.filter(b => b.type === 'paragraph' && b.text?.trim()).length
-  return { words, paragraphs, blocks: blocks.length, readingMinutes: words > 0 ? Math.max(1, Math.round(words / 200)) : 0 }
+  const paragraphs = flat.filter(b => b.type === 'paragraph' && b.text?.trim()).length
+  return { words, paragraphs, blocks: flat.length, readingMinutes: words > 0 ? Math.max(1, Math.round(words / 200)) : 0 }
 }
 
 export function truncate(text: string, maxLen: number): string {

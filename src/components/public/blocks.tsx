@@ -85,8 +85,22 @@ export function RenderBlock({ block }: { block: ContentBlock }) {
     )
     case 'table': return <BlockTable block={block} />
     case 'resource': return <BlockResource block={block} />
+    case 'columns': return <BlockColumns block={block} />
     default: return null
   }
+}
+
+// Kolumnblock ("Kolumner", TapEditor.tsx): två spalter sida vid sida, med
+// bredd i procent. Varje spalt renderas med samma ContentBlocks som resten av
+// sidan (rekursivt) — den grupperar t.ex. sina egna bilder till ett galleri.
+export function BlockColumns({ block }: { block: ContentBlock }) {
+  const cols = block.layout_columns ?? []
+  if (!cols.length) return null
+  return (
+    <div className="content-columns" style={{ gridTemplateColumns: cols.map(c => `${c.width}fr`).join(' ') }}>
+      {cols.map((col, i) => <ContentBlocks key={i} blocks={col.blocks} />)}
+    </div>
+  )
 }
 
 // Renders a list of content blocks inside a `.content-blocks` wrapper.

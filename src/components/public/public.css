@@ -1716,6 +1716,19 @@ a.testimony-card:focus-visible {
 /* Content blocks */
 .content-blocks { display: flex; flex-direction: column; gap: var(--space-5); }
 
+/* Kolumnblock ("Kolumner", TapEditor.tsx) — två spalter sida vid sida.
+   Bredden sätts inline per block (fr-enheter, från redigerarens splitter).
+   Staplas alltid på smala skärmar oavsett vald bredd. */
+.content-columns {
+  display: grid;
+  gap: var(--space-6);
+  align-items: start;
+  margin: var(--space-5) 0;
+}
+@media (max-width: 700px) {
+  .content-columns { grid-template-columns: 1fr !important; }
+}
+
 .block-heading { margin-top: var(--space-4); }
 /* h1–h4 har storlek globalt; de två minsta nivåerna sätts här så att de inte
    blir mindre än brödtexten (webbläsarens standard för h5/h6). */

@@ -5,8 +5,14 @@ export type SenderType = 'ncc' | 'lund_kommun' | 'authority' | 'media' | 'initia
 export type MediaType = 'image' | 'video' | 'map' | 'graphic' | 'press_image'
 export type MapPointType = 'work_area' | 'quarry_area' | 'property_border' | 'transport_route' | 'residence_distance' | 'nature_value' | 'walking_trail' | 'observation_point' | 'photo_point' | 'testimony_point'
 
+/** Kolumnblockets ("Kolumner") en av två spalter — bredd i procent (summerar till 100) och egna, nästlade block. */
+export interface LayoutColumn {
+  width: number
+  blocks: ContentBlock[]
+}
+
 export interface ContentBlock {
-  type: 'heading' | 'paragraph' | 'quote' | 'factbox' | 'warning' | 'image' | 'gallery' | 'video' | 'document_list' | 'links' | 'divider' | 'button' | 'related' | 'sources' | 'comparison' | 'faq' | 'list' | 'cta' | 'resource' | 'table'
+  type: 'heading' | 'paragraph' | 'quote' | 'factbox' | 'warning' | 'image' | 'gallery' | 'video' | 'document_list' | 'links' | 'divider' | 'button' | 'related' | 'sources' | 'comparison' | 'faq' | 'list' | 'cta' | 'resource' | 'table' | 'columns'
   text?: string
   title?: string
   url?: string
@@ -25,6 +31,8 @@ export interface ContentBlock {
   columns?: string[]
   /** Tabellblock: en lista per rad, med en cell per kolumn. */
   cells?: string[][]
+  /** Kolumnblock ("Kolumner"): två spalter sida vid sida, se LayoutColumn. */
+  layout_columns?: LayoutColumn[]
 }
 
 export interface SiteSettings {

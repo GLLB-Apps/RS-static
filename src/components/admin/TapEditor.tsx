@@ -6,6 +6,8 @@ import { useToast } from '../../lib/toast'
 import { headingLevel, internalPath, normalizeUrl } from '../../lib/utils'
 import { blocksToMarkdown, markdownToBlocks } from '../../lib/markdownBlocks'
 import HeadingMenu from './HeadingMenu'
+import ColumnsMenu, { type ColumnsChoice } from './ColumnsMenu'
+import ColumnsBlockEditor from './ColumnsBlockEditor'
 import MediaPicker from './MediaPicker'
 import PdfImportDialog from './PdfImportDialog'
 import UploadDialog from './UploadDialog'
@@ -63,7 +65,7 @@ const LEGACY_LABELS: Partial<Record<ContentBlock['type'], string>> = {
 }
 
 const blockLabel = (type: ContentBlock['type']) =>
-  INSERTS.find(x => x.type === type)?.label ?? LEGACY_LABELS[type] ?? type
+  type === 'columns' ? 'Kolumner' : INSERTS.find(x => x.type === type)?.label ?? LEGACY_LABELS[type] ?? type
 
 /** Publicerade dokument att länka till, hämtas en gång per editor. */
 function usePublishedDocuments() {
@@ -251,7 +253,20 @@ function blankBlock(type: ContentBlock['type']): ContentBlock {
   if (type === 'cta' || type === 'links') { b.title = ''; b.links = [] }
   if (type === 'comparison') { b.title = ''; b.rows = [] }
   if (type === 'table') { b.title = ''; b.columns = ['', '']; b.cells = [['', '']] }
+  if (type === 'columns') b.layout_columns = [{ width: 50, blocks: [] }, { width: 50, blocks: [] }]
   return b
+}
+
+/** Bygger kolumnblockets startinnehåll utifrån valet i ColumnsMenu.tsx. */
+function blankColumns({ ratio, preset }: ColumnsChoice): Partial<ContentBlock> {
+  const leftType = preset === 'image-text' ? 'image' : preset === 'text-image' ? 'paragraph' : null
+  const rightType = preset === 'image-text' ? 'paragraph' : preset === 'text-image' ? 'image' : null
+  return {
+    layout_columns: [
+      { width: ratio[0], blocks: leftType ? [blankBlock(leftType)] : [] },
+      { width: ratio[1], blocks: rightType ? [blankBlock(rightType)] : [] },
+    ],
+  }
 }
 
 // Hjälpen i MD-läget. Håll den i takt med src/lib/markdownBlocks.ts.
@@ -331,9 +346,12 @@ function autosize(el: HTMLTextAreaElement | null) {
 interface Props {
   blocks: ContentBlock[]
   onChange: (blocks: ContentBlock[]) => void
+  /** Sant för editorn inuti en kolumnruta — döljer kolumnverktyget (inga
+   * kolumner-i-kolumner) och den långa hjälptexten, för en lugnare yta. */
+  nested?: boolean
 }
 
-export default function TapEditor({ blocks, onChange }: Props) {
+export default function TapEditor({ blocks, onChange, nested }: Props) {
   const refs = useRef<(HTMLTextAreaElement | null)[]>([])
   const [focused, setFocused] = useState<number | null>(null)
   const [pending, setPending] = useState<{ index: number; caret: number } | null>(null)
@@ -434,6 +452,10 @@ export default function TapEditor({ blocks, onChange }: Props) {
     if (markdown != null) insertMarkdown(MD_SNIPPET[type] ?? '{}')
     else insertAfter(focused, type)
   }
+  /** Kolumnblocket har ingen markdown-form — bara insticksrutan i Vanlig läge. */
+  function insertColumns(choice: ColumnsChoice) {
+    insertAfter(focused, 'columns', blankColumns(choice))
+  }
 
   /**
    * Skriver in text vid markören i MD-rutan, alltid som ett eget block med tom
@@ -495,6 +517,11 @@ export default function TapEditor({ blocks, onChange }: Props) {
   // layout-independent. Note: on Nordic keyboards AltGr sends Ctrl+Alt, but the
   // chosen letters don't produce AltGr characters on those layouts, so typing is
   // unaffected.
+  //
+  // stopPropagation vid varje hanterad tangent: ett kolumnblock lägger en HEL
+  // ny TapEditor inuti den här (ColumnsBlockEditor.tsx) — utan den skulle
+  // samma tangenttryck bubbla vidare och hanteras EN GÅNG TILL av den yttre
+  // editorns instans av den här funktionen.
   function onEditorKeyDown(e: KeyboardEvent<HTMLDivElement>) {
     // Ctrl+Shift+1…6 sätter rubriknivå. Siffrorna kan inte ligga på Ctrl+Alt:
     // det är AltGr på svenskt tangentbord och skriver @, £, $ …
@@ -502,6 +529,7 @@ export default function TapEditor({ blocks, onChange }: Props) {
       const digit = /^(?:Digit|Numpad)([1-6])$/.exec(e.code)
       if (digit) {
         e.preventDefault()
+        e.stopPropagation()
         applyHeading(Number(digit[1]))
         return
       }
@@ -510,6 +538,7 @@ export default function TapEditor({ blocks, onChange }: Props) {
     const type = CODE_TO_TYPE[e.code]
     if (!type) return
     e.preventDefault()
+    e.stopPropagation()
     // Mitt i ett block byter kommandot typ på blocket och behåller innehållet.
     // I slutet av det, eller på en tom rad, lägger det till ett nytt.
     if (markdown == null && focused != null && caretInside(focused)) convertAt(focused, type)
@@ -587,6 +616,9 @@ export default function TapEditor({ blocks, onChange }: Props) {
         </div>
         <span className="tap-toolbar-sep" />
         <div className="tap-toolbar-group">
+          {/* Kolumner har ingen markdown-form och kan inte innehålla ett till
+              kolumnblock — döljs därför i MD-läge och i en nästlad kolumnruta. */}
+          {!nested && markdown == null && <ColumnsMenu onPick={insertColumns} />}
           {INSERTS.map(ins => (
             <button key={ins.type} type="button" title={`${ins.label} (Ctrl+Alt+${SHORTCUT_KEY[ins.type]})`} className="tap-tool tap-tool-insert" onMouseDown={e => e.preventDefault()} onClick={() => addBlock(ins.type)}>
               + {ins.label} <span className="tap-tool-key">{SHORTCUT_KEY[ins.type]}</span>
@@ -629,7 +661,12 @@ export default function TapEditor({ blocks, onChange }: Props) {
               <button type="button" className="danger" onClick={() => removeAt(i)} aria-label="Ta bort">✕</button>
             </div>
 
-            {isText(block.type) ? (
+            {block.type === 'columns' ? (
+              <ColumnsBlockEditor
+                columns={block.layout_columns ?? []}
+                onChange={cols => set(i, { layout_columns: cols })}
+              />
+            ) : isText(block.type) ? (
               <textarea
                 ref={el => { refs.current[i] = el }}
                 className={`tap-text tap-${block.type}${block.type === 'heading' ? ` tap-h${headingLevel(block.level)}` : ''}`}
@@ -841,7 +878,7 @@ export default function TapEditor({ blocks, onChange }: Props) {
         />
       )}
 
-      {markdown != null ? (
+      {!nested && (markdown != null ? (
         <p className="tap-hint">
           Allt du skriver här blir block direkt — byt till <strong>Vanlig</strong> när du vill se resultatet.
           Knapparna i verktygsraden och <kbd>Ctrl</kbd>+<kbd>Alt</kbd>-kommandona fungerar även här: de skriver in blockets markdown vid markören.
@@ -849,7 +886,7 @@ export default function TapEditor({ blocks, onChange }: Props) {
         </p>
       ) : (
       <p className="tap-hint">Klicka och skriv. Tryck <kbd>Enter</kbd> för ny rad. I ett citat ger <kbd>Skift</kbd>+<kbd>Enter</kbd> ett nytt stycke inuti citatet. Markera en rad och tryck <strong>Rubrik</strong> (nivå 1–6 i listan, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>1</kbd>–<kbd>6</kbd>, eller <code>##</code> först på raden) eller <strong>Citat</strong> för att ändra stil. Står du i en ruta (bild, faktaruta …) kan du trycka <strong>Text</strong>, <strong>Rubrik</strong> eller <strong>Citat</strong> för att fortsätta skriva under den. Håll <kbd>Ctrl</kbd>+<kbd>Alt</kbd> och tryck bokstaven på en knapp: står du <strong>mitt i</strong> ett block byter det typ på blocket med innehållet kvar, står du i slutet av raden eller på en tom rad läggs blocket till.</p>
-      )}
+      ))}
     </div>
   )
 }
